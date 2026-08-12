@@ -1,0 +1,1711 @@
+{
+  "openapi": "3.0.0",
+  "servers": [
+    {
+      "url": "https://api.emergemarket.io/v2",
+      "description": "Primary production endpoint"
+    },
+    {
+      "url": "https://demo-api.emergemarket.dev/v2",
+      "description": "Testing sandbox endpoint"
+    }
+  ],
+  "info": {
+    "version": "2.0.0",
+    "title": "Emerge Carrier API",
+    "description": "### \nThe Emerge carrier API provides integrated carrier (Provider) developers with access to the Emerge platform.\n\nThe current version of the API is v1.0.0 This API will evolve as the features in Emerge's product evolve.\n\n# Get Started\n\nWelcome to Emerge's REST API Carrier Documentation. \nOur APIs allow Capacity and Integration Providers to easily interact with Shippers utilizing Emerge's Platform. \n\nIf you are interested in implementing a Carrier API integration\nplease submit a request [here](https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179) \n\nAll production level API requests are made to:\n<br />`https://api.emergemarket.io`\n\n\nThe testing sandbox is available during development and for testing:\n<br />`https://demo-api.emergemarket.dev`\n\n## Compatibility Policy\n\nEmerge APIs are versioned using a prefix in the endpoint URL. Within an API version, we only make backward-compatible changes. This mean that when a provider integrates with our REST API, the API will continue to work until the version is deprecated. If we have to create a change that is not compatible with the current version, a new version will be created.\n\n### Non-Breaking Changes\n\n* Adding additional optional fields on the API request.\n* Adding additional fields on the API response.\n* Adding an HTTP method to an API.\n* Adding optional headers.\n* Adding additional accepted enumerated values.\n* Changing Error Response descriptions.\n* Added Rate Limits.\n\n### Breaking Changes\n\n* Removing or renaming an API method or endpoint.\n* Removing or renaming existing API request or response fields.\n* Removing or renaming enumerated values.\n* Changing the Error Response values.\n\n### Deprecation Policy\n\n* Emerge will continue to support deprecated APIs for 1 year.\n* Documentation will also be updated and integrating providers will be notified via email when a version or endpoint is being deprecated.\n\n# Workflows\nOur Carrier APIs enable Capacity Providers more flexibility when working with Shippers using Emerge's Platform. \nMore workflows will become available in the future as we continue growing our Carrier API suite.\n\nWhile integrating with Emerge, it is helpful to be aware of our nomenclature. \nOur Shippers create \"Opportunities,\" defined as shipments they are accepting quotes for. \nWhen we request a rate, you respond with a \"Quote\" which is composed of the rate and duration details. \nOnce a Quote is received from our Capacity Providers, it becomes an \"Option\" for our Shippers to review. \nYou will see these terms throughout our documentation.\n\n## Rate Request to Quote Response\nIn this workflow, Emerge automatically sends Rate Requests to our Capacity Providers on behalf of our Shippers. \nThis workflow makes it easy for Capacity Providers to rate Opportunities while maintaining existing processes. The steps of this workflow include:\n\n1. Receive a Rate Request Event via Webhook.<br />\na. Rate Requests contain Shipper identifying information in the relationship_identifiers object. These values are provided by the Capacity Provider during Capacity Link onboarding to enable matching in the Provider's application.<br />\n\n2. Review Opportunity details and determine whether to provide a quote.<br />\n\n3. Send the Rate or provide the Error Reason for declining to rate via the Quote Response Endpoint.<br />\na. A Quote Response must provide the event_id sourced from the Rate Request Event.<br />\nb. Providers can respond with either a Rate or an Error to let the shipper know why they are not providing a rate.<br />\nc. Providers responding with a rate can include their Quote ID in the provider_reference field.<br />\n\n4. The Rate will be available for Review by the Shipper.\n",
+    "x-logo": {
+      "url": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTUycHgiIGhlaWdodD0iODBweCIgdmlld0JveD0iMCAwIDE1MiA4MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDx0aXRsZT5lbWVyZ2UtbG9nbzwvdGl0bGU+CiAgICA8ZyBpZD0iZW1lcmdlLWxvZ28iIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJFbWVyZ2UiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI0LjAwMDAwMCwgMjQuMDAwMDAwKSIgZmlsbD0iIzBENDdBMSIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTgwLjMzNzc4ODMsNS44Mzc1NTI0NCBDODIuODk5NzUyLDUuODM3NTUyNDQgODUuNDI2MDA5Miw2LjY5MTgwMTcgODcuODgxMjY2MSw4LjAwODg5NDA2IEw4NC40NjUzNjAzLDI1LjU5Mjg1NTIgQzgzLjcxODEyNjcsMjkuNTA4Mjc5OSA4MC45MDcwMzg4LDMyIDc2LjQ5NDkxMjMsMzIgTDcxLjAxNTE0MzcsMzIgTDcxLjQwNjU0NjIsMjcuNzI4NjE4NiBMNzcuMzQ4ODUyNCwyNy43Mjg2MTg2IEM3OC41NTg2MjY1LDI3LjcyODYxODYgNzkuNDEyNTY5OSwyNi44MDMwNjc0IDc5LjY2MTY5MiwyNS41OTI4NTkyIEw4MC4wODg2NjQyLDIzLjMxNDc3MDUgQzc4LjkxMTI1MDgsMjQuMzAwNzM4MiA3Ny40MjU0NDQyLDI0Ljg0MjM3MDMgNzUuODg5OTU1MSwyNC44NDUzNTcyIEM3MS44NjkwOTQxLDI0Ljg0NTM1NzIgNjkuOTQ3NjQ4OSwyMS4zNTcwNTgyIDcwLjczMDQ1ODEsMTcuMTkyNDE5OSBMNzEuMzM1NDEzMSwxNC4xNjY4MjcgQzcyLjM2NzM0MDMsOS4wMDU0NzQ4NSA3NS4yODQ5OTE5LDUuODM3NTUyNDQgODAuMzM3Nzg4Myw1LjgzNzU1MjQ0IFogTTUzLjAwOTk4NDEsNS44Mzc1NTI0NCBDNTYuNzgxNzIzLDUuODM3NTUyNDQgNTkuMzA3OTgwMSw4LjE1MTIyMzU4IDU5LjMwNzk4MDEsMTEuMTQxMjM4MSBDNTkuMzA3OTgwMSwxNC42NjUxMTk0IDU2LjI0NzkwNTIsMTcuMjI4MDA0MyA1MC43MzI3MTIxLDE3LjU4Mzk2NTIgTDQ3Ljk5Mjc2MzQsMTcuNzYxODc3MSBDNDcuNjcyNjM3MSwxOS4zOTkzNDggNDguMjA2MzE4LDIxLjEwNzg0NjUgNTAuNjk3MTQyNSwyMS4xMDc4NDY1IEM1Mi42ODk3MjA4LDIxLjEwNzg0NjUgNTQuNzUzNDM4MSwyMC4zOTU5MTY2IDU2LjQ2MTQ1OTcsMTkuNzkwODg5MiBMNTYuNzgxNzIzLDIzLjgxMzA2MDkgQzU0LjUwNDQ1MzIsMjQuNjY3NDQ3MyA1Mi4zMzM4ODk5LDI1LjMwODA2NTIgNTAuMDIxMDUwMywyNS4zMDgwNjUyIEM0NS4yNTI5NTM3LDI1LjMwODA2NTIgNDIuMDUwNjAyMywyMi40NjA1MjEzIDQzLjE4OTIzODMsMTYuODM2NDYxMSBMNDMuNjg3MzQ3NiwxNC4zNDQ3Mzg5IEM0NC43OTA0MTQsOC44OTg3Mjc3MiA0Ny43NzkzNDc5LDUuODM3NTUyNDQgNTMuMDA5OTg0MSw1LjgzNzU1MjQ0IFogTTk3LjcwMjAwNCw1LjgzNzU1MjQ0IEMxMDEuNDczNzQzLDUuODM3NTUyNDQgMTA0LDguMTUxMjIzNTggMTA0LDExLjE0MTIzODEgQzEwNCwxNC42NjUxMTk0IDEwMC45Mzk5MjUsMTcuMjI4MDA0MyA5NS40MjQ3MzIsMTcuNTgzOTY1MiBMOTIuNjg0NzgzMiwxNy43NjE4NzcxIEM5Mi4zNjQ2NTY5LDE5LjM5OTM0OCA5Mi44OTgzMzc4LDIxLjEwNzg0NjUgOTUuMzg5MTYyNCwyMS4xMDc4NDY1IEM5Ny4zODE3NDA1LDIxLjEwNzg0NjUgOTkuNDQ1NDU4LDIwLjM5NTkxNjYgMTAxLjE1MzQ4LDE5Ljc5MDg4OTIgTDEwMS40NzM3NDMsMjMuODEzMDYwOSBDOTkuMTk2NDcyOSwyNC42Njc0NDczIDk3LjAyNTkwOTYsMjUuMzA4MDY1MiA5NC43MTMwNzAxLDI1LjMwODA2NTIgQzg5Ljk0NDk3MzUsMjUuMzA4MDY1MiA4Ni43NDI2MjIxLDIyLjQ2MDUyMTMgODcuODgxMjU4MSwxNi44MzY0NjExIEw4OC4zNzkzNjc0LDE0LjM0NDczODkgQzg5LjQ4MjQzMzksOC44OTg3Mjc3MiA5Mi40NzEzNjc2LDUuODM3NTUyNDQgOTcuNzAyMDA0LDUuODM3NTUyNDQgWiBNMTguMTM5MTIxMywwIEwxNy4zMjA3NDg4LDQuMjcxMzc3MzcgTDEwLjYzMTM1NjIsNC4yNzEzNzczNyBDOC4yNDcyNDAzOCw0LjI3MTM3NzM3IDcuNjA2ODUwNzIsNS42NTk0OTk0MSA3LjI4NjU4OTM4LDcuMjYxMzg3OTEgTDYuNzUyNzY3NCw5Ljk2NjYwODM2IEwxNS4xMTQ2MTgsOS45NjY2MDgzNiBMMTQuMzMxODE4OSwxNC4yMDI0MDk0IEw1LjkzNDM5NDc1LDE0LjIwMjQwOTQgTDUuMjU4MzAwNDcsMTcuNjE5NTQzNiBDNC45MzgxNzQxNiwxOS4yNTY4Nzc0IDUuMDQ0ODgyOTMsMjAuNTczOTcxOCA3LjQyODg2MTY4LDIwLjU3Mzk3MTggTDE0LjI2MDY3MTcsMjAuNTczOTcxOCBMMTMuNjIwMTQ0OSwyMy45MTk5NDExIEMxMy41NTgzOTA3LDI0LjQ1ODc4ODcgMTMuMDk0NzQ4NSwyNC44NjA3NzIzIDEyLjU1Mjc4NTIsMjQuODQ1MzU1MSBMNi41NzQ5MTk0NiwyNC44NDUzNTUxIEMxLjQ4NjY5ODU5LDI0Ljg0NTM1NTEgLTAuNjQ4Mjk1MDUsMjIuMTQwMTQwNyAwLjE3MDA3NzU5NCwxOC4wNDY2NjkyIEwyLjM0MDY0MDgzLDYuODM0MjY4MzEgQzMuMTU5MDEzNDcsMi43MDUyMTQ0MSA2LjI1NDY1NjEsMCAxMS4zNzg1ODM2LDAgTDE4LjEzOTEyMTMsMCBaIE0zNy43ODA3NTIsNS44Mzc1NTQ0NSBDNDEuNTE2OTIxNSw1LjgzNzU1NDQ1IDQzLjE4OTIzNjMsOC4xNTEyMjU2IDQyLjQwNjQzMzIsMTIuMTczNTM0NCBMNDAuMTI5MTYzMiwyMy45MTk5NDExIEM0MC4wNTA4MzI0LDI0LjQ2NDQ3ODkgMzkuNTc1NzYxOCwyNC44NjMwMzc3IDM5LjAyNjA5NjgsMjQuODQ1MzU1MSBMMzUuMDc2NTE4LDI0Ljg0NTM1NTEgTDM3LjQyNDkyNzIsMTIuNzQyOTg3NSBDMzcuODE2MzM3OCwxMC43NDk2OTI5IDM3LjMxODIxODQsMTAuMDM3NzczMSAzNS45MzA0NjAzLDEwLjAzNzc3MzEgQzM0Ljc5MTgyNDMsMTAuMDM3NzczMSAzMy42NTMxOTAzLDEwLjY0Mjk0NTcgMzIuNTg1NjkzNSwxMS41MzI3Nzc0IEMzMi41MTQ1NDYzLDEyLjA2NjY1MDIgMzIuNDQzNDE1MSwxMi42MzYyNDA0IDMyLjMzNjcwNjQsMTMuMjA1NjkzNSBMMzAuMDk1MDA2LDI0Ljg0NTM1NTEgTDI1LjIyMDE5NDYsMjQuODQ1MzU1MSBMMjcuNTY4NjAzOCwxMi43NDI5ODc1IEMyNy44ODg4NjcxLDExLjA3MDA3MTQgMjcuNzQ2NTg4NywxMC4wMzc3NzMxIDI2LjQ2NTUzNzQsMTAuMDM3NzczMSBDMjUuMjkxMzMxOCwxMC4wMzc3NzMxIDIzLjcyNTcyNTYsMTEuMTQxMjM2MSAyMi42OTM3OTgzLDEyLjMxNTg2MTkgTDIwLjI3NDI1LDI0Ljg0NTM1NTEgTDE1LjM5OTQ0NjcsMjQuODQ1MzU1MSBMMTguOTkzMjAwNiw2LjMwMDI2MDQ2IEwyMy4wNDk2MzE0LDYuMzAwMjYwNDYgTDIyLjk0MjkyMjYsOC4yMjIzOTAzNiBDMjQuMjk0OTc2MSw2Ljg2OTg1MDY5IDI1Ljk2NzQyOCw1LjgzNzU1NDQ1IDI3Ljk2MDAwNDMsNS44Mzc1NTQ0NSBDMzAuMjM3Mjc0Miw1LjgzNzU1NDQ1IDMxLjY2MDYwNCw2LjU4NTA1NjU4IDMyLjI2NTQyMiw4LjE4NjgwNzk4IEMzMy43NTk4ODksNi45MDU0MzMwNyAzNS43MTcwMzQ3LDUuODM3NTU0NDUgMzcuNzgwNzUyLDUuODM3NTU0NDUgWiBNNzAuODcyNTg3Miw1Ljg3MzEzNDgxIEM3MS40NjMxMzk0LDUuODY1OTcyODggNzIuMDUxMjU5LDUuOTUwMDMwODYgNzIuNjE2MTc4NCw2LjEyMjM0MDUgTDcxLjUxMzExOCwxMC4yNTE0MDQ1IEM3MS4wNzAxMjcsMTAuMTQ3NDgwMSA3MC42MTU4NDMzLDEwLjA5OTYxNjggNzAuMTYwOTI5MywxMC4xMDg5Mzc5IEM2OC42NjY0NjI0LDEwLjEwODkzNzkgNjYuOTk0MTQ1NiwxMS40NjE2MTI2IDY1Ljk5Nzc4OTksMTIuMzg3MDI2NiBMNjMuNTc4MjQxNiwyNC44NDUzNTUxIEw1OC43MDM0MzYzLDI0Ljg0NTM1NTEgTDYyLjI5NzMyNTIsNi4zMDAyNjA0NiBMNjYuMzE4MDUxMiw2LjMwMDI2MDQ2IEw2Ni4yODI0ODE3LDguNTQyNzY2ODQgQzY3LjUyNzgyNjQsNy4wNDc3NjI1OCA2OS4xNjQ3MDg4LDUuODczMTM0ODEgNzAuODcyNTg3Miw1Ljg3MzEzNDgxIFogTTgwLjIzMDkzODUsMTAuMDM3NzczMSBDNzcuOTE4MDk4OSwxMC4wMzc3NzMxIDc2Ljc3OTQ2MjksMTEuNTY4MzU5OCA3Ni4xNzQ2NDI4LDE0LjU5Mzk1MjcgTDc1Ljc0NzY3MDcsMTYuODcyMDQxNSBDNzUuMjQ5NDI0MywxOS4zOTkzNDQgNzUuNzgzMjQwMywyMC42NDUxMzY1IDc3LjE3MDg2MzQsMjAuNjQ1MTM2NSBDNzguNDUxOTE2OCwyMC42NDUxMzY1IDc5LjY5NzI1NzUsMTkuNzkwODg3MiA4MC45NzgxNzE5LDE4LjMzMTQ2NTMgTDgyLjUwODIwODUsMTAuNTAwNDgxMSBDODEuNzgzMDU3MywxMC4yMTA2ODI2IDgxLjAxMTY0NjksMTAuMDUzOTQzMiA4MC4yMzA5Mzg1LDEwLjAzNzc3MzEgWiBNNTIuNTQ3MzA3NSwxMC4wMzc3NzMxIEM0OS44MDc0OTU3LDEwLjAzNzc3MzEgNDkuMDI0NjkyNywxMi4zMTU4NjE5IDQ4LjYzMzI5MDEsMTQuMzgwMzIzMyBMNTAuNjI1ODY4NCwxNC4yMzc5OTE4IEM1My4yNTg5NzEzLDE0LjA2MDA3OTkgNTQuNDY4NzQ2NCwxMi45OTIxOTkzIDU0LjQ2ODc0NjQsMTEuNjc1MTA2OSBDNTQuNDY4NzQ2NCwxMC42NDI5NDU3IDUzLjc1NzIxNzYsMTAuMDM3NzczMSA1Mi41NDczMDc1LDEwLjAzNzc3MzEgWiBNOTcuMjM5MzI3MiwxMC4wMzc3NzMxIEM5NC40OTk1MTU1LDEwLjAzNzc3MzEgOTMuNzE2NzEyNCwxMi4zMTU4NjE5IDkzLjMyNTMwOTksMTQuMzgwMzIzMyBMOTUuMzE3ODg4MiwxNC4yMzc5OTE4IEM5Ny45NTA5OTExLDE0LjA2MDA3OTkgOTkuMTYwNzY2MywxMi45OTIxOTkzIDk5LjE2MDc2NjMsMTEuNjc1MTA2OSBDOTkuMTYwNzY2MywxMC42NDI5NDU3IDk4LjQ0OTIzNzQsMTAuMDM3NzczMSA5Ny4yMzkzMjcyLDEwLjAzNzc3MzEgWiIgaWQ9IkxvZ28tRW1lcmdlIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=",
+      "altText": "Emerge logo"
+    }
+  },
+  "tags": [
+    {
+      "name": "Rate Request Event",
+      "description": "<h3>rate_request</h3>\nThis object contains Opportunity details used to create a rate by a Capacity Provider. Once a Capacity Provider has received the rate request event, they can respond with a quote using the Quote Response endpoint. If there is no response to the rate request within the time specified by the Integration Provider configuration, a manual rate request will be made available in the Emerge Platform and an email requesting a rate is sent to the Capacity Provider.\n <SchemaDefinition schemaRef=\"#/components/schemas/Rate_Request_Event\" />\n"
+    },
+    {
+      "name": "Tender Request Event",
+      "description": "<h3>tender_request</h3>\nThe object contains tender details used to respond by a Capacity Provider.\n <SchemaDefinition schemaRef=\"#/components/schemas/Tender_Request_Event\" />\n"
+    }
+  ],
+  "x-tagGroups": [
+    {
+      "name": "Provider API",
+      "tags": [
+        "Authentication",
+        "Options",
+        "Tender"
+      ]
+    },
+    {
+      "name": "Webhook Events",
+      "tags": [
+        "Rate Request Event",
+        "Tender Request Event"
+      ]
+    }
+  ],
+  "paths": {
+    "/auth/login/client_credentials": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Gets access token for Integration Provider.",
+        "security": [],
+        "description": "This method allows an Integration Provider to generate an access token from Emerge platform. A client credential pair, composed of a client id and a client secret, must be supplied in the request. The procured access token should be sent by the Integration Provider while calling other Carrier API endpoints.",
+        "requestBody": {
+          "description": "Request body of an authentication attempt.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "client_id": {
+                    "description": "The identifier provided during onboarding and used for authentication.",
+                    "type": "string",
+                    "example": "eMF2mQNXue5BXjmUNX1pQ45grwrquuiQ"
+                  },
+                  "client_secret": {
+                    "description": "The secret provided during onboarding and used for authentication.",
+                    "type": "string",
+                    "example": "1gTmAOzPLqoE5HKxjWgFt8WnAEPu3MQjlNBrR94c1q4o7UTtGgRd1QGwCFzVPsWb"
+                  }
+                },
+                "required": [
+                  "client_id",
+                  "client_secret"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200 | OK. A JSON object containing the access token and additional information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/200_client_credential_authentication_response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 | Bad Request. A bad request was made. Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/400_badrequest_clientcredentials_response"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/options": {
+      "post": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "Respond to Quote",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "This method is used to respond a Rate Request. If a Quote is supplied, an Option is created inside of the Emerge Platform. If an error is sent, the reason the Provider did not quote is given to the Shipper.",
+        "requestBody": {
+          "description": "Request model to submit the rates.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rate_request_id": {
+                    "description": "The identifier for the rate request. This is provided by Emerge in the Rate Request Event.",
+                    "type": "string",
+                    "example": "31e34816-f50d-4158-88b8-768715f628b2"
+                  },
+                  "quote_details": {
+                    "description": "This object identifies all relevant quote details. This object is optional if the \"error_messages\" object is in use.",
+                    "type": "object",
+                    "properties": {
+                      "provider_reference": {
+                        "description": "The rate identifier number for the Capacity Provider. Providers may expect this value to be returned when the shipment is tendered.",
+                        "type": "string",
+                        "example": "a55097d0-76e3-427c-bc67-613dd0a2ded2"
+                      },
+                      "rate": {
+                        "description": "Identifies rate value details.",
+                        "type": "object",
+                        "properties": {
+                          "amount": {
+                            "description": "The rate amount.",
+                            "type": "integer",
+                            "example": 100
+                          },
+                          "currency": {
+                            "description": "Defines the currency of amount. Must be \"USD\".",
+                            "type": "string",
+                            "example": "USD"
+                          },
+                          "type": {
+                            "description": "Defines rate type. This value must match the requested rate type in the Rate Request Event.",
+                            "type": "string",
+                            "enum": [
+                              "LH_ONLY",
+                              "ALL_IN"
+                            ],
+                            "example": "LH_ONLY"
+                          }
+                        }
+                      },
+                      "expiration_date": {
+                        "description": "Defines when the quote expires. This is a date/time offset.",
+                        "type": "string",
+                        "example": "2021-09-22T12:01:56.9726183+00:00"
+                      }
+                    }
+                  },
+                  "error_messages": {
+                    "description": "Identifies reasons for not providing a quote. This field is optional if the \"quote_details\" object is in use.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "example": "Unable to Quote due to ..."
+                    }
+                  }
+                },
+                "required": [
+                  "rate_request_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "202 | Accepted. Rates submitted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/200_postoptions_response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 | Bad Request. A bad request was made. Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/400_badrequest_postoptions_response"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/tenders/{shipment_id}/responses": {
+      "post": {
+        "tags": [
+          "Tender"
+        ],
+        "summary": "Respond to Tender",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "This method is used to receive response for a Tender.",
+        "requestBody": {
+          "description": "Request model to submit the response.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "event_id": {
+                    "description": "The identifier for the tender request. This is provided by Emerge in the Tender Request Event.",
+                    "type": "string",
+                    "example": "40dbcdb1-272b-4ee3-8621-208b88fe0beb"
+                  },
+                  "status": {
+                    "description": "Defines tender status.",
+                    "type": "string",
+                    "enum": [
+                      "ACCEPT",
+                      "REJECT"
+                    ],
+                    "example": "ACCEPT"
+                  },
+                  "rejection_reason": {
+                    "description": "Identifies reasons for rejecting a tender.",
+                    "type": "string",
+                    "enum": [
+                      "NO_CAPACITY",
+                      "SHORT_LEAD_TIME",
+                      "PICKUP_APPOINTMENT_NOT_FEASIBLE",
+                      "DELIVERY_APPOINTMENT_NOT_FEASIBLE",
+                      "TRANSIT_TIME_NOT_FEASIBLE",
+                      "VOLUME_COMMITMENT_MET"
+                    ],
+                    "example": "NO_CAPACITY"
+                  },
+                  "carrier_shipment_id": {
+                    "description": "Defines the crrier shipment id.",
+                    "type": "string",
+                    "example": "S111171611"
+                  }
+                },
+                "required": [
+                  "event_id",
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "202 | Accepted. Rates submitted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/200_postoptions_response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 | Bad Request. A bad request was made. Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/400_badrequest_posttender_response"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "stops_object": {
+        "description": "This object contains stop information for the quote.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "description": "The sequence of the stop.",
+              "type": "integer",
+              "example": 1
+            },
+            "stop_type": {
+              "description": "The stop type.",
+              "type": "string",
+              "enum": [
+                "ORIGIN",
+                "INTERMEDIATE",
+                "DESTINATION"
+              ],
+              "example": "ORIGIN"
+            },
+            "stop_action": {
+              "description": "The stop action type.",
+              "type": "string",
+              "enum": [
+                "PICKUP",
+                "DROPOFF"
+              ],
+              "example": "PICKUP"
+            },
+            "loading_type": {
+              "description": "The loading type.",
+              "type": "string",
+              "enum": [
+                "LIVE",
+                "DROP"
+              ],
+              "example": "LIVE"
+            },
+            "notes": {
+              "description": "The notes associated to the stop.",
+              "type": "string",
+              "example": "3665 North Harbor Drive"
+            },
+            "location": {
+              "description": "This object defines the location details for the stop.",
+              "type": "object",
+              "properties": {
+                "city": {
+                  "description": "The city the stop is located.",
+                  "type": "string",
+                  "example": "San Diego"
+                },
+                "state": {
+                  "description": "The state the stop is located. This will be expressed in standard state abbreviations.",
+                  "type": "string",
+                  "example": "CA"
+                },
+                "postal_code": {
+                  "description": "The postal code the stop is located.",
+                  "type": "string",
+                  "example": "92101"
+                },
+                "country_code": {
+                  "description": "The country code the stop is located.",
+                  "type": "string",
+                  "enum": [
+                    "US",
+                    "USA",
+                    "CA",
+                    "CAN"
+                  ],
+                  "example": "US"
+                }
+              }
+            },
+            "appointment": {
+              "description": "This object defines appointment related information.",
+              "type": "object",
+              "properties": {
+                "type": {
+                  "description": "The appointment type.",
+                  "type": "string",
+                  "enum": [
+                    "FCFS",
+                    "APPT_NEEDED",
+                    "APPT_SCHEDULED"
+                  ],
+                  "example": "FCFS"
+                },
+                "earliest": {
+                  "description": "The earliest date/time the shipment could arrive at the stop. This is a date/time offset.",
+                  "type": "string",
+                  "example": "2021-09-22T00:00:00-08:00"
+                },
+                "latest": {
+                  "description": "The latest date/time the shipment could arrive at the stop. This is a date/time offset.",
+                  "type": "string",
+                  "example": "2021-09-22T00:00:00-08:00"
+                }
+              }
+            }
+          }
+        }
+      },
+      "special_requirements_object": {
+        "description": "This object contains any special requirements associated to the quote.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "description": "The special requirement codes associated to the quote.",
+              "type": "string",
+              "enum": [
+                "HAZMAT",
+                "TEAM_DRIVERS",
+                "PRE_COOL",
+                "SMOKE_TARPS",
+                "STANDARD_TARPS"
+              ],
+              "example": "TEAM_DRIVERS"
+            }
+          }
+        }
+      },
+      "commodities_object": {
+        "description": "This object defines the commodities that are a part of this quote.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "description": "The description of the commodity.",
+              "type": "string",
+              "example": "FAK"
+            },
+            "weight": {
+              "description": "The weight of the commodity expressed in pounds.",
+              "type": "integer",
+              "example": 100
+            },
+            "unit_type": {
+              "description": "The type of unit a commodity is moved on.",
+              "type": "string",
+              "enum": [
+                "OTHER",
+                "PALLET",
+                "BOX",
+                "CRATE",
+                "BAG",
+                "COILS",
+                "DRUMS",
+                "REELS",
+                "ROLLS",
+                "TUBES_OR_PIPES",
+                "SLIPSHEETS",
+                "BALE",
+                "BUCKET",
+                "BUNDLE",
+                "CAN",
+                "CARTON",
+                "CASE",
+                "CYLINDER",
+                "PAIL",
+                "PIECES",
+                "SKID"
+              ],
+              "example": "PALLET"
+            }
+          }
+        }
+      },
+      "references_object": {
+        "description": "This object contains reference number information for the quote.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "description": "The type of reference number.",
+              "type": "string",
+              "enum": [
+                "OTHER",
+                "CUSTOMER",
+                "APPOINTMENT",
+                "BOL",
+                "DELIVERY",
+                "PICKUP",
+                "PICKUP_CONFIRMATION",
+                "PO",
+                "PRO",
+                "TRAILER"
+              ],
+              "example": "CUSTOMER"
+            },
+            "value": {
+              "description": "The reference number value.",
+              "type": "string",
+              "example": "CustRef123"
+            }
+          }
+        }
+      },
+      "tender_stops_object": {
+        "description": "This object contains stop information for the shipment.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "description": "The sequence of the stop.",
+              "type": "integer",
+              "example": 1
+            },
+            "stop_type": {
+              "description": "The stop type.",
+              "type": "string",
+              "enum": [
+                "ORIGIN",
+                "INTERMEDIATE",
+                "DESTINATION"
+              ],
+              "example": "ORIGIN"
+            },
+            "stop_action": {
+              "description": "The stop action type.",
+              "type": "string",
+              "enum": [
+                "PICKUP",
+                "DROPOFF"
+              ],
+              "example": "PICKUP"
+            },
+            "loading_type": {
+              "description": "The loading type.",
+              "type": "string",
+              "enum": [
+                "LIVE",
+                "DROP"
+              ],
+              "example": "LIVE"
+            },
+            "notes": {
+              "description": "The notes associated to the stop.",
+              "type": "string",
+              "example": "3665 North Harbor Drive"
+            },
+            "location": {
+              "description": "This object defines the location details for the stop.",
+              "type": "object",
+              "properties": {
+                "name": {
+                  "description": "The name of the location.",
+                  "type": "string",
+                  "example": "Target"
+                },
+                "location_code": {
+                  "description": "The location code associated to the stop.",
+                  "type": "string",
+                  "example": "12212"
+                },
+                "address1": {
+                  "description": "The address1 the stop is located.",
+                  "type": "string",
+                  "example": "N park ln"
+                },
+                "address2": {
+                  "description": "The address2 the stop is located.",
+                  "type": "string",
+                  "example": "corner 4th"
+                },
+                "city": {
+                  "description": "The city the stop is located.",
+                  "type": "string",
+                  "example": "San Diego"
+                },
+                "state": {
+                  "description": "The state the stop is located. This will be expressed in standard state abbreviations.",
+                  "type": "string",
+                  "example": "CA"
+                },
+                "postal_code": {
+                  "description": "The postal code the stop is located.",
+                  "type": "string",
+                  "example": "92101"
+                },
+                "country_code": {
+                  "description": "The country code the stop is located.",
+                  "type": "string",
+                  "enum": [
+                    "US",
+                    "USA",
+                    "CA",
+                    "CAN"
+                  ],
+                  "example": "US"
+                }
+              }
+            },
+            "appointment": {
+              "description": "This object defines appointment related information.",
+              "type": "object",
+              "properties": {
+                "type": {
+                  "description": "The appointment type.",
+                  "type": "string",
+                  "enum": [
+                    "FCFS",
+                    "APPT_NEEDED",
+                    "APPT_SCHEDULED"
+                  ],
+                  "example": "FCFS"
+                },
+                "earliest": {
+                  "description": "The earliest date/time the shipment could arrive at the stop. This is a date/time offset.",
+                  "type": "string",
+                  "example": "2023-04-11T00:00:00-08:00"
+                },
+                "latest": {
+                  "description": "The latest date/time the shipment could arrive at the stop. This is a date/time offset.",
+                  "type": "string",
+                  "example": "2023-04-11T00:00:00-08:00"
+                }
+              }
+            },
+            "references": {
+              "$ref": "#/components/schemas/tender_references_object"
+            },
+            "contact": {
+              "$ref": "#/components/schemas/tender_stop_contact_object"
+            }
+          }
+        }
+      },
+      "tender_commodities_object": {
+        "description": "This object defines the commodities that are a part of this shipment.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "description": "The description of the commodity.",
+              "type": "string",
+              "example": "FAK"
+            },
+            "weight": {
+              "description": "The weight of the commodity expressed in pounds.",
+              "type": "integer",
+              "example": 100
+            },
+            "unit_type": {
+              "description": "The type of unit a commodity is moved on.",
+              "type": "string",
+              "enum": [
+                "OTHER",
+                "PALLET",
+                "BOX",
+                "CRATE",
+                "BAG",
+                "COILS",
+                "DRUMS",
+                "REELS",
+                "ROLLS",
+                "TUBES_OR_PIPES",
+                "SLIPSHEETS",
+                "BALE",
+                "BUCKET",
+                "BUNDLE",
+                "CAN",
+                "CARTON",
+                "CASE",
+                "CYLINDER",
+                "PAIL",
+                "PIECES",
+                "SKID"
+              ],
+              "example": "PALLET"
+            },
+            "unit_count": {
+              "description": "The unit count of the commodity.",
+              "type": "integer",
+              "example": 4
+            }
+          }
+        }
+      },
+      "tender_references_object": {
+        "description": "This object contains reference number information for the shipment.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "description": "The type of reference number.",
+              "type": "string",
+              "enum": [
+                "OTHER",
+                "CUSTOMER",
+                "APPOINTMENT",
+                "BOL",
+                "DELIVERY",
+                "PICKUP",
+                "PICKUP_CONFIRMATION",
+                "PO",
+                "PRO",
+                "TRAILER"
+              ],
+              "example": "CUSTOMER"
+            },
+            "value": {
+              "description": "The reference number value.",
+              "type": "string",
+              "example": "CustRef123"
+            }
+          }
+        }
+      },
+      "tender_stop_contact_object": {
+        "description": "The object that defines the stop's contact information.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The contact name for the person at the stop.",
+            "type": "string",
+            "example": "Anmol"
+          },
+          "contact_items": {
+            "description": "The object that defines how to contact the person.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "description": "The contact type.",
+                  "type": "string",
+                  "enum": [
+                    "EMAIL",
+                    "PHONE"
+                  ],
+                  "example": "EMAIL"
+                },
+                "value": {
+                  "description": "The contact type value.",
+                  "type": "string",
+                  "example": "example@abc.com"
+                }
+              }
+            }
+          }
+        }
+      },
+      "200_postoptions_response": {
+        "description": "202 | Accepted.",
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/errorcode_zero"
+          }
+        }
+      },
+      "400_badrequest_postoptions_response": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "description": "HTTP code",
+                "type": "integer",
+                "example": 400
+              },
+              "detailed_errors": {
+                "description": "Error messages",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "integer",
+                      "example": "amount"
+                    },
+                    "value": {
+                      "type": "string",
+                      "example": "Must have at least one reason in case unable to provide rate.."
+                    }
+                  }
+                }
+              },
+              "messages": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "Validation failed."
+                }
+              }
+            }
+          }
+        }
+      },
+      "400_badrequest_posttender_response": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "description": "HTTP code",
+                "type": "integer",
+                "example": 400
+              },
+              "detailed_errors": {
+                "description": "Error messages",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "example": "status"
+                    },
+                    "value": {
+                      "type": "string",
+                      "example": "Error converting value to type 'Emerge.Atom.Carrier.Integrations.Contracts.Enums.TenderResponseStatus'."
+                    }
+                  }
+                }
+              },
+              "messages": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "Validation failed."
+                }
+              }
+            }
+          }
+        }
+      },
+      "200_client_credential_authentication_response": {
+        "type": "object",
+        "properties": {
+          "response": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "description": "The access token to be used in subsequent requests.",
+                "type": "string",
+                "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1qQkRRemN5TlRoQ05UbERNVVpGTXpneU5FUXpNVVF4UVRoR1FUSTRPRFF5T0VFeE16QXdRdyJ9.eyJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tL1Byb3ZpZGVyR3VpZCI6ImQ1OWEyNTY0LTAyNzAtNDBhYy1iYWZkLWIwNWE0NDNlZGY4ZiIsImlzcyI6Imh0dHBzOi8vdmFudGFnZWZyZWlnaHQuYXV0aDAuY29tLyIsInN1YiI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tIiwiaWF0IjoxNjMxNjk5MjM3LCJleHAiOjE2MzE3ODU2MzcsImF6cCI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRIiwic2NvcGUiOiJpbnRlZ3JhdGlvbjpzY29wZSIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.kMHPwoPFORvTp4A5e-1sc6gwCAdVPGwv3fx_I8sN_RSEWG7Cd9BSfQf5UtDOq4zyrAHmVyf1hczxL5bvVC4XOoe7v0g2hqbogEPEQLubO5tWZdoG76xKRYuJC-7aJAW8MJFUnp952l2rWE4bQ3jsQsLyZIavsaTW3dmrOgWEBLIbKR_4vMdA4SAIhclV_ZatiZRCtl6sib7KIUXQ8rFq5UjY_Oc3_XfSOTzgJSwV0eVA5D7Sty88Zqf6ElQNRf2jt4srZ0q3O1flVdyjCYsigig8xl7vSlkt-TJgMi8efucGsLPCR4DbsR1tlS7ulc05wIQL3QgngMajfCSfkSnOig"
+              },
+              "expires_in": {
+                "description": "Expiration time of token in seconds.",
+                "type": "number",
+                "example": 86400
+              }
+            }
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": 0
+              }
+            }
+          }
+        }
+      },
+      "400_badrequest_clientcredentials_response": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "description": "HTTP code",
+                "type": "integer",
+                "example": 400
+              },
+              "detailed_errors": {
+                "description": "Error messages",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "example": "client_id"
+                    },
+                    "value": {
+                      "type": "string",
+                      "example": "client_id must not be empty."
+                    }
+                  }
+                }
+              },
+              "messages": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "Validation failed."
+                }
+              }
+            }
+          }
+        }
+      },
+      "400_badrequest_response": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "description": "HTTP code",
+                "type": "integer",
+                "example": 400
+              },
+              "detailed_errors": {
+                "description": "Error messages",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "example": "load_type_id"
+                    },
+                    "value": {
+                      "type": "string",
+                      "example": "load_type_id has a range of values which does not include 12"
+                    }
+                  }
+                }
+              },
+              "messages": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "Validation failed."
+                }
+              }
+            }
+          }
+        }
+      },
+      "403_forbidden_response": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "description": "HTTP code",
+                "type": "integer",
+                "example": 403
+              },
+              "messages": {
+                "description": "Error messages",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "Response status code does not indicate success 403 (Forbidden)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "409_response": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": 409
+              },
+              "messages": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "The tender status is invalid."
+                }
+              }
+            }
+          }
+        }
+      },
+      "500_response": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": 500
+              },
+              "messages": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "userName."
+                }
+              }
+            }
+          }
+        }
+      },
+      "errorcode_zero": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP code",
+            "type": "integer",
+            "example": 0
+          }
+        }
+      },
+      "Rate_Request_Event": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "description": "The unique identifier for the event.",
+            "type": "string",
+            "example": "31e34816-f50d-4158-88b8-768715f628b2"
+          },
+          "timestamp": {
+            "description": "The date/time when the event was created in the Emerge application. This is a date/time offset.",
+            "type": "string",
+            "example": "2021-09-15T12:46:17.381291+00:00"
+          },
+          "event_type": {
+            "description": "The event type name.",
+            "type": "string",
+            "example": "rate_request"
+          },
+          "event_data": {
+            "description": "This object contains all details associated with the event.",
+            "type": "object",
+            "properties": {
+              "response_requirements": {
+                "description": "This object defines response requirements.",
+                "type": "object",
+                "properties": {
+                  "respond_by_date_time": {
+                    "description": "The data/time when the rate response must be received. This is a date/time offset.",
+                    "type": "string",
+                    "example": "2021-09-22T12:01:56.9726183+00:00"
+                  },
+                  "rate_type_requested": {
+                    "description": "The requested rate type.",
+                    "type": "string",
+                    "enum": [
+                      "LH_ONLY",
+                      "ALL_IN"
+                    ],
+                    "example": "LH_ONLY"
+                  }
+                }
+              },
+              "request_from": {
+                "description": "This object contains Shipment Provider details.",
+                "type": "object",
+                "properties": {
+                  "shipper_id": {
+                    "description": "The Shipment Provider's unique identifier.",
+                    "type": "string",
+                    "example": "83fd91ea-39f5-4a91-bc0d-b6ca1a553d33"
+                  },
+                  "name": {
+                    "description": "The name of the Provider.",
+                    "type": "string",
+                    "example": "TestProvider"
+                  }
+                }
+              },
+              "request_to": {
+                "description": "This object contains Capacity Provider details.",
+                "type": "object",
+                "properties": {
+                  "capacity_provider_id": {
+                    "description": "The Provider's unique identifier.",
+                    "type": "string",
+                    "example": "83fd91ea-39f5-4a91-bc0d-b6ca1a553d33"
+                  },
+                  "name": {
+                    "description": "The name of the Provider.",
+                    "type": "string",
+                    "example": "TestCP"
+                  },
+                  "contact": {
+                    "description": "The object that defines the Provider's contact information.",
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "description": "The contact email for the Provider.",
+                        "type": "string",
+                        "format": "email",
+                        "example": "sam@testCP.com"
+                      },
+                      "first_name": {
+                        "description": "The first name of the Provider's contact.",
+                        "type": "string",
+                        "example": "Sam"
+                      },
+                      "last_name": {
+                        "description": "The last name of the Provider's contact.",
+                        "type": "string",
+                        "example": "test"
+                      }
+                    }
+                  }
+                }
+              },
+              "relationship_identifiers": {
+                "description": "This object contains the set of key-value pairs defined during Capacity Link onboarding. This assists Providers matching requests to Shippers in their internal applications.",
+                "type": "object",
+                "properties": {
+                  "identifier1": {
+                    "description": "This field name is defined during Capacity Link integration onboarding. The populated value is defined when a Shipper is onboarded to Capacity Link by a Capacity Provider. This key value pair is used to match rate requests to Shippers inside the Provider's application.",
+                    "type": "string",
+                    "example": "Customer"
+                  },
+                  "identifier2": {
+                    "description": "This field name is defined during Capacity Link integration onboarding. The populated value is defined when a Shipper is onboarded to Capacity Link by a Capacity Provider. This key value pair is used to match rate requests to Shippers inside the Provider's application.",
+                    "type": "string",
+                    "example": "CustRef123"
+                  }
+                }
+              },
+              "opportunity_details": {
+                "description": "This object contains quote details for the rate request.",
+                "type": "object",
+                "properties": {
+                  "opportunity_id": {
+                    "description": "The identifier for the quote.",
+                    "type": "string",
+                    "example": "Q1111111"
+                  },
+                  "cargo_value": {
+                    "description": "The cargo value for the quote.",
+                    "type": "integer",
+                    "example": 10000
+                  },
+                  "length_of_haul": {
+                    "description": "This object contains the length of haul details.",
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "description": "The length of haul for the quote.",
+                        "type": "string",
+                        "example": "1101.1"
+                      },
+                      "unit": {
+                        "description": "The length of haul unit. This will be provided in miles.",
+                        "type": "string",
+                        "enum": [
+                          "MI"
+                        ],
+                        "example": "MI"
+                      }
+                    }
+                  },
+                  "total_weight": {
+                    "description": "This object contains the total weight details for the quote.",
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "description": "The total weight for the quote.",
+                        "type": "string",
+                        "example": "44000"
+                      },
+                      "unit": {
+                        "description": "The total weight of the cargo. This will be provided in pounds.",
+                        "type": "string",
+                        "enum": [
+                          "LB"
+                        ],
+                        "example": "LB"
+                      }
+                    }
+                  },
+                  "equipment_length": {
+                    "description": "This object contains the equipment length details for the quote.",
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "description": "The equipment length for the quote.",
+                        "type": "string",
+                        "example": "53"
+                      },
+                      "unit": {
+                        "description": "The equipment length unit. This will be provided in feet.",
+                        "type": "string",
+                        "enum": [
+                          "FT"
+                        ],
+                        "example": "FT"
+                      }
+                    }
+                  },
+                  "temperature": {
+                    "description": "This object contains the temperature details for the quote.",
+                    "type": "object",
+                    "properties": {
+                      "min_value": {
+                        "description": "The minimum temperature for the quote.",
+                        "type": "integer",
+                        "example": 10
+                      },
+                      "max_value": {
+                        "description": "The maximum temperature for the quote.",
+                        "type": "integer",
+                        "example": 30
+                      },
+                      "unit": {
+                        "description": "The temperature unit. This must be in Fahrenheit.",
+                        "type": "string",
+                        "enum": [
+                          "F"
+                        ],
+                        "example": "F"
+                      }
+                    }
+                  },
+                  "equipment_type": {
+                    "description": "The equipment type identifier.",
+                    "type": "string",
+                    "enum": [
+                      "OTHER",
+                      "FLATBED",
+                      "REEFER",
+                      "STEPDECK",
+                      "RGN",
+                      "VAN",
+                      "DRAYAGE",
+                      "DUMP",
+                      "VAN_OR_REEFER",
+                      "TRAILER_POOL_INTERCHANGE",
+                      "POWER_ONLY",
+                      "CONESTOGA",
+                      "MAXI_TRAILER",
+                      "INTERMODAL",
+                      "BOX_TRUCK",
+                      "HOT_SHOT",
+                      "SPRINTER_VAN",
+                      "STRAIGHT_TRUCK"
+                    ],
+                    "example": "REEFER"
+                  },
+                  "references": {
+                    "$ref": "#/components/schemas/references_object"
+                  },
+                  "stops": {
+                    "$ref": "#/components/schemas/stops_object"
+                  },
+                  "commodities": {
+                    "$ref": "#/components/schemas/commodities_object"
+                  },
+                  "special_requirements": {
+                    "$ref": "#/components/schemas/special_requirements_object"
+                  },
+                  "notes": {
+                    "description": "This object contains general notes associated to the quote.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "note": {
+                          "description": "The general note for the quote.",
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "tags": {
+                    "description": "Tags associated with the quote.",
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "Freeze Protect"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Tender_Request_Event": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "description": "The unique identifier for the event.",
+            "type": "string",
+            "example": "31e34816-f50d-4158-88b8-768715f628b2"
+          },
+          "timestamp": {
+            "description": "The date/time when the event was created in the Emerge application. This is a date/time offset.",
+            "type": "string",
+            "example": "2023-04-11T12:46:17.381291+00:00"
+          },
+          "event_type": {
+            "description": "The event type name.",
+            "type": "string",
+            "example": "tender_request"
+          },
+          "event_data": {
+            "description": "This object contains all details associated with the event.",
+            "type": "object",
+            "properties": {
+              "response_requirements": {
+                "description": "This object defines response requirements.",
+                "type": "object",
+                "properties": {
+                  "respond_by_date_time": {
+                    "description": "The date and time(UTC) when the tender response must be received. This will only populate when applicable on create messages.",
+                    "type": "string",
+                    "example": "2023-05-18T12:01:56.9726183+00:00"
+                  }
+                }
+              },
+              "request_from": {
+                "description": "This object contains Shipment Provider details.",
+                "type": "object",
+                "properties": {
+                  "shipper_id": {
+                    "description": "The Shipment Provider's unique identifier.",
+                    "type": "string",
+                    "example": "83fd91ea-39f5-4a91-bc0d-b6ca1a553d33"
+                  },
+                  "name": {
+                    "description": "The name of the Provider.",
+                    "type": "string",
+                    "example": "TestProvider"
+                  }
+                }
+              },
+              "request_to": {
+                "description": "This object contains Capacity Provider details.",
+                "type": "object",
+                "properties": {
+                  "capacity_provider_id": {
+                    "description": "The Provider's unique identifier.",
+                    "type": "string",
+                    "example": "83fd91ea-39f5-4a91-bc0d-b6ca1a553d33"
+                  },
+                  "name": {
+                    "description": "The name of the Provider.",
+                    "type": "string",
+                    "example": "TestCP"
+                  },
+                  "contact": {
+                    "description": "The object that defines the Provider's contact information.",
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "description": "The contact email for the Provider.",
+                        "type": "string",
+                        "format": "email",
+                        "example": "sam@testCP.com"
+                      },
+                      "first_name": {
+                        "description": "The first name of the Provider's contact.",
+                        "type": "string",
+                        "example": "Sam"
+                      },
+                      "last_name": {
+                        "description": "The last name of the Provider's contact.",
+                        "type": "string",
+                        "example": "test"
+                      }
+                    }
+                  }
+                }
+              },
+              "relationship_identifiers": {
+                "description": "This object contains the set of key-value pairs defined during Capacity Link onboarding. This assists Providers matching requests to Shippers in their internal applications.",
+                "type": "object",
+                "properties": {
+                  "identifier1": {
+                    "description": "This field name is defined during Capacity Link integration onboarding. The populated value is defined when a Shipper is onboarded to Capacity Link by a Capacity Provider. This key value pair is used to match tenders to Shippers inside the Provider's application.",
+                    "type": "string",
+                    "example": "Customer"
+                  },
+                  "identifier2": {
+                    "description": "This field name is defined during Capacity Link integration onboarding. The populated value is defined when a Shipper is onboarded to Capacity Link by a Capacity Provider. This key value pair is used to match tenders to Shippers inside the Provider's application.",
+                    "type": "string",
+                    "example": "CustRef123"
+                  }
+                }
+              },
+              "event_details": {
+                "description": "This object contains the event details.",
+                "type": "object",
+                "properties": {
+                  "message_type": {
+                    "description": "The identifier for the message type.",
+                    "type": "string",
+                    "enum": [
+                      "CREATE",
+                      "UPDATE",
+                      "CANCEL"
+                    ],
+                    "example": "UPDATE"
+                  },
+                  "update_details": {
+                    "description": "This contains the list of updated properties.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "location",
+                        "appointment",
+                        "commodity",
+                        "stop_note",
+                        "shipment_note",
+                        "references",
+                        "weight",
+                        "unit_count",
+                        "equipment_type",
+                        "loading_type",
+                        "commodity",
+                        "number_of_stops"
+                      ]
+                    },
+                    "example": [
+                      "location",
+                      "appointment",
+                      "commodity",
+                      "stop_note"
+                    ]
+                  }
+                }
+              },
+              "shipment_details": {
+                "description": "This object contains shipment details.",
+                "type": "object",
+                "properties": {
+                  "shipment_id": {
+                    "description": "The identifier for the shipment.",
+                    "type": "string",
+                    "example": "S123455"
+                  },
+                  "quote_id": {
+                    "description": "The identifier for the quote.",
+                    "type": "string",
+                    "example": "Q1111111"
+                  },
+                  "cargo_value": {
+                    "description": "The cargo value for the shipment.",
+                    "type": "number",
+                    "example": 1000
+                  },
+                  "length_of_haul": {
+                    "description": "This object contains the length of haul details.",
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "description": "The length of haul for the shipment.",
+                        "type": "string",
+                        "example": "1101.1"
+                      },
+                      "unit": {
+                        "description": "The length of haul unit. This will be provided in miles.",
+                        "type": "string",
+                        "enum": [
+                          "MI"
+                        ],
+                        "example": "MI"
+                      }
+                    }
+                  },
+                  "total_weight": {
+                    "description": "This object contains the total weight details for the shipment.",
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "description": "The total weight for the shipment.",
+                        "type": "string",
+                        "example": "44000"
+                      },
+                      "unit": {
+                        "description": "The total weight of the cargo. This will be provided in pounds.",
+                        "type": "string",
+                        "enum": [
+                          "LB"
+                        ],
+                        "example": "LB"
+                      }
+                    }
+                  },
+                  "temperature": {
+                    "description": "This object contains the temperature details for the shipment.",
+                    "type": "object",
+                    "properties": {
+                      "min_value": {
+                        "description": "The minimum temperature for the shipment.",
+                        "type": "integer",
+                        "example": 10
+                      },
+                      "max_value": {
+                        "description": "The maximum temperature for the shipment.",
+                        "type": "integer",
+                        "example": 30
+                      },
+                      "unit": {
+                        "description": "The temperature unit. This must be in Fahrenheit.",
+                        "type": "string",
+                        "enum": [
+                          "F"
+                        ],
+                        "example": "F"
+                      }
+                    }
+                  },
+                  "equipment_length": {
+                    "description": "This object contains the equipment length details for the shipment.",
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "description": "The equipment length for the shipment.",
+                        "type": "string",
+                        "example": "53"
+                      },
+                      "unit": {
+                        "description": "The equipment length unit. This will be provided in feet.",
+                        "type": "string",
+                        "enum": [
+                          "FT"
+                        ],
+                        "example": "FT"
+                      }
+                    }
+                  },
+                  "equipment_type": {
+                    "description": "The equipment type identifier.",
+                    "type": "string",
+                    "enum": [
+                      "OTHER",
+                      "FLATBED",
+                      "REEFER",
+                      "STEPDECK",
+                      "RGN",
+                      "VAN",
+                      "DRAYAGE",
+                      "DUMP",
+                      "VAN_OR_REEFER",
+                      "TRAILER_POOL_INTERCHANGE",
+                      "POWER_ONLY",
+                      "CONESTOGA",
+                      "MAXI_TRAILER",
+                      "INTERMODAL",
+                      "BOX_TRUCK",
+                      "HOT_SHOT",
+                      "SPRINTER_VAN",
+                      "STRAIGHT_TRUCK"
+                    ],
+                    "example": "REEFER"
+                  },
+                  "references": {
+                    "$ref": "#/components/schemas/tender_references_object"
+                  },
+                  "stops": {
+                    "$ref": "#/components/schemas/tender_stops_object"
+                  },
+                  "commodities": {
+                    "$ref": "#/components/schemas/tender_commodities_object"
+                  },
+                  "special_requirements": {
+                    "description": "This object contains any special requirements associated to the shipment.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "description": "The special requirement codes associated to the shipment.",
+                          "type": "string",
+                          "enum": [
+                            "HAZMAT",
+                            "TEAM_DRIVERS",
+                            "PRE_COOL",
+                            "SMOKE_TARPS",
+                            "STANDARD_TARPS"
+                          ],
+                          "example": "TEAM_DRIVERS"
+                        }
+                      }
+                    }
+                  },
+                  "notes": {
+                    "description": "This object contains general notes associated to the shipment.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "note": {
+                          "description": "The general note for the shipment.",
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "special_instructions": {
+                    "description": "This object contains special instructions (Rate Con Notes, shipper specific notes) associated to the shipment.",
+                    "type": "object",
+                    "properties": {
+                      "notes": {
+                        "description": "The special notes for the shipment.",
+                        "type": "string",
+                        "example": "Test special instructions"
+                      }
+                    }
+                  },
+                  "tags": {
+                    "description": "Tags associated with the shipment.",
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "Freeze Protect"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "400": {
+        "description": "400 | Bad Request. A bad request was made. Please try again",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/400_badrequest_response"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token"
+      },
+      "403": {
+        "description": "403 | Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/403_forbidden_response"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "404 | Not Found. The requested resource was not found"
+      },
+      "409": {
+        "description": "409 | Conflict. A conflict has occurred",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/409_response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "500 | Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/500_response"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

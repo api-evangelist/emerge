@@ -1,0 +1,58 @@
+generated: '2026-08-12'
+method: searched
+source: https://api-docs.emergemarket.io/#section/Get-Started, https://carrier-api-docs.emergemarket.io/#section/Get-Started
+has_sandbox: true
+environments:
+- name: production
+  base_url: https://api.emergemarket.io
+  paths:
+    Emerge Public API (Shipper API): /v1
+    Emerge Carrier API: /v2
+- name: sandbox
+  base_url: https://demo-api.emergemarket.dev
+  paths:
+    Emerge Public API (Shipper API): /v1
+    Emerge Carrier API: /v2
+  purpose: >-
+    "The testing sandbox is available during development and for testing" — quoted from the Get
+    Started section of both API documents.
+  separate_domain: true
+  domain_note: >-
+    The sandbox lives on a different registrable domain (emergemarket.dev) from production
+    (emergemarket.io), so environment separation is enforced at the host, not by a key prefix.
+separation:
+  mechanism: separate base host
+  key_prefixes: none-documented
+  mode_flag: none-documented
+  note: >-
+    Emerge documents no test-vs-live key prefix, no mode header, and no way to tell from a token
+    which environment it belongs to. Credentials are obtained per environment.
+credentials:
+  self_serve: false
+  how_to_get:
+    shipper: >-
+      A shipper user's own Emerge platform username/password is exchanged for a bearer token at
+      POST /auth/login. There is no public sandbox signup — an Emerge account is required.
+    carrier: >-
+      Capacity/Integration Providers request an integration through the Emerge Zendesk form linked
+      from the Carrier API docs, then receive a client id / client secret pair and Capacity Link
+      onboarding values (relationship_identifiers).
+  request_form: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+test_data:
+  test_values_published: false
+  note: >-
+    Emerge publishes no magic test identifiers, no seeded fixture loads, no test carrier accounts,
+    and no simulation triggers for the webhook event stream. Nothing is recorded here because
+    nothing was published — no test values were invented.
+  spec_examples_note: >-
+    The OpenAPI documents carry illustrative field examples only (e.g. an example login body of
+    user_name/password). These are documentation placeholders, not working sandbox credentials.
+time_simulation:
+  supported: false
+fixtures_or_triggers:
+  supported: false
+collections:
+  postman: https://www.postman.com/emergetms/emergetms-s-public-workspace
+  note: >-
+    EmergeTMS publishes a public Postman workspace ("Emerge API Documentation - v1.0.0") that can be
+    forked and pointed at either environment.

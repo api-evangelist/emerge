@@ -1,0 +1,27 @@
+# Emerge
+
+> Emerge is a freight procurement platform (ProcureOS) for shippers who want to get out of spreadsheets and emails and know they're never overpaying for truckload freight. It combines spot quoting, contract RFP tools, market-rate benchmarking (Rate Pulse), and a marketplace of 45,000+ vetted asset-based carriers. Founded 2017, headquartered in Scottsdale, Arizona. Serves full truckload, volume/partial truckload, and drop-trailer freight across the US, Canada, and Mexico.
+
+## Products
+
+- [Contract Procurement](https://www.emergemarket.com/contract-procurement): Freight RFP software — run truckload RFPs and mini-bids in hours instead of months, with awarding scenarios, carrier scorecards, and reporting
+- [Spot Procurement](https://www.emergemarket.com/spot-procurement): Spot freight quoting and tendering — collect quotes from all your brokers and carriers in one place instead of email chains, with load tracking and Dynamic Book It Now automated booking
+- [Emerge AI](https://www.emergemarket.com/emerge-ai): Freight rate benchmarking and lane intelligence — see the market rate on your lanes (Rate Pulse) so you know whether you're overpaying, plus spend optimization
+- [Emerge Marketplace](https://www.emergemarket.com/emerge-marketplace): 45,000+ pre-vetted, asset-based carriers to supplement your own network — you keep your carriers; the marketplace adds capacity when you need it
+- [Integrations](https://www.emergemarket.com/integrations): TMS and data integrations including Project44, E2open, MercuryGate, and Capacity Link
+
+## For Carriers
+
+- [Carrier Solutions](https://www.emergemarket.com/carrier): How carriers join the Emerge Marketplace and book freight directly with shippers at no cost to the carrier
+
+## Customer Results
+
+- [Pepsi Bottling Ventures Case Study](https://www.emergemarket.com/resource/pepsi-bottling-case-study): Cut bid events from months to hours and tripled the number of carriers invited to RFPs
+- [Dynamic Book It Now Case Study](https://www.emergemarket.com/resource/dynamic-book-it-now-case-study): 85% of users secured spot rates below market, averaging 8.5% below market rate
+- [Premier Carrier Case Study](https://www.emergemarket.com/resource/premier-carrier-case-study): $3.9M in contract awards to vetted asset-based carriers in 60 days
+
+## Company
+
+- [About Emerge](https://www.emergemarket.com/company/about)
+- [Blog](https://www.emergemarket.com/company/blog): Guides on spot vs. contract freight, running RFPs, rate benchmarking, and carrier management
+- [Book a Demo](https://www.emergemarket.com/demo)

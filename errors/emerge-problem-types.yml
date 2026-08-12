@@ -1,0 +1,103 @@
+generated: '2026-08-12'
+method: derived
+source: openapi/emerge-public-api-openapi.yml, openapi/emerge-carrier-api-openapi.yml
+format: proprietary
+format_note: >-
+  Emerge does NOT use RFC 9457 problem+json. Errors are returned as application/json with a
+  proprietary envelope. Two envelope shapes are in the specs: a nested one
+  ({"error": {"code": <int>, "messages": [<string>]}}) and a flat one ({"code": <int>}). The `code`
+  field repeats the HTTP status rather than carrying a distinct application error code, so there is
+  no error-code registry to catalog — the HTTP status IS the error taxonomy.
+envelopes:
+- name: errorcode_zero_object
+  shape: '{"error": {"code": integer, "messages": [string]}}'
+  fields:
+    error.code: HTTP code
+    error.messages: array of error message strings
+  used_by: [400, 403, 409, 500]
+- name: errorcode_zero_without_message_object
+  shape: '{"error": {"code": integer}}'
+  used_by: [403]
+- name: errorcode_zero
+  shape: '{"code": integer}'
+  used_by: [429, 500, carrier-api 400/403/409/500]
+problems:
+- status: 400
+  title: Bad Request
+  description: A bad request was made. Please try again.
+  schema: 400_badrequest_response
+  envelope: errorcode_zero_object
+  remediation: >-
+    Validate the request body against the operation schema. Several operations declare their own
+    400 variant with operation-specific messages (create award, create tender, update tender,
+    network partner, opportunity post, opportunity notification, opportunity by id, refresh token,
+    webhook, client credentials, post options, post tender).
+  source_operations:
+  - openapi/emerge-public-api-openapi.yml#POST /auth/refresh
+  - openapi/emerge-public-api-openapi.yml#POST /network_partners
+  - openapi/emerge-public-api-openapi.yml#POST /opportunities
+  - openapi/emerge-public-api-openapi.yml#PUT /opportunities/{opportunity_id}
+  - openapi/emerge-public-api-openapi.yml#POST /opportunities/{opportunity_id}/post_to_marketplace
+  - openapi/emerge-public-api-openapi.yml#POST /opportunities/{opportunity_id}/post_to_network_partners
+  - openapi/emerge-public-api-openapi.yml#POST /awards
+  - openapi/emerge-public-api-openapi.yml#POST /tenders
+  - openapi/emerge-public-api-openapi.yml#PUT /tenders/{tender_id}
+  - openapi/emerge-public-api-openapi.yml#POST /webhooks
+  - openapi/emerge-public-api-openapi.yml#PUT /webhooks/{webhook_id}
+  - openapi/emerge-carrier-api-openapi.yml#POST /auth/login/client_credentials
+  - openapi/emerge-carrier-api-openapi.yml#POST /options
+  - openapi/emerge-carrier-api-openapi.yml#POST /tenders/{shipment_id}/responses
+- status: 401
+  title: Not Authorized
+  description: The request was not authorized. Please add or refresh your authorization token.
+  schema: null
+  envelope: none
+  body: empty
+  remediation: >-
+    Obtain a bearer token via POST /auth/login (shipper) or POST /auth/login/client_credentials
+    (carrier), or refresh it via POST /auth/refresh, and send it as `Authorization: Bearer <token>`.
+- status: 403
+  title: Forbidden
+  description: The authenticated principal is not permitted to perform this operation.
+  schema: 403_forbidden_response
+  envelope: errorcode_zero_object
+  remediation: Confirm the account/organization has access to the resource and the requested action.
+- status: 404
+  title: Not Found
+  description: The requested resource was not found.
+  schema: null
+  envelope: none
+  body: empty
+  remediation: Verify the opportunity_id / tender_id / shipment_id / webhook_id / partner_id.
+- status: 409
+  title: Conflict
+  description: A conflict has occurred.
+  schema: 409_response
+  envelope: errorcode_zero_object
+  remediation: >-
+    Emitted on POST /tenders/{tender_id}/cancel when the tender is not in a cancellable state.
+    Re-read the tender status before retrying.
+  source_operations:
+  - openapi/emerge-public-api-openapi.yml#POST /tenders/{tender_id}/cancel
+- status: 429
+  title: Too Many Requests
+  description: Too many requests.
+  schema: 429_response
+  envelope: errorcode_zero
+  remediation: >-
+    Back off and retry. Authentication is rate limited to up to 20 requests per second and may be
+    lower during high-volume periods. No Retry-After or RateLimit-* response header is documented —
+    see rate-limits/emerge-rate-limits.yml.
+  source_operations:
+  - openapi/emerge-public-api-openapi.yml#POST /auth/login
+- status: 500
+  title: Internal Server Error
+  description: Internal Server Error.
+  schema: 500_response
+  envelope: errorcode_zero
+  remediation: Retry with backoff; contact Emerge support if persistent.
+gaps:
+- No RFC 9457 application/problem+json media type.
+- No stable application error codes — `code` mirrors the HTTP status.
+- 401 and 404 return no response body at all.
+- No documented error-code reference page outside the two OpenAPI documents.

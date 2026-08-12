@@ -1,0 +1,63 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Emerge Carrier API
+  version: 1.0.0
+extends: openapi/emerge-carrier-api-openapi.yml
+x-generated: '2026-08-12'
+x-method: generated
+x-source: >-
+  Enhancements derived from API Evangelist artifacts in this repo. The harvested specification at
+  openapi/_original/emerge-carrier-api-openapi.json is never mutated.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apievangelist.com/providers/emerge
+    x-apievangelist-artifacts:
+      authentication: authentication/emerge-authentication.yml
+      conventions: conventions/emerge-conventions.yml
+      errors: errors/emerge-problem-types.yml
+      lifecycle: lifecycle/emerge-lifecycle.yml
+      sandbox: sandbox/emerge-sandbox.yml
+      webhooks: asyncapi/emerge-webhooks.yml
+    x-contract-gaps:
+    - no operationId on any operation
+    - info.description states "The current version of the API is v1.0.0" while info.version is 2.0.0
+      and the servers are /v2 — a documented version inconsistency
+    - errors are a proprietary envelope, not RFC 9457 problem+json
+- target: $.info
+  update:
+    x-api-lifecycle:
+      version: v2
+      spec_version: 2.0.0
+      deprecation_support_window: 1 year
+      deprecation_policy: https://carrier-api-docs.emergemarket.io/#section/Get-Started/Compatibility-Policy
+      status_page: https://status.emergemarket.com/
+      onboarding_request: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+- target: $.servers
+  update:
+    x-environments:
+      production: https://api.emergemarket.io/v2
+      sandbox: https://demo-api.emergemarket.dev/v2
+- target: $.components.securitySchemes.BearerAuth
+  update:
+    x-token-acquisition:
+      operation: POST /auth/login/client_credentials
+      credentials: Integration Provider client id + client secret
+      note: >-
+        A client-credentials exchange at a proprietary path — not an RFC 6749 token endpoint, and no
+        scopes are defined.
+- target: $.paths['/options'].post
+  update:
+    x-agentic-access:
+      action-class: acting
+      consequence: physical
+      note: >-
+        Submits a binding rate to a shipper (creating an Option). Requires the event_id from the
+        originating rate_request webhook event; carriers may echo their own quote id in
+        provider_reference. Commercially consequential.
+- target: $.paths['/tenders/{shipment_id}/responses'].post
+  update:
+    x-agentic-access:
+      action-class: acting
+      consequence: physical
+      note: Accepts or rejects a tender — commits the carrier to hauling the load.

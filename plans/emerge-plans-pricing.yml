@@ -1,0 +1,46 @@
+generated: '2026-08-12'
+method: searched
+source: https://www.emergemarket.com/legal/fees
+plan_count: 0
+note: >-
+  Emerge publishes NO plans, tiers, or list prices. There is no /pricing page — the marketing site
+  has no pricing entry in its navigation, footer, or sitemap (255 URLs checked), and
+  https://www.emergemarket.com/pricing returns 404. The only pricing artifact Emerge publishes is a
+  legal fee-disclosure page describing two fee mechanisms, neither of which carries an amount, rate,
+  or currency. Access is sales-led: the only conversion path is "Book a Demo"
+  (https://www.emergemarket.com/demo), and Carrier API access is requested through a Zendesk ticket
+  form. Carriers are told the marketplace is "at no cost to the carrier".
+plans: []
+fees:
+- name: Transaction Fee
+  applies_to: shippers using the Emerge Carrier Network
+  amount: null
+  currency: null
+  basis: >-
+    "This fee is included in the total price of the transaction." No rate or amount is disclosed.
+  source: https://www.emergemarket.com/legal/fees
+- name: Platform Fee
+  applies_to: >-
+    shippers who do not use the Emerge Carrier Network or Freight Intermediary Services, after
+    90 days of platform use
+  amount: null
+  currency: null
+  basis: not disclosed
+  source: https://www.emergemarket.com/legal/fees
+carrier_side:
+  cost: none
+  claim: >-
+    "book freight directly with shippers at no cost to the carrier" — https://www.emergemarket.com/carrier
+api_pricing:
+  metered: false
+  note: >-
+    Neither API is separately priced or metered in any published material. API access follows the
+    platform relationship; API terms are at https://www.emergemarket.com/legal/api-terms-of-use.
+evidence:
+- url: https://www.emergemarket.com/legal/fees
+  status: 200
+- url: https://www.emergemarket.com/pricing
+  status: 404
+- url: https://www.emergemarket.com/sitemap.xml
+  status: 200
+  note: 255 URLs, no pricing page

@@ -1,0 +1,123 @@
+generated: '2026-08-12'
+method: searched
+source: https://api-docs.emergemarket.io/ and https://carrier-api-docs.emergemarket.io/
+spec_type: none
+spec_note: >-
+  Emerge publishes NO AsyncAPI document. Its event surface is documented as a first-class part of the
+  two OpenAPI documents — a Webhook Subscription API (CRUD on /webhooks) plus a Webhook Events tag
+  group whose tag descriptions carry a SchemaDefinition reference to a real, named event payload
+  schema in components.schemas for every event type. That is a genuine, machine-readable webhook
+  catalog, so it is captured here verbatim from the specs rather than converted into an AsyncAPI
+  document we would have authored ourselves.
+surface: webhooks
+delivery:
+  style: HTTP POST to a subscriber-registered URL
+  content_type: application/json
+  subscription:
+    managed_by: Emerge Public API (Shipper API)
+    operations:
+    - POST /webhooks
+    - GET /webhooks
+    - GET /webhooks/{webhook_id}
+    - PUT /webhooks/{webhook_id}
+    - DELETE /webhooks/{webhook_id}
+    source: openapi/emerge-public-api-openapi.yml
+  authentication:
+    style: HTTP Basic on the subscriber endpoint
+    fields: [authentication.is_enabled, authentication.username, authentication.password]
+    schema: webhook_object
+    note: >-
+      The subscriber supplies a username/password pair that Emerge presents when calling the
+      registered URL. No HMAC signature header is documented.
+  signature_verification: none-documented
+  retries:
+    attempts: 6
+    schedule_seconds: [1, 4, 9, 16, 25, 36]
+    basis: quadratic backoff, each gap measured from the previous attempt
+    triggers: [network failure, server error, request timeout]
+    source: openapi/emerge-public-api-openapi.yml#/tags/Webhooks
+events:
+- name: tracking_status_updated
+  api: Emerge Public API (Shipper API)
+  group: Tracking Events
+  schema: tracking_status_updated_Event
+  description: >-
+    Primary shipment status changed (tender accepted through delivered). Carries old and new state;
+    old state is an empty object on creation.
+- name: delivery_status_updated
+  api: Emerge Public API (Shipper API)
+  group: Tracking Events
+  schema: delivery_status_updated_Event
+  description: >-
+    On-time status of a shipment changed (e.g. on-time to late), driven by an ETA update or an actual
+    arrival/departure update.
+- name: stop_actual_times_updated
+  api: Emerge Public API (Shipper API)
+  group: Tracking Events
+  schema: stop_actual_times_updated_Event
+  description: Actual arrival or departure information was received in the Emerge system.
+- name: current_location_updated_job
+  api: Emerge Public API (Shipper API)
+  group: Tracking Events
+  schema: current_location_updated_Event
+  description: Most recent truck location; Emerge emits this every 30 minutes.
+- name: opportunity_awarded
+  api: Emerge Public API (Shipper API)
+  schema: Opportunity_Awarded_Event
+  description: >-
+    Details of the awarded option so the subscriber can take subsequent action — including tendering
+    to it — inside their own TMS.
+- name: opportunity_not_awarded
+  api: Emerge Public API (Shipper API)
+  schema: Opportunity_NotAwarded_Event
+  description: The opportunity was not awarded by the end of the bid duration.
+- name: opportunity_deleted
+  api: Emerge Public API (Shipper API)
+  schema: Opportunity_Deleted_Event
+  description: An opportunity was deleted; carries the opportunity identifier and references.
+- name: options_changed
+  api: Emerge Public API (Shipper API)
+  schema: Options_Changed_Event
+  description: >-
+    The list of options available for an opportunity changed. Whether all options or only the lowest
+    option is sent is controlled by an application setting.
+- name: tender_status_updated
+  api: Emerge Public API (Shipper API)
+  schema: Tender_Status_Updated_Event
+  description: The status of a tender changed.
+- name: network_partner_updated
+  api: Emerge Public API (Shipper API)
+  schema: Network_Partner_Updated_Event
+  description: >-
+    A partner registered on the Emerge platform following a shipper invite, or partner details
+    changed.
+- name: network_partner_deleted
+  api: Emerge Public API (Shipper API)
+  schema: Network_Partner_Deleted_Event
+  description: A network partner was deleted.
+- name: current_marketplace_option
+  api: Emerge Public API (Shipper API)
+  schema: Current_Marketplace_Option_Event
+  description: The current Emerge Marketplace option details changed.
+- name: rate_request
+  api: Emerge Carrier API
+  schema: Rate_Request_Event
+  description: >-
+    Sent to a Capacity Provider with the opportunity details needed to price it. The provider replies
+    via POST /options with a quote or an error reason. If no response arrives inside the Integration
+    Provider's configured window, Emerge falls back to a manual rate request in the platform plus an
+    email to the carrier.
+- name: tender_request
+  api: Emerge Carrier API
+  schema: Tender_Request_Event
+  description: >-
+    Sent to a Capacity Provider with the tender details; the provider replies via
+    POST /tenders/{shipment_id}/responses.
+subscription_wildcard:
+  value: '*'
+  note: The webhook_event_types enum accepts "*" to subscribe to every event type.
+counts:
+  events: 14
+  shipper_events: 12
+  carrier_events: 2
+  asyncapi_documents: 0

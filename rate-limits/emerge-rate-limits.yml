@@ -1,0 +1,42 @@
+generated: '2026-08-12'
+method: searched
+source: https://api-docs.emergemarket.io/
+limit_count: 1
+rate_limits:
+- scope: endpoint
+  endpoint: POST /auth/login
+  api: Emerge Public API (Shipper API)
+  limit: 20
+  window: 1 second
+  unit: requests
+  burst: null
+  qualifier: >-
+    "Authentication has a rate limit of up to 20 requests per second. This limit may be lower during
+    times of high volumes." — quoted verbatim from the POST /auth/login operation description.
+  status_on_exhaustion: 429
+  source: https://api-docs.emergemarket.io/
+response_headers:
+  documented: []
+  ratelimit_draft: false
+  x_ratelimit: false
+  retry_after: false
+  note: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After response header is documented anywhere in either
+    OpenAPI document or on the docs sites. An agent hitting 429 has no runtime signal telling it how
+    long to wait — only the proprietary {"code": 429} body from the 429_response schema.
+exhaustion_response:
+  status: 429
+  description: 429 | Too many requests.
+  schema: 429_response
+  body: '{"code": 429}'
+  media_type: application/json
+undocumented:
+  note: >-
+    No limits are published for any non-authentication operation. The Compatibility Policy lists
+    "Added Rate Limits" as a non-breaking change Emerge reserves the right to make, which implies
+    further limits may be introduced without notice. Only the /auth/login limit is published, so
+    limit_count is 1 rather than 0.
+  probed: false
+  probe_note: >-
+    No unauthenticated operation exists to observe live headers against — every non-auth endpoint
+    requires a bearer token, and this pipeline uses no credentials.

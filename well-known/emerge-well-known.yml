@@ -1,0 +1,138 @@
+generated: '2026-08-12'
+method: probed
+source: live GET of /.well-known/* on every Emerge host named in apis.yml and the OpenAPI servers[]
+note: >-
+  Emerge serves a real RFC 9116 security.txt across every emergemarket.io / emergemarket.dev host
+  (identical 73-byte document, Contact + Expires only). No other /.well-known/ document is served.
+  The apex/www marketing host (www.emergemarket.com, Webflow) answers 404 with an "Invalid
+  .well-known" HTML stub for every path. The app console (app.emergemarket.io) and both Redoc docs
+  hosts (api-docs / carrier-api-docs) are SPA/static catch-alls that answer 200 with an HTML shell
+  for ANY /.well-known/* path — those 200s are NOT documents and are recorded here as misses so
+  they are never mistaken for a served surface.
+hosts:
+- host: https://api.emergemarket.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: emerge-security.txt
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://demo-api.emergemarket.dev
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: emerge-security.txt
+    note: byte-identical to the production host document
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://www.emergemarket.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://app.emergemarket.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: emerge-security.txt
+  - path: /.well-known/openid-configuration
+    status: 200
+    result: miss
+    note: 5451-byte SPA HTML shell, not a document
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    result: miss
+    note: 5451-byte SPA HTML shell, not a document
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    result: miss
+    note: 5451-byte SPA HTML shell, not a document
+  - path: /.well-known/api-catalog
+    status: 502
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    result: miss
+    note: 5451-byte SPA HTML shell, not a document
+  - path: /.well-known/agent-card.json
+    status: 200
+    result: miss
+    note: 5451-byte SPA HTML shell, not an AgentCard — no a2a/ artifact was written
+  - path: /.well-known/agent.json
+    status: 200
+    result: miss
+    note: 5451-byte SPA HTML shell, not an AgentCard — no a2a/ artifact was written
+- host: https://api-docs.emergemarket.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: emerge-security.txt
+  - path: /.well-known/agent-card.json
+    status: 200
+    result: miss
+    note: Redoc HTML shell returned for every path on this host
+  - path: /.well-known/agent.json
+    status: 200
+    result: miss
+    note: Redoc HTML shell returned for every path on this host
+- host: https://carrier-api-docs.emergemarket.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: emerge-security.txt
+  - path: /.well-known/agent-card.json
+    status: 200
+    result: miss
+    note: Redoc HTML shell returned for every path on this host
+  - path: /.well-known/agent.json
+    status: 200
+    result: miss
+    note: Redoc HTML shell returned for every path on this host
+summary:
+  documents_served: 1
+  document_types: [security.txt]
+  oauth_discovery: false
+  openid_discovery: false
+  api_catalog: false
+  agent_card: false

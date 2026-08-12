@@ -1,0 +1,86 @@
+generated: '2026-08-12'
+method: searched
+source: openapi/emerge-carrier-api-openapi.yml, openapi/emerge-public-api-openapi.yml
+docs: https://api-docs.emergemarket.io/
+summary:
+  types:
+  - http
+  api_key_in: []
+  oauth2_flows: []
+  bearer_only: true
+  note: >-
+    Both Emerge APIs use a single `http`/`bearer` security scheme (`BearerAuth`). There is no
+    apiKey scheme, no OAuth 2.0 securityScheme, no OpenID Connect, and no mTLS. Tokens are minted at
+    proprietary login endpoints rather than an RFC 6749 token endpoint, and no scopes exist — a
+    token is all-or-nothing for the API it belongs to. There is consequently no `scopes/` artifact
+    for this provider.
+schemes:
+- name: BearerAuth
+  type: http
+  scheme: bearer
+  sources:
+  - openapi/emerge-carrier-api-openapi.yml
+  - openapi/emerge-public-api-openapi.yml
+  header: 'Authorization: Bearer <token>'
+token_acquisition:
+- api: Emerge Public API (Shipper API)
+  operation: POST /auth/login
+  security: "none (the operation declares `security: []`)"
+  credentials:
+    kind: resource-owner password
+    fields: [user_name, password]
+    required: [user_name, password]
+    note: >-
+      The caller supplies an Emerge shipper user's own platform username and password. There is no
+      machine identity for the Shipper API — an integration authenticates as a human user account.
+  response_schema: 200_authentication_response
+  rate_limit: up to 20 requests per second, and lower during high-volume periods
+  errors: [403, 429, 500]
+- api: Emerge Public API (Shipper API)
+  operation: POST /auth/refresh
+  purpose: refresh an existing shipper access token without resending the password
+  errors: [400, 403]
+- api: Emerge Carrier API
+  operation: POST /auth/login/client_credentials
+  security: "none (the operation declares `security: []`)"
+  credentials:
+    kind: client credentials
+    fields: [client id, client secret]
+    note: >-
+      Issued to a Capacity/Integration Provider during Capacity Link onboarding, alongside the
+      `relationship_identifiers` values that appear on rate_request events. Request access via
+      https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+  response_schema: 200_client_credential_authentication_response
+  errors: [400, 403]
+token_properties:
+  scopes: none
+  expiry: not documented in the OpenAPI response description
+  refresh: shipper only (POST /auth/refresh); no refresh path documented for carrier tokens
+  revocation: not documented
+  introspection: not documented
+  environment_binding:
+    mechanism: separate base host (api.emergemarket.io vs demo-api.emergemarket.dev)
+    key_prefix: none
+    note: >-
+      A token carries no visible marker of which environment it belongs to. Callers must track that
+      themselves — see sandbox/emerge-sandbox.yml.
+callback_authentication:
+  surface: webhooks
+  mechanism: HTTP Basic on the subscriber's own endpoint
+  fields: [authentication.is_enabled, authentication.username, authentication.password]
+  signature: none
+  note: >-
+    Emerge presents subscriber-supplied Basic credentials when delivering events. There is no HMAC
+    signature header, so TLS plus Basic is the entire verification story for inbound events. The
+    credentials are carried in cleartext in the webhook_object request/response shape.
+  detail: asyncapi/emerge-webhooks.yml
+discovery:
+  openid_configuration: absent (404 on every host)
+  oauth_authorization_server: absent (404 on every host)
+  oauth_protected_resource: absent (404 on every host)
+  detail: well-known/emerge-well-known.yml
+gaps:
+- Shipper API integrations authenticate as a named human user, not a service principal.
+- No scopes or least-privilege boundary between read and write operations.
+- Token lifetime, revocation and introspection are undocumented.
+- Webhook deliveries are not signed.

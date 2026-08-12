@@ -1,0 +1,81 @@
+generated: '2026-08-12'
+method: derived
+source: openapi/emerge-public-api-openapi.yml, openapi/emerge-carrier-api-openapi.yml, https://api.emergemarket.io/.well-known/security.txt
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: >-
+    Both published documents declare openapi 3.0.0 (Emerge Public API 1.2.1, Emerge Carrier API
+    2.0.0), served through Redoc at api-docs.emergemarket.io and carrier-api-docs.emergemarket.io.
+- id: openapi-3.1
+  conforms: false
+  evidence: documents are 3.0.0, not 3.1.x
+- id: rfc7235-bearer
+  conforms: true
+  evidence: components.securitySchemes.BearerAuth is type http, scheme bearer, in both documents
+- id: oauth2
+  conforms: false
+  evidence: >-
+    No oauth2 securityScheme is declared. The Carrier API uses a client_id/client_secret pair, but
+    it is exchanged at a proprietary POST /auth/login/client_credentials endpoint rather than an
+    RFC 6749 token endpoint, and no scopes, grant types or token introspection are defined.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404 on every Emerge host
+- id: rfc8414-oauth-metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returns 404 on every Emerge host
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors are application/json with a proprietary {"error":{"code","messages"}} envelope; no
+    application/problem+json media type appears in either document
+- id: rfc9116-security-txt
+  conforms: true
+  evidence: >-
+    https://api.emergemarket.io/.well-known/security.txt returns 200 text/plain with Contact and
+    Expires fields (Expires 2029-12-05T14:07:00Z)
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: >-
+    A one-year deprecation support window is published in prose, but no Sunset or Deprecation
+    response header is documented
+- id: rfc9110-idempotent-methods
+  conforms: partial
+  evidence: >-
+    GET/PUT/DELETE are used per their HTTP semantics, but no idempotency key is offered for POST,
+    so retried creates are not protected
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    A 14-event webhook catalog is published inside the OpenAPI tag groups with named payload
+    schemas, but no AsyncAPI document is served
+- id: rfc9421-http-message-signatures
+  conforms: false
+  evidence: webhook deliveries carry HTTP Basic auth, not a signature header
+- id: json-schema
+  conforms: partial
+  evidence: >-
+    OpenAPI 3.0 Schema Object dialect only (123 named component schemas across the two documents);
+    no standalone JSON Schema documents are published
+- id: mcp
+  conforms: false
+  evidence: >-
+    No hosted MCP server; POST tools/list to mcp.emergemarket.io (NXDOMAIN),
+    mcp.emergemarket.com (403), api.emergemarket.io/mcp (404) and www.emergemarket.com/mcp (405)
+    all missed, and the MCP registry has no Emerge entry
+- id: a2a
+  conforms: false
+  evidence: >-
+    /.well-known/agent-card.json and /.well-known/agent.json return 404 on api.emergemarket.io and
+    demo-api.emergemarket.dev and an HTML SPA shell (not an AgentCard) on app.emergemarket.io and
+    both docs hosts
+compliance_program:
+  trust_center: https://trust.emergemarket.com/
+  platform: Vanta
+  certifications_published: []
+  note: >-
+    EmergeTech Inc operates a Vanta-hosted trust center, but the certification list renders
+    client-side and no named certification (SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP) could be read
+    anonymously. No `type: Compliance` pointer is emitted because no certification is verifiable
+    from the public surface — see security/emerge-trust-center.yml.

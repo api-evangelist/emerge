@@ -1,0 +1,134 @@
+generated: '2026-08-12'
+method: derived
+status: candidate
+source: openapi/emerge-public-api-openapi.yml, openapi/emerge-carrier-api-openapi.yml
+search_result:
+  official_hosted_server: none
+  probes:
+  - url: https://mcp.emergemarket.io/
+    method: POST tools/list
+    status: '000'
+    note: host does not resolve (NXDOMAIN)
+  - url: https://mcp.emergemarket.com/
+    method: POST tools/list
+    status: 403
+    note: Cloudflare error 1014 (CNAME cross-user banned) — not an MCP endpoint
+  - url: https://api.emergemarket.io/mcp
+    method: POST tools/list
+    status: 404
+  - url: https://www.emergemarket.com/mcp
+    method: POST tools/list
+    status: 405
+    note: Webflow marketing host rejects POST
+  - url: https://registry.modelcontextprotocol.io/v0/servers?search=emerge
+    method: GET
+    status: 200
+    result: no EmergeTech server registered
+  third_party: []
+  docs_mentions: none
+server: null
+note: >-
+  Emerge operates no MCP server. The tools below are a CANDIDATE surface derived one-to-one from the
+  published REST operations so an implementer (Emerge or a partner) has a starting shape. They are
+  not offered by Emerge and no tool below has ever been called. Neither OpenAPI document defines
+  operationId on any operation, so each candidate tool cites its METHOD + PATH as the source
+  operation instead of an operationId — the tool's real input contract is that operation's
+  parameters and requestBody in the referenced spec.
+tools:
+- name: emerge_login
+  description: Exchange a shipper username and password for a bearer access token.
+  source_operation: openapi/emerge-public-api-openapi.yml#POST /auth/login
+- name: emerge_refresh_token
+  description: Refresh an existing shipper access token.
+  source_operation: openapi/emerge-public-api-openapi.yml#POST /auth/refresh
+- name: emerge_list_network_partners
+  description: List the carriers and brokers in the shipper's private network.
+  source_operation: openapi/emerge-public-api-openapi.yml#GET /network_partners
+- name: emerge_invite_network_partner
+  description: Invite a carrier or broker into the shipper's private network.
+  source_operation: openapi/emerge-public-api-openapi.yml#POST /network_partners
+- name: emerge_delete_network_partner
+  description: Remove a partner from the shipper's private network.
+  source_operation: openapi/emerge-public-api-openapi.yml#DELETE /network_partners/{partner_id}
+- name: emerge_create_opportunity
+  description: Create a freight opportunity (a load to be quoted) with stops, commodities and references.
+  source_operation: openapi/emerge-public-api-openapi.yml#POST /opportunities
+- name: emerge_list_opportunities
+  description: List the shipper's opportunities.
+  source_operation: openapi/emerge-public-api-openapi.yml#GET /opportunities
+- name: emerge_get_opportunity
+  description: Read one opportunity by id.
+  source_operation: openapi/emerge-public-api-openapi.yml#GET /opportunities/{opportunity_id}
+- name: emerge_update_opportunity
+  description: Update an existing opportunity.
+  source_operation: openapi/emerge-public-api-openapi.yml#PUT /opportunities/{opportunity_id}
+- name: emerge_delete_opportunity
+  description: Delete an opportunity by id.
+  source_operation: openapi/emerge-public-api-openapi.yml#DELETE /opportunities/{opportunity_id}
+- name: emerge_delete_opportunity_by_customer_reference
+  description: Delete an opportunity by the shipper's own customer reference number.
+  source_operation: openapi/emerge-public-api-openapi.yml#DELETE /opportunities/by_customer_reference/{customer_reference_number}
+- name: emerge_post_opportunity_to_marketplace
+  description: Post an opportunity to the Emerge Marketplace to source live capacity.
+  source_operation: openapi/emerge-public-api-openapi.yml#POST /opportunities/{opportunity_id}/post_to_marketplace
+- name: emerge_unpost_opportunity_from_marketplace
+  description: Withdraw an opportunity from the Emerge Marketplace.
+  source_operation: openapi/emerge-public-api-openapi.yml#POST /opportunities/{opportunity_id}/unpost_from_marketplace
+- name: emerge_post_opportunity_to_network_partners
+  description: Post an opportunity to the shipper's own network partners.
+  source_operation: openapi/emerge-public-api-openapi.yml#POST /opportunities/{opportunity_id}/post_to_network_partners
+- name: emerge_list_options
+  description: List the carrier options (quotes) received for an opportunity.
+  source_operation: openapi/emerge-public-api-openapi.yml#GET /opportunities/{opportunity_id}/options
+- name: emerge_create_award
+  description: Award an opportunity to a chosen option.
+  source_operation: openapi/emerge-public-api-openapi.yml#POST /awards
+- name: emerge_list_awards
+  description: List awards.
+  source_operation: openapi/emerge-public-api-openapi.yml#GET /awards
+- name: emerge_get_award
+  description: Read one award by id.
+  source_operation: openapi/emerge-public-api-openapi.yml#GET /awards/{id}
+- name: emerge_create_tender
+  description: Tender a load to a carrier.
+  source_operation: openapi/emerge-public-api-openapi.yml#POST /tenders
+- name: emerge_get_tender
+  description: Read one tender by id.
+  source_operation: openapi/emerge-public-api-openapi.yml#GET /tenders/{tender_id}
+- name: emerge_update_tender
+  description: Update an existing tender.
+  source_operation: openapi/emerge-public-api-openapi.yml#PUT /tenders/{tender_id}
+- name: emerge_cancel_tender
+  description: Cancel a tender (409 if it is not in a cancellable state).
+  source_operation: openapi/emerge-public-api-openapi.yml#POST /tenders/{tender_id}/cancel
+- name: emerge_get_shipment
+  description: Read a shipment, its tenders, current tender and tracking status.
+  source_operation: openapi/emerge-public-api-openapi.yml#GET /shipments/{shipment_id}
+- name: emerge_create_webhook
+  description: Register a subscriber endpoint for Emerge webhook events.
+  source_operation: openapi/emerge-public-api-openapi.yml#POST /webhooks
+- name: emerge_list_webhooks
+  description: List registered webhook subscriptions.
+  source_operation: openapi/emerge-public-api-openapi.yml#GET /webhooks
+- name: emerge_get_webhook
+  description: Read one webhook subscription.
+  source_operation: openapi/emerge-public-api-openapi.yml#GET /webhooks/{webhook_id}
+- name: emerge_update_webhook
+  description: Update a webhook subscription's URL, event types, auth or enabled state.
+  source_operation: openapi/emerge-public-api-openapi.yml#PUT /webhooks/{webhook_id}
+- name: emerge_delete_webhook
+  description: Delete a webhook subscription.
+  source_operation: openapi/emerge-public-api-openapi.yml#DELETE /webhooks/{webhook_id}
+- name: emerge_carrier_client_credentials_login
+  description: Exchange an Integration Provider client id and secret for a bearer access token.
+  source_operation: openapi/emerge-carrier-api-openapi.yml#POST /auth/login/client_credentials
+- name: emerge_carrier_respond_to_quote
+  description: Respond to a rate_request event with a quote, or an error reason for declining to rate.
+  source_operation: openapi/emerge-carrier-api-openapi.yml#POST /options
+- name: emerge_carrier_respond_to_tender
+  description: Respond to a tender_request event.
+  source_operation: openapi/emerge-carrier-api-openapi.yml#POST /tenders/{shipment_id}/responses
+counts:
+  tools_candidate: 31
+  rest_operations_total: 31
+  tools_published_by_provider: 0

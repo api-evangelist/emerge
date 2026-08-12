@@ -1,0 +1,66 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  registry.npmjs.org, pypi.org, github.com, api-docs.emergemarket.io, carrier-api-docs.emergemarket.io,
+  www.emergemarket.com
+package_count: 0
+official_sdk_count: 0
+packages: []
+note: >-
+  Emerge ships NO first-party client libraries. Neither OpenAPI document, neither Redoc docs host,
+  the marketing site, nor the Intercom help center links an SDK in any language; integration is
+  expected to be hand-rolled against the REST endpoints or brokered through a TMS partner. No
+  `type: SDKs` pointer is emitted because there is no official client library to point at.
+registries_probed:
+- registry: npm
+  query: emergemarket
+  result: 0 packages
+  status: 200
+- registry: npm
+  query: emerge freight
+  result: no first-party package (only unrelated third-party freight/`emerge` namesakes)
+  status: 200
+- registry: pypi
+  package: emergemarket
+  status: 404
+- registry: pypi
+  package: emerge-api
+  status: 404
+- registry: pypi
+  package: emerge
+  status: 200
+  result: not-first-party
+  note: >-
+    pypi.org/project/emerge is "An open source EM FEM simulator in Python" (v2.8.3) — an unrelated
+    electromagnetics package, not EmergeTech's freight API.
+- registry: github
+  query: org emergetms / emergemarket / emerge-market
+  status: 404
+  result: no GitHub organization
+- registry: github
+  query: repository search "emergemarket"
+  status: 200
+  result: 0 repositories
+alternatives_published:
+- kind: postman
+  name: EmergeTMS's Public Workspace
+  url: https://www.postman.com/emergetms/emergetms-s-public-workspace
+  official: true
+  note: >-
+    The nearest thing to a first-party client artifact — a public, forkable Postman workspace
+    containing "Emerge API Documentation - v1.0.0" collections and folders (e.g. Tender Status).
+    Not a package; no registry version to record.
+- kind: third-party-connector
+  name: Emerge connector for Tray.ai
+  url: https://tray.ai/documentation/connectors/service/emerge
+  official: false
+  note: >-
+    Built and maintained by Tray.ai against https://api.emergemarket.io/v1 (and the
+    demo-api.emergemarket.dev/v1 sandbox), not by Emerge.
+- kind: tms-integrations
+  names: [Project44, E2open, MercuryGate, Tab Connect, Bitfreighter, Metafora, S2Q]
+  url: https://www.emergemarket.com/integrations
+  official: partner
+  note: >-
+    Emerge's distribution model for the API is partner TMS integrations (Capacity Link) rather than
+    published SDKs.

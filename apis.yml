@@ -1,23 +1,193 @@
 aid: emerge
 name: Emerge
-description: 'Emerge is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Emerge (EmergeTech, Inc.) is a Scottsdale, Arizona freight procurement and transportation spend
+  management platform — marketed as ProcureOS — that moves full truckload, volume/partial truckload
+  and drop-trailer freight sourcing out of spreadsheets and email into a single system. The platform
+  combines contract procurement (annual RFPs, mini-bids, awarding scenarios, carrier scorecards),
+  spot procurement (quoting, tendering, Dynamic Book It Now, tracking and visibility), Emerge AI rate
+  benchmarking and lane intelligence (Rate Pulse), and the Emerge Marketplace of 45,000+ pre-vetted
+  asset-based carriers across the US, Canada and Mexico. Emerge publishes two public REST APIs — a
+  Shipper (public) API for opportunities, options, awards, tenders, shipments, network partners and
+  webhook subscriptions, and a Carrier API for capacity/integration providers responding to rate
+  requests and tenders — plus a documented webhook event catalog, a testing sandbox, and TMS
+  integrations with Project44, E2open, MercuryGate and Capacity Link partners.
+image: https://cdn.prod.website-files.com/66ad43d7385c00622859db37/66b8fd0eb48dad5fa020dc5c_website_share.png
 url: https://raw.githubusercontent.com/api-evangelist/emerge/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
-specificationVersion: '0.20'
+specificationVersion: '0.21'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
-- Company
-apis: []
+- freight
+- logistics
+- transportation
+- supply-chain
+- procurement
+- trucking
+- freight-marketplace
+- transportation-management
+- shipping
+- rate-benchmarking
+- webhooks
+- b2b-marketplace
+apis:
+- name: Emerge Public API (Shipper API)
+  description: >-
+    REST API giving partner developers and shipper TMS platforms access to the core Emerge shipper
+    workflow: create and manage opportunities, post them to the Emerge Marketplace or to network
+    partners, retrieve carrier options, create awards, tender to a carrier, track shipments, manage
+    network partners, and subscribe to webhook events. Supports the opportunity-to-tender and
+    opportunity-to-award workflows. Bearer token auth via a username/password login exchange.
+  humanURL: https://api-docs.emergemarket.io/
+  baseURL: https://api.emergemarket.io/v1
+  tags:
+  - freight
+  - logistics
+  - procurement
+  - transportation-management
+  - webhooks
+  - shipping
+  properties:
+  - type: Documentation
+    url: https://api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://api-docs.emergemarket.io/#section/Get-Started
+  - type: OpenAPI
+    url: openapi/emerge-public-api-openapi.yml
+  - type: Authentication
+    url: authentication/emerge-authentication.yml
+  - type: Webhooks
+    url: asyncapi/emerge-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/emerge-problem-types.yml
+  - type: DataModel
+    url: data-model/emerge-data-model.yml
+  - type: Overlay
+    url: overlays/emerge-public-api-overlay.yaml
+  - type: RateLimits
+    url: rate-limits/emerge-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/emerge-sandbox.yml
+  - type: TermsOfService
+    url: https://www.emergemarket.com/legal/api-terms-of-use
+- name: Emerge Carrier API
+  description: >-
+    REST API for Capacity and Integration Providers (carriers, brokers and their TMS vendors) working
+    with shippers on the Emerge platform. Providers receive Rate Request and Tender Request events by
+    webhook, then respond with a quote (creating an Option for the shipper) or a tender response.
+    Authenticates with a client id / client secret credential pair exchanged for a bearer token. Part
+    of the Capacity Link program.
+  humanURL: https://carrier-api-docs.emergemarket.io/
+  baseURL: https://api.emergemarket.io/v2
+  tags:
+  - freight
+  - logistics
+  - trucking
+  - carrier-integration
+  - webhooks
+  properties:
+  - type: Documentation
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://carrier-api-docs.emergemarket.io/#section/Get-Started
+  - type: OpenAPI
+    url: openapi/emerge-carrier-api-openapi.yml
+  - type: Authentication
+    url: authentication/emerge-authentication.yml
+  - type: Webhooks
+    url: asyncapi/emerge-webhooks.yml
+  - type: Overlay
+    url: overlays/emerge-carrier-api-overlay.yaml
+  - type: Sandbox
+    url: sandbox/emerge-sandbox.yml
+  - type: SignUp
+    url: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+common:
+- type: Website
+  url: https://www.emergemarket.com/
+- type: DeveloperPortal
+  url: https://api-docs.emergemarket.io/
+- type: Documentation
+  url: https://api-docs.emergemarket.io/
+- type: APIReference
+  url: https://api-docs.emergemarket.io/
+- type: GettingStarted
+  url: https://api-docs.emergemarket.io/#section/Get-Started
+- type: Support
+  url: https://help.emergemarket.io/en/
+- type: Blog
+  url: https://www.emergemarket.com/company/blog
+- type: Pricing
+  url: https://www.emergemarket.com/legal/fees
+- type: Login
+  url: https://login.emergemarket.io/
+- type: SignUp
+  url: https://www.emergemarket.com/demo
+- type: TermsOfService
+  url: https://www.emergemarket.com/legal/terms-and-conditions
+- type: PrivacyPolicy
+  url: https://www.emergemarket.com/legal/privacy-policy
+- type: Postman
+  url: https://www.postman.com/emergetms/emergetms-s-public-workspace
+- type: StatusPage
+  url: https://status.emergemarket.com/
+- type: Deprecation
+  url: https://api-docs.emergemarket.io/#section/Get-Started/Compatibility-Policy
+- type: TrustCenter
+  url: https://trust.emergemarket.com/
+- type: Security
+  url: https://api.emergemarket.io/.well-known/security.txt
+- type: SecurityTxt
+  url: well-known/emerge-security.txt
+- type: WellKnown
+  url: well-known/emerge-well-known.yml
+- type: LLMsTxt
+  url: llms/emerge-llms.txt
+- type: Authentication
+  url: authentication/emerge-authentication.yml
+- type: Conventions
+  url: conventions/emerge-conventions.yml
+- type: Lifecycle
+  url: lifecycle/emerge-lifecycle.yml
+- type: Conformance
+  url: conformance/emerge-conformance.yml
+- type: ErrorCatalog
+  url: errors/emerge-problem-types.yml
+- type: DataModel
+  url: data-model/emerge-data-model.yml
+- type: RateLimits
+  url: rate-limits/emerge-rate-limits.yml
+- type: Plans
+  url: plans/emerge-plans-pricing.yml
+- type: Sandbox
+  url: sandbox/emerge-sandbox.yml
+- type: Webhooks
+  url: asyncapi/emerge-webhooks.yml
+- type: Packages
+  url: packages/emerge-packages.yml
+- type: MCPServer
+  url: mcp/emerge-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: VulnerabilityDisclosure
+  url: security/emerge-vulnerability-disclosure.yml
+- type: TrustCenter
+  url: security/emerge-trust-center.yml
+- type: DomainSecurity
+  url: security/emerge-domain-security.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
-common:
-- type: Website
-  url: https://forgeglobal.com/emerge_stock/
+x-enrichment:
+  date: '2026-08-12'
+  status: enriched
+  artifacts_added: 29
+  pass: local-v1

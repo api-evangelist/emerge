@@ -1,0 +1,95 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Emerge Public API (Shipper API)
+  version: 1.0.0
+extends: openapi/emerge-public-api-openapi.yml
+x-generated: '2026-08-12'
+x-method: generated
+x-source: >-
+  Enhancements derived from API Evangelist artifacts in this repo. The harvested specification at
+  openapi/_original/emerge-public-api-openapi.json is never mutated.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apievangelist.com/providers/emerge
+    x-apievangelist-artifacts:
+      authentication: authentication/emerge-authentication.yml
+      conventions: conventions/emerge-conventions.yml
+      errors: errors/emerge-problem-types.yml
+      lifecycle: lifecycle/emerge-lifecycle.yml
+      rate_limits: rate-limits/emerge-rate-limits.yml
+      sandbox: sandbox/emerge-sandbox.yml
+      webhooks: asyncapi/emerge-webhooks.yml
+      data_model: data-model/emerge-data-model.yml
+    x-contract-gaps:
+    - no operationId on any operation
+    - no pagination parameters on any collection read
+    - no idempotency key on any write operation
+    - no RateLimit-*/Retry-After headers on the 429 response
+    - errors are a proprietary envelope, not RFC 9457 problem+json
+- target: $.info
+  update:
+    x-api-lifecycle:
+      version: v1
+      spec_version: 1.2.1
+      deprecation_support_window: 1 year
+      deprecation_policy: https://api-docs.emergemarket.io/#section/Get-Started/Compatibility-Policy
+      status_page: https://status.emergemarket.com/
+- target: $.servers
+  update:
+    x-environments:
+      production: https://api.emergemarket.io/v1
+      sandbox: https://demo-api.emergemarket.dev/v1
+      separation: separate registrable domain, no key prefix or mode flag
+- target: $.components.securitySchemes.BearerAuth
+  update:
+    x-token-acquisition:
+      operation: POST /auth/login
+      credentials: shipper username + password
+      refresh: POST /auth/refresh
+      rate_limit: 20 requests per second
+- target: $.paths['/opportunities'].post
+  update:
+    x-agentic-access:
+      action-class: acting
+      consequence: write
+      note: >-
+        Creates a freight opportunity. Not idempotent — Emerge documents no idempotency key, so a
+        retried create can produce a duplicate opportunity. Agents should read back by
+        customer_reference_number before retrying.
+- target: $.paths['/opportunities/{opportunity_id}/post_to_marketplace'].post
+  update:
+    x-agentic-access:
+      action-class: acting
+      consequence: physical
+      note: >-
+        Exposes the load to 45,000+ marketplace carriers and begins live bidding. Commercially
+        consequential and externally visible; recommend human confirmation.
+- target: $.paths['/awards'].post
+  update:
+    x-agentic-access:
+      action-class: acting
+      consequence: physical
+      note: Awards freight to a carrier at a stated rate — a commercial commitment.
+- target: $.paths['/tenders'].post
+  update:
+    x-agentic-access:
+      action-class: acting
+      consequence: physical
+      note: Tenders a load to a carrier, initiating physical transportation.
+- target: $.paths['/tenders/{tender_id}/cancel'].post
+  update:
+    x-agentic-access:
+      action-class: acting
+      consequence: physical
+      note: >-
+        Cancels an accepted tender. Returns 409 when the tender is not in a cancellable state;
+        recommend human-in-the-loop.
+- target: $.paths['/webhooks'].post
+  update:
+    x-agentic-access:
+      action-class: acting
+      consequence: write
+      note: >-
+        Registers a subscriber endpoint. The authentication object carries a plaintext
+        username/password used for HTTP Basic on callbacks — treat as a secret at rest and in logs.

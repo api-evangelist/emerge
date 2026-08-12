@@ -42,5 +42,15 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Emerge is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/emerge_stock/
+Emerge (EmergeTech, Inc.) is a Scottsdale, Arizona freight procurement and transportation spend
+management platform — marketed as ProcureOS — covering contract procurement (RFPs, mini-bids,
+carrier scorecards), spot procurement (quoting, tendering, tracking), Emerge AI rate benchmarking,
+and the Emerge Marketplace of 45,000+ pre-vetted asset-based carriers across the US, Canada and
+Mexico. It publishes two public REST APIs with OpenAPI 3.0 documents, a 14-event webhook catalog,
+a testing sandbox, an llms.txt, an RFC 9116 security.txt and a public Postman workspace.
+
+- Website: https://www.emergemarket.com/
+- Shipper (public) API docs: https://api-docs.emergemarket.io/
+- Carrier API docs: https://carrier-api-docs.emergemarket.io/
+- Status: https://status.emergemarket.com/
+- Secondary-market listing: https://forgeglobal.com/emerge_stock/

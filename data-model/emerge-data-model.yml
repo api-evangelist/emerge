@@ -1,0 +1,198 @@
+generated: '2026-08-12'
+method: derived
+source: openapi/emerge-public-api-openapi.yml, openapi/emerge-carrier-api-openapi.yml
+note: >-
+  Entity graph derived from the OpenAPI component schemas and their id-reference fields. Emerge's
+  domain vocabulary is published in the Carrier API introduction: a shipper creates an
+  "Opportunity"; a Capacity Provider answers a rate request with a "Quote", which becomes an
+  "Option" for the shipper; the shipper "Awards" and then "Tenders" to a carrier; execution and
+  tracking happen on a "Shipment".
+identifiers:
+  style: integer and GUID `id` fields per entity, plus caller-supplied references
+  caller_supplied:
+  - customer_reference_number (addressable: DELETE /opportunities/by_customer_reference/{customer_reference_number})
+  - references / reference_type_object on opportunities, tenders and carrier events
+  - provider_reference (carrier quote id echoed back on POST /options)
+  - relationship_identifiers (Capacity Link onboarding values carried on rate_request events)
+entities:
+- name: Opportunity
+  schema: opportunities_object
+  description: A shipment a shipper is accepting quotes for; the root of both Emerge workflows.
+  key_fields: [id, reference, type_id, load_type_id, equipment_type_id, equipment_size, option_count,
+    is_posting, search_in_marketplace, request_all_network_partners, is_hot_load, is_tracking_required,
+    priced_at, length_of_haul, created_date, modified_date, is_deleted]
+  status_enum: opportunity_status
+  type_enum: opportunity_type
+  operations:
+  - "POST /opportunities"
+  - "GET /opportunities"
+  - "GET /opportunities/{opportunity_id}"
+  - "PUT /opportunities/{opportunity_id}"
+  - "DELETE /opportunities/{opportunity_id}"
+  - "POST /opportunities/{opportunity_id}/post_to_marketplace"
+  - "POST /opportunities/{opportunity_id}/unpost_from_marketplace"
+  - "POST /opportunities/{opportunity_id}/post_to_network_partners"
+  - "DELETE /opportunities/by_customer_reference/{customer_reference_number}"
+- name: Option
+  schema: options_object
+  description: A carrier's priced response to an opportunity (created from a carrier Quote).
+  key_fields: [id, opportunity_id, partner_id, type_id, rate, rate_pre_mile, availability_date, notes]
+  operations:
+  - "GET /opportunities/{opportunity_id}/options"
+  - "POST /options (Carrier API)"
+- name: Award
+  schema: 200_getawards_partner_response
+  description: The shipper's selection of an option; drives the opportunity_awarded event.
+  operations:
+  - "POST /awards"
+  - "GET /awards"
+  - "GET /awards/{id}"
+- name: Tender
+  schema: tenders_object
+  description: The offer of the load to a specific carrier, and its acceptance lifecycle.
+  key_fields: [id, opportunity_id, option_id, shipment_id, partner_id, status_id, rate, is_dispatched,
+    acceptance_date, assignment, documents, created_by_user_id, modified_by_user_id]
+  status_enum: tender_status
+  operations:
+  - "POST /tenders"
+  - "GET /tenders/{tender_id}"
+  - "PUT /tenders/{tender_id}"
+  - "POST /tenders/{tender_id}/cancel"
+  - "POST /tenders/{shipment_id}/responses (Carrier API)"
+- name: Shipment
+  schema: shipment_object
+  description: The executing load; carries the current tender and the tracking surface.
+  key_fields: [id, reference, status_id, opportunity, tenders, current_tender]
+  status_enum: shipment_status
+  operations:
+  - "GET /shipments/{shipment_id}"
+- name: TrackingShipment
+  schema: tracking_shipment_object
+  description: Tracking projection of a shipment, including the public tracking link.
+  key_fields: [id, emerge_reference, status_id, opportunity_id, organization_id, public_tracking_link, tender, notes]
+- name: NetworkPartner
+  schema: 200_getnetworkpartner_response
+  description: A carrier or broker in the shipper's own private network (distinct from the Marketplace).
+  operations:
+  - "GET /network_partners"
+  - "POST /network_partners"
+  - "DELETE /network_partners/{partner_id}"
+- name: Stop
+  schema: stops_object / opportunity_request_stops_object / opportunity_response_stops_object / tender_stop_object
+  description: A pickup or delivery location on an opportunity or tender, with schedule and contact.
+- name: Commodity
+  schema: commodities_object / request_commodities_object / tender_commodity_object
+  description: What is being hauled on a stop.
+- name: Accessorial
+  schema: accessorials_object / request_accessorials_object
+  description: Additional charge/service line attached to an opportunity or tender.
+- name: Reference
+  schema: references_object / reference_type_object / request_references_object
+  description: Caller-supplied identifiers (BOL, PO, customer reference) attached to an entity.
+- name: OrganizationUser
+  schema: organization_user_response_object
+  description: A user in the shipper organization; opportunities and tenders carry assigned_user.
+  key_fields: [user_id, role, first_name, last_name, email, phone]
+- name: Webhook
+  schema: webhook_object
+  description: A subscriber endpoint registration with event-type selection and Basic auth.
+  key_fields: [url, event_types, content_type, is_enabled, authentication, created_date, modified_date]
+  operations:
+  - "POST /webhooks"
+  - "GET /webhooks"
+  - "GET /webhooks/{webhook_id}"
+  - "PUT /webhooks/{webhook_id}"
+  - "DELETE /webhooks/{webhook_id}"
+relationships:
+- from: Opportunity
+  to: Option
+  kind: has_many
+  via: options_object.opportunity_id
+- from: Opportunity
+  to: Stop
+  kind: has_many
+  via: opportunities_object.stops
+- from: Opportunity
+  to: Commodity
+  kind: has_many
+  via: opportunities_object.commodities
+- from: Opportunity
+  to: Accessorial
+  kind: has_many
+  via: opportunities_object.accessorials
+- from: Opportunity
+  to: Reference
+  kind: has_many
+  via: opportunities_object.references
+- from: Opportunity
+  to: OrganizationUser
+  kind: belongs_to
+  via: opportunities_object.assigned_user_id
+- from: Opportunity
+  to: Shipment
+  kind: has_many
+  via: opportunities_object.shipments
+- from: Option
+  to: NetworkPartner
+  kind: belongs_to
+  via: options_object.partner_id
+- from: Tender
+  to: Opportunity
+  kind: belongs_to
+  via: tenders_object.opportunity_id
+- from: Tender
+  to: Option
+  kind: belongs_to
+  via: tenders_object.option_id
+- from: Tender
+  to: Shipment
+  kind: belongs_to
+  via: tenders_object.shipment_id
+- from: Tender
+  to: NetworkPartner
+  kind: belongs_to
+  via: tenders_object.partner_id
+- from: Tender
+  to: OrganizationUser
+  kind: belongs_to
+  via: tenders_object.assigned_user_id
+- from: Tender
+  to: Stop
+  kind: has_many
+  via: tenders_object.stops
+- from: Shipment
+  to: Tender
+  kind: has_many
+  via: shipment_object.tenders
+- from: Shipment
+  to: Tender
+  kind: has_one
+  via: shipment_object.current_tender
+- from: Shipment
+  to: Opportunity
+  kind: belongs_to
+  via: shipment_object.opportunity
+- from: TrackingShipment
+  to: Opportunity
+  kind: belongs_to
+  via: tracking_shipment_object.opportunity_id
+- from: TrackingShipment
+  to: Tender
+  kind: has_one
+  via: tracking_shipment_object.tender
+enumerations:
+- opportunity_status
+- opportunity_type
+- tender_status
+- shipment_status
+- delivery_Status
+- transportation_entity_types
+- equipment_size_object
+- equipment_type_id_object
+- load_type_id_object
+- webhook_event_types
+counts:
+  schemas_public_api: 103
+  schemas_carrier_api: 20
+  entities: 12
+  relationships: 19

@@ -1,0 +1,50 @@
+generated: '2026-08-12'
+method: generated
+source: openapi/emerge-public-api-openapi.yml, openapi/emerge-carrier-api-openapi.yml
+note: >-
+  Emerge publishes no AGENTS.md or provider-authored skill files. These four skills are generated
+  from the two published OpenAPI documents and the artifacts in this repo, and mirror the two
+  workflows Emerge itself names (opportunity-to-tender, opportunity-to-award) plus the webhook
+  subscription surface and the carrier side. Neither OpenAPI defines `operationId` on any operation,
+  so every step in every skill is grounded in the real HTTP method + path from the spec.
+skills:
+- file: emerge-opportunity-to-tender.md
+  name: Source truckload capacity on Emerge and tender it
+  api: openapi/emerge-public-api-openapi.yml
+  operations:
+  - POST /auth/login
+  - POST /opportunities
+  - POST /opportunities/{opportunity_id}/post_to_marketplace
+  - POST /opportunities/{opportunity_id}/post_to_network_partners
+  - GET /opportunities/{opportunity_id}/options
+  - POST /tenders
+  - GET /tenders/{tender_id}
+  - GET /shipments/{shipment_id}
+- file: emerge-opportunity-to-award.md
+  name: Source capacity on Emerge and award it back into your own TMS
+  api: openapi/emerge-public-api-openapi.yml
+  operations:
+  - POST /auth/login
+  - POST /opportunities
+  - POST /opportunities/{opportunity_id}/post_to_marketplace
+  - GET /opportunities/{opportunity_id}/options
+  - POST /awards
+  - GET /awards
+  - GET /awards/{id}
+  - DELETE /opportunities/by_customer_reference/{customer_reference_number}
+- file: emerge-subscribe-to-events.md
+  name: Subscribe to Emerge webhook events
+  api: openapi/emerge-public-api-openapi.yml
+  operations:
+  - POST /webhooks
+  - GET /webhooks
+  - GET /webhooks/{webhook_id}
+  - PUT /webhooks/{webhook_id}
+  - DELETE /webhooks/{webhook_id}
+- file: emerge-carrier-quote-and-tender.md
+  name: Quote and accept Emerge freight as a Capacity Provider
+  api: openapi/emerge-carrier-api-openapi.yml
+  operations:
+  - POST /auth/login/client_credentials
+  - POST /options
+  - POST /tenders/{shipment_id}/responses

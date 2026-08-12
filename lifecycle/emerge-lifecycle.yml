@@ -1,0 +1,72 @@
+generated: '2026-08-12'
+method: searched
+source: https://api-docs.emergemarket.io/#section/Get-Started/Compatibility-Policy
+versioning:
+  scheme: uri-path
+  current:
+    Emerge Public API (Shipper API): v1
+    Emerge Carrier API: v2
+  spec_versions:
+    Emerge Public API (Shipper API): 1.2.1
+    Emerge Carrier API: 2.0.0
+  docs: https://api-docs.emergemarket.io/#section/Get-Started/Compatibility-Policy
+  policy: >-
+    Emerge APIs are versioned with a prefix in the endpoint URL. Within a version only
+    backward-compatible changes are made; an incompatible change creates a new version.
+  non_breaking_changes:
+  - Adding additional optional fields on the API request
+  - Adding additional fields on the API response
+  - Adding an HTTP method to an API
+  - Adding optional headers
+  - Adding additional accepted enumerated values
+  - Changing Error Response descriptions
+  - Adding Rate Limits
+  breaking_changes:
+  - Removing or renaming an API method or endpoint
+  - Removing or renaming existing API request or response fields
+  - Removing or renaming enumerated values
+  - Changing the Error Response values
+deprecation:
+  policy_url: https://api-docs.emergemarket.io/#section/Get-Started/Compatibility-Policy
+  support_window: 1 year
+  policy: >-
+    Emerge continues to support deprecated APIs for one year. Documentation is updated and
+    integrating providers are notified by email when a version or endpoint is being deprecated.
+  notification_channel: email to integrating providers
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+status_page:
+  url: https://status.emergemarket.com/
+  platform: Atlassian Statuspage
+  components:
+  - Web Application
+  - Carrier TMS
+  - Carrier RFP
+  - Shipper TMS
+  - Shipper RFP
+  - API
+  - Shipper API
+  - Carrier API
+  observed_uptime_90d:
+    API: '99.97%'
+    Shipper API: '99.97%'
+    Carrier API: '99.97%'
+    Web Application: '99.88%'
+  note: uptime figures observed on the public status page on 2026-08-12
+sla:
+  url: null
+  uptime_target: null
+  note: >-
+    No published SLA or uptime commitment was found; the status page reports observed uptime only.
+    Fee/commercial terms are at https://www.emergemarket.com/legal/fees and API terms at
+    https://www.emergemarket.com/legal/api-terms-of-use.
+changelog:
+  url: null
+  note: >-
+    No dated changelog or release-notes page was found on the marketing site, the two Redoc docs
+    hosts, or the Intercom help center. Version history is only implied by the spec `info.version`
+    values (Shipper 1.2.1, Carrier 2.0.0) and the compatibility policy above.
+deprecated_operations: []
+deprecated_operations_note: >-
+  No operation in either OpenAPI carries `deprecated: true`.

@@ -1,0 +1,87 @@
+generated: '2026-08-12'
+method: searched
+source: https://api-docs.emergemarket.io/, https://carrier-api-docs.emergemarket.io/
+derived_from:
+- openapi/emerge-public-api-openapi.yml
+- openapi/emerge-carrier-api-openapi.yml
+style:
+  description: >-
+    Emerge describes its own API as "a 'restish' API" designed around familiar HTTP verbs
+    (POST/PUT/DELETE/GET). Resources are plural, snake_case path segments; identifiers are path
+    parameters; sub-actions are POST verbs on a resource sub-path
+    (/opportunities/{id}/post_to_marketplace, /tenders/{id}/cancel).
+  media_type: application/json
+  naming: snake_case for paths, query parameters, request and response fields
+authentication:
+  style: HTTP bearer token
+  scheme: BearerAuth (http/bearer)
+  shipper_token: POST /auth/login with user_name + password
+  carrier_token: POST /auth/login/client_credentials with client id + client secret
+  refresh: POST /auth/refresh (shipper)
+  detail: authentication/emerge-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    No idempotency key, replay protection, or safe-retry contract is documented in either OpenAPI or
+    on the docs sites. Retries of POST /opportunities, POST /awards or POST /tenders are not
+    protected. No `type: Idempotency` pointer is emitted for this provider because there is no
+    idempotency contract to point at.
+pagination:
+  supported: partial
+  style: none-documented
+  note: >-
+    Collection reads (GET /opportunities, GET /awards, GET /network_partners, GET /webhooks,
+    GET /opportunities/{id}/options) declare no page/limit/offset/cursor parameters and no paging
+    envelope in the OpenAPI. Filtering on GET /opportunities is by query parameter rather than a
+    paging cursor.
+field_expansion:
+  supported: false
+sparse_fieldsets:
+  supported: false
+metadata:
+  supported: true
+  mechanism: references / customer_reference_number
+  note: >-
+    Callers attach their own identifiers through the references_object / reference_type_object
+    structures and the customer_reference_number, which is also addressable directly
+    (DELETE /opportunities/by_customer_reference/{customer_reference_number}). Carrier providers
+    echo their own quote id in `provider_reference`, and Rate Request events carry a
+    relationship_identifiers object supplied at Capacity Link onboarding.
+request_tracing:
+  request_id_header: null
+  note: No request-id or correlation-id header is documented.
+versioning:
+  style: uri-path prefix (/v1 shipper, /v2 carrier)
+  detail: lifecycle/emerge-lifecycle.yml
+error_envelope:
+  format: proprietary JSON
+  shapes:
+  - '{"error": {"code": integer, "messages": [string]}}'
+  - '{"code": integer}'
+  rfc9457: false
+  detail: errors/emerge-problem-types.yml
+rate_limiting:
+  documented: partial
+  known_limit: authentication up to 20 requests per second (may be lower at high volume)
+  response_status: 429
+  response_headers: none-documented
+  detail: rate-limits/emerge-rate-limits.yml
+events:
+  style: HTTP webhooks with subscriber-side HTTP Basic auth
+  retries: 6 attempts at 1/4/9/16/25/36 second gaps
+  detail: asyncapi/emerge-webhooks.yml
+timestamps:
+  format: ISO 8601 with offset
+  example: '2019-02-12T02:36:54.2973188+00:00'
+  fields: [created_date, modified_date]
+environments:
+  production: https://api.emergemarket.io
+  sandbox: https://demo-api.emergemarket.dev
+  detail: sandbox/emerge-sandbox.yml
+gaps:
+- No idempotency key on any write operation.
+- No pagination contract on any collection read.
+- No operationId on any operation in either OpenAPI document.
+- No rate-limit response headers.
+- No request/correlation id header.
