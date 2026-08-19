@@ -1,0 +1,87 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Emerge Carrier API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets access token for Integration Provider.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v2/auth/login/client_credentials",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This method allows an Integration Provider to generate an access token from Emerge platform. A client credential pair, composed of a client id and a client secret, must be supplied in the request. The procured access token should be sent by the Integration Provider while calling other Carrier API endpoints."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Options",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Respond to Quote",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v2/options",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This method is used to respond a Rate Request. If a Quote is supplied, an Option is created inside of the Emerge Platform. If an error is sent, the reason the Provider did not quote is given to the Shipper."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Tender",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Respond to Tender",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v2/tenders/:shipment_id/responses",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This method is used to receive response for a Tender."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,781 @@
+{
+  "item": [
+    {
+      "id": "33759b0b-04ee-46a2-9308-16f762be8477",
+      "name": "Rate Request Event",
+      "description": {
+        "content": "<h3>rate_request</h3>\nThis object contains Opportunity details used to create a rate by a Capacity Provider. Once a Capacity Provider has received the rate request event, they can respond with a quote using the Quote Response endpoint. If there is no response to the rate request within the time specified by the Integration Provider configuration, a manual rate request will be made available in the Emerge Platform and an email requesting a rate is sent to the Capacity Provider.\n <SchemaDefinition schemaRef=\"#/components/schemas/Rate_Request_Event\" />\n",
+        "type": "text/plain"
+      },
+      "item": [],
+      "event": []
+    },
+    {
+      "id": "8d8a4ae0-c7ad-4698-9480-b971c1517351",
+      "name": "Tender Request Event",
+      "description": {
+        "content": "<h3>tender_request</h3>\nThe object contains tender details used to respond by a Capacity Provider.\n <SchemaDefinition schemaRef=\"#/components/schemas/Tender_Request_Event\" />\n",
+        "type": "text/plain"
+      },
+      "item": [],
+      "event": []
+    },
+    {
+      "id": "1da06fa7-ddd4-4fca-9360-5d3ff9e87dbe",
+      "name": "Authentication",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "afcd13b2-4e68-40fa-a24d-85253f75bfd6",
+          "name": "Gets access token for Integration Provider.",
+          "request": {
+            "name": "Gets access token for Integration Provider.",
+            "description": {
+              "content": "This method allows an Integration Provider to generate an access token from Emerge platform. A client credential pair, composed of a client id and a client secret, must be supplied in the request. The procured access token should be sent by the Integration Provider while calling other Carrier API endpoints.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "auth",
+                "login",
+                "client_credentials"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "05f4193f-3396-4860-96ef-f5fad28347bb",
+              "name": "200 | OK. A JSON object containing the access token and additional information.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "auth",
+                    "login",
+                    "client_credentials"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"client_id\": \"eMF2mQNXue5BXjmUNX1pQ45grwrquuiQ\",\n  \"client_secret\": \"1gTmAOzPLqoE5HKxjWgFt8WnAEPu3MQjlNBrR94c1q4o7UTtGgRd1QGwCFzVPsWb\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"response\": {\n    \"token\": \"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1qQkRRemN5TlRoQ05UbERNVVpGTXpneU5FUXpNVVF4UVRoR1FUSTRPRFF5T0VFeE16QXdRdyJ9.eyJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tL1Byb3ZpZGVyR3VpZCI6ImQ1OWEyNTY0LTAyNzAtNDBhYy1iYWZkLWIwNWE0NDNlZGY4ZiIsImlzcyI6Imh0dHBzOi8vdmFudGFnZWZyZWlnaHQuYXV0aDAuY29tLyIsInN1YiI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tIiwiaWF0IjoxNjMxNjk5MjM3LCJleHAiOjE2MzE3ODU2MzcsImF6cCI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRIiwic2NvcGUiOiJpbnRlZ3JhdGlvbjpzY29wZSIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.kMHPwoPFORvTp4A5e-1sc6gwCAdVPGwv3fx_I8sN_RSEWG7Cd9BSfQf5UtDOq4zyrAHmVyf1hczxL5bvVC4XOoe7v0g2hqbogEPEQLubO5tWZdoG76xKRYuJC-7aJAW8MJFUnp952l2rWE4bQ3jsQsLyZIavsaTW3dmrOgWEBLIbKR_4vMdA4SAIhclV_ZatiZRCtl6sib7KIUXQ8rFq5UjY_Oc3_XfSOTzgJSwV0eVA5D7Sty88Zqf6ElQNRf2jt4srZ0q3O1flVdyjCYsigig8xl7vSlkt-TJgMi8efucGsLPCR4DbsR1tlS7ulc05wIQL3QgngMajfCSfkSnOig\",\n    \"expires_in\": 86400\n  },\n  \"error\": {\n    \"code\": 0\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ba59e7c5-eb3f-419f-8a57-42478b1150bb",
+              "name": "400 | Bad Request. A bad request was made. Please try again",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "auth",
+                    "login",
+                    "client_credentials"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"client_id\": \"eMF2mQNXue5BXjmUNX1pQ45grwrquuiQ\",\n  \"client_secret\": \"1gTmAOzPLqoE5HKxjWgFt8WnAEPu3MQjlNBrR94c1q4o7UTtGgRd1QGwCFzVPsWb\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": 400,\n    \"detailed_errors\": [\n      {\n        \"key\": \"client_id\",\n        \"value\": \"client_id must not be empty.\"\n      },\n      {\n        \"key\": \"client_id\",\n        \"value\": \"client_id must not be empty.\"\n      }\n    ],\n    \"messages\": [\n      \"Validation failed.\",\n      \"Validation failed.\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "67ddfe8f-a2c5-4df8-9b0a-5f81604be41d",
+              "name": "403 | Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "auth",
+                    "login",
+                    "client_credentials"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"client_id\": \"eMF2mQNXue5BXjmUNX1pQ45grwrquuiQ\",\n  \"client_secret\": \"1gTmAOzPLqoE5HKxjWgFt8WnAEPu3MQjlNBrR94c1q4o7UTtGgRd1QGwCFzVPsWb\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": 403,\n    \"messages\": [\n      \"Response status code does not indicate success 403 (Forbidden)\",\n      \"Response status code does not indicate success 403 (Forbidden)\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "a785d8a4-bb5e-4e65-8a13-8d7133614a1e",
+      "name": "Options",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0aa9c33b-1329-415f-a117-14e06ffc6a23",
+          "name": "Respond to Quote",
+          "request": {
+            "name": "Respond to Quote",
+            "description": {
+              "content": "This method is used to respond a Rate Request. If a Quote is supplied, an Option is created inside of the Emerge Platform. If an error is sent, the reason the Provider did not quote is given to the Shipper.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "options"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rate_request_id\": \"<string>\",\n  \"quote_details\": {\n    \"provider_reference\": \"<string>\",\n    \"rate\": {\n      \"amount\": \"<integer>\",\n      \"currency\": \"<string>\",\n      \"type\": \"<string>\"\n    },\n    \"expiration_date\": \"<string>\"\n  },\n  \"error_messages\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f71d5e53-3598-478a-8d78-1a7d67974966",
+              "name": "202 | Accepted. Rates submitted successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "options"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rate_request_id\": \"31e34816-f50d-4158-88b8-768715f628b2\",\n  \"quote_details\": {\n    \"provider_reference\": \"a55097d0-76e3-427c-bc67-613dd0a2ded2\",\n    \"rate\": {\n      \"amount\": 100,\n      \"currency\": \"USD\",\n      \"type\": \"LH_ONLY\"\n    },\n    \"expiration_date\": \"2021-09-22T12:01:56.9726183+00:00\"\n  },\n  \"error_messages\": [\n    \"Unable to Quote due to ...\",\n    \"Unable to Quote due to ...\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": 0\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fcbdd4de-12c3-4871-812e-3850134989ab",
+              "name": "400 | Bad Request. A bad request was made. Please try again",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "options"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rate_request_id\": \"31e34816-f50d-4158-88b8-768715f628b2\",\n  \"quote_details\": {\n    \"provider_reference\": \"a55097d0-76e3-427c-bc67-613dd0a2ded2\",\n    \"rate\": {\n      \"amount\": 100,\n      \"currency\": \"USD\",\n      \"type\": \"LH_ONLY\"\n    },\n    \"expiration_date\": \"2021-09-22T12:01:56.9726183+00:00\"\n  },\n  \"error_messages\": [\n    \"Unable to Quote due to ...\",\n    \"Unable to Quote due to ...\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": 400,\n    \"detailed_errors\": [\n      {\n        \"key\": 986,\n        \"value\": \"Must have at least one reason in case unable to provide rate..\"\n      },\n      {\n        \"key\": 6562,\n        \"value\": \"Must have at least one reason in case unable to provide rate..\"\n      }\n    ],\n    \"messages\": [\n      \"Validation failed.\",\n      \"Validation failed.\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4699b202-074d-4d2c-be6f-2c3cdaf80146",
+              "name": "401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "options"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rate_request_id\": \"31e34816-f50d-4158-88b8-768715f628b2\",\n  \"quote_details\": {\n    \"provider_reference\": \"a55097d0-76e3-427c-bc67-613dd0a2ded2\",\n    \"rate\": {\n      \"amount\": 100,\n      \"currency\": \"USD\",\n      \"type\": \"LH_ONLY\"\n    },\n    \"expiration_date\": \"2021-09-22T12:01:56.9726183+00:00\"\n  },\n  \"error_messages\": [\n    \"Unable to Quote due to ...\",\n    \"Unable to Quote due to ...\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b5b584cf-86d3-4bc6-814d-0728a5326e7e",
+              "name": "403 | Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "options"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rate_request_id\": \"31e34816-f50d-4158-88b8-768715f628b2\",\n  \"quote_details\": {\n    \"provider_reference\": \"a55097d0-76e3-427c-bc67-613dd0a2ded2\",\n    \"rate\": {\n      \"amount\": 100,\n      \"currency\": \"USD\",\n      \"type\": \"LH_ONLY\"\n    },\n    \"expiration_date\": \"2021-09-22T12:01:56.9726183+00:00\"\n  },\n  \"error_messages\": [\n    \"Unable to Quote due to ...\",\n    \"Unable to Quote due to ...\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": 403,\n    \"messages\": [\n      \"Response status code does not indicate success 403 (Forbidden)\",\n      \"Response status code does not indicate success 403 (Forbidden)\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "d8fbc011-c1db-48c7-8cd5-5e8e1d5ed6a8",
+      "name": "Tender",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "bcef57ea-c4b6-40e1-9f1d-d81b5e327018",
+          "name": "Respond to Tender",
+          "request": {
+            "name": "Respond to Tender",
+            "description": {
+              "content": "This method is used to receive response for a Tender.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tenders",
+                ":shipment_id",
+                "responses"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_id\": \"<string>\",\n  \"status\": \"<string>\",\n  \"rejection_reason\": \"<string>\",\n  \"carrier_shipment_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "dfd1fbb0-5000-4231-b833-e8be97fb179d",
+              "name": "202 | Accepted. Rates submitted successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tenders",
+                    ":shipment_id",
+                    "responses"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_id\": \"40dbcdb1-272b-4ee3-8621-208b88fe0beb\",\n  \"status\": \"ACCEPT\",\n  \"rejection_reason\": \"NO_CAPACITY\",\n  \"carrier_shipment_id\": \"S111171611\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": 0\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1faaf74d-cc38-4545-b1f5-11d8c42f3a9e",
+              "name": "400 | Bad Request. A bad request was made. Please try again",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tenders",
+                    ":shipment_id",
+                    "responses"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_id\": \"40dbcdb1-272b-4ee3-8621-208b88fe0beb\",\n  \"status\": \"ACCEPT\",\n  \"rejection_reason\": \"NO_CAPACITY\",\n  \"carrier_shipment_id\": \"S111171611\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": 400,\n    \"detailed_errors\": [\n      {\n        \"key\": \"status\",\n        \"value\": \"Error converting value to type 'Emerge.Atom.Carrier.Integrations.Contracts.Enums.TenderResponseStatus'.\"\n      },\n      {\n        \"key\": \"status\",\n        \"value\": \"Error converting value to type 'Emerge.Atom.Carrier.Integrations.Contracts.Enums.TenderResponseStatus'.\"\n      }\n    ],\n    \"messages\": [\n      \"Validation failed.\",\n      \"Validation failed.\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7d6fd36d-e899-4f64-a4b7-773a6e3a29ec",
+              "name": "401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tenders",
+                    ":shipment_id",
+                    "responses"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_id\": \"40dbcdb1-272b-4ee3-8621-208b88fe0beb\",\n  \"status\": \"ACCEPT\",\n  \"rejection_reason\": \"NO_CAPACITY\",\n  \"carrier_shipment_id\": \"S111171611\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "470ff4d0-aa7d-4bd6-9f71-af65f0041fd4",
+              "name": "403 | Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tenders",
+                    ":shipment_id",
+                    "responses"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_id\": \"40dbcdb1-272b-4ee3-8621-208b88fe0beb\",\n  \"status\": \"ACCEPT\",\n  \"rejection_reason\": \"NO_CAPACITY\",\n  \"carrier_shipment_id\": \"S111171611\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": 403,\n    \"messages\": [\n      \"Response status code does not indicate success 403 (Forbidden)\",\n      \"Response status code does not indicate success 403 (Forbidden)\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.emergemarket.io/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "0ab5c186-ba74-4abf-830e-db5303070fd2",
+    "name": "Emerge Carrier API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "### \nThe Emerge carrier API provides integrated carrier (Provider) developers with access to the Emerge platform.\n\nThe current version of the API is v1.0.0 This API will evolve as the features in Emerge's product evolve.\n\n# Get Started\n\nWelcome to Emerge's REST API Carrier Documentation. \nOur APIs allow Capacity and Integration Providers to easily interact with Shippers utilizing Emerge's Platform. \n\nIf you are interested in implementing a Carrier API integration\nplease submit a request [here](https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179) \n\nAll production level API requests are made to:\n<br />`https://api.emergemarket.io`\n\n\nThe testing sandbox is available during development and for testing:\n<br />`https://demo-api.emergemarket.dev`\n\n## Compatibility Policy\n\nEmerge APIs are versioned using a prefix in the endpoint URL. Within an API version, we only make backward-compatible changes. This mean that when a provider integrates with our REST API, the API will continue to work until the version is deprecated. If we have to create a change that is not compatible with the current version, a new version will be created.\n\n### Non-Breaking Changes\n\n* Adding additional optional fields on the API request.\n* Adding additional fields on the API response.\n* Adding an HTTP method to an API.\n* Adding optional headers.\n* Adding additional accepted enumerated values.\n* Changing Error Response descriptions.\n* Added Rate Limits.\n\n### Breaking Changes\n\n* Removing or renaming an API method or endpoint.\n* Removing or renaming existing API request or response fields.\n* Removing or renaming enumerated values.\n* Changing the Error Response values.\n\n### Deprecation Policy\n\n* Emerge will continue to support deprecated APIs for 1 year.\n* Documentation will also be updated and integrating providers will be notified via email when a version or endpoint is being deprecated.\n\n# Workflows\nOur Carrier APIs enable Capacity Providers more flexibility when working with Shippers using Emerge's Platform. \nMore workflows will become available in the future as we continue growing our Carrier API suite.\n\nWhile integrating with Emerge, it is helpful to be aware of our nomenclature. \nOur Shippers create \"Opportunities,\" defined as shipments they are accepting quotes for. \nWhen we request a rate, you respond with a \"Quote\" which is composed of the rate and duration details. \nOnce a Quote is received from our Capacity Providers, it becomes an \"Option\" for our Shippers to review. \nYou will see these terms throughout our documentation.\n\n## Rate Request to Quote Response\nIn this workflow, Emerge automatically sends Rate Requests to our Capacity Providers on behalf of our Shippers. \nThis workflow makes it easy for Capacity Providers to rate Opportunities while maintaining existing processes. The steps of this workflow include:\n\n1. Receive a Rate Request Event via Webhook.<br />\na. Rate Requests contain Shipper identifying information in the relationship_identifiers object. These values are provided by the Capacity Provider during Capacity Link onboarding to enable matching in the Provider's application.<br />\n\n2. Review Opportunity details and determine whether to provide a quote.<br />\n\n3. Send the Rate or provide the Error Reason for declining to rate via the Quote Response Endpoint.<br />\na. A Quote Response must provide the event_id sourced from the Rate Request Event.<br />\nb. Providers can respond with either a Rate or an Error to let the shipper know why they are not providing a rate.<br />\nc. Providers responding with a rate can include their Quote ID in the provider_reference field.<br />\n\n4. The Rate will be available for Review by the Shipper.\n",
+      "type": "text/plain"
+    }
+  }
+}

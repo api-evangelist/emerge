@@ -1,0 +1,862 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Emerge Public API",
+    "version": "1.2.1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets access token for shipper user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v1/auth/login",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This method allows the shipper user to generate an access token from Emerge platform. This access token is based upon a username/password combination that should be supplied in the request. Authentication has a rate limit of up to 20 requests per second. This limit may be lower during times of high volumes."
+        },
+        {
+          "info": {
+            "name": "Gets a refreshed access token for shipper user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v1/auth/refresh",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This method allows users to refresh their access token based upon the original authentication event."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Network Partners",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets all active network partners associated with the shipper organization.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.emergemarket.io/v1/network_partners",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This method gives the ability to a shipper organization to view its active network partners in the Emerge system."
+        },
+        {
+          "info": {
+            "name": "Invites a network partner to Emerge platform.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v1/network_partners",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This method gives the ability to the shipper organization to invite it's network partner to the Emerge platform."
+        },
+        {
+          "info": {
+            "name": "Deletes a network partner from Emerge platform.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.emergemarket.io/v1/network_partners/:partner_id",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "partner_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the network partner."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This method gives the ability to a shipper organization to delete it's network partner from the Emerge platform."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Opportunities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieves the details of opportunities by Reference Numbers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.emergemarket.io/v1/opportunities",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "references.customer",
+                "value": "",
+                "type": "query",
+                "description": "Reference Number of the opportunity <br />\nKeys: <span style=\"color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere\"> references.customer </span>\n<span style=\"color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere\"> references.trailer </span>\n<span style=\"color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere\"> references.pro </span>\n<span style=\"color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere\"> references.pickupconfirmation </span>\n<span style=\"color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere\"> references.pickup </span>\n<span style=\"color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere\"> references.bol </span>\n<span style=\"color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere\"> references.appointment </span>\n<span style=\"color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere\"> references.delivery </span>\n<span style=\"color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere\"> references.other </span>\n<span style=\"color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere\"> references.po </span>\n"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves the details of opportunities by Reference Numbers"
+        },
+        {
+          "info": {
+            "name": "Creates an opportunity.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v1/opportunities",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates an opportunity, also called a quote, in the system. Emerge recommends that the call provides a pickup date to ensure that this opportunity can be posted to the marketplace."
+        },
+        {
+          "info": {
+            "name": "Retrieves the details of an opportunity by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.emergemarket.io/v1/opportunities/:opportunity_id",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the opportunity"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves the details of an opportunity by ID"
+        },
+        {
+          "info": {
+            "name": "Updates an opportunity by ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.emergemarket.io/v1/opportunities/:opportunity_id",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the opportunity"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates an opportunity by ID."
+        },
+        {
+          "info": {
+            "name": "Deletes an opportunity by opportunity ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.emergemarket.io/v1/opportunities/:opportunity_id",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the opportunity"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes an opportunity using the opportunity ID."
+        },
+        {
+          "info": {
+            "name": "Posts an opportunity to the Emerge marketplace.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v1/opportunities/:opportunity_id/post_to_marketplace",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the opportunity"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This method gives the ability to a shipper organization to post an opportunity to the Emerge marketplace."
+        },
+        {
+          "info": {
+            "name": "Unposts an opportunity from the Emerge marketplace.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v1/opportunities/:opportunity_id/unpost_from_marketplace",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the opportunity"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This method gives the ability to a shipper organization to unpost an opportunity from the Emerge marketplace."
+        },
+        {
+          "info": {
+            "name": "Posts an opportunity to shipper's network partners.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v1/opportunities/:opportunity_id/post_to_network_partners",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the opportunity"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This method gives the ability to a shipper organization to post an opportunity to its network partners (capacity providers)."
+        },
+        {
+          "info": {
+            "name": "Deletes an opportunity by customer reference number.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.emergemarket.io/v1/opportunities/by_customer_reference/:customer_reference_number",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "customer_reference_number",
+                "value": "",
+                "type": "path",
+                "description": "Customer reference number."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete an opportunity using the Customer Reference Number. If there are multiple matches for the Customer Reference number, all open opportunities with that Customer Reference number will be deleted."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Options",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets options for an opportunity.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.emergemarket.io/v1/opportunities/:opportunity_id/options",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the opportunity"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Gets all network partner options and market place options for a specific opportunity."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Awards",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Returns an array of awards.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.emergemarket.io/v1/awards",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "344392",
+                "type": "query",
+                "description": "Emerge system identifier for the awarded opportunity."
+              },
+              {
+                "name": "option_id",
+                "value": "12545",
+                "type": "query",
+                "description": "Emerge system identifier for the option associated with the awarded opportunity."
+              },
+              {
+                "name": "customer_reference_number",
+                "value": "1212934",
+                "type": "query",
+                "description": "Customer's identifier to match the awarded opportunity on."
+              },
+              {
+                "name": "start_date",
+                "value": "2021-10-28",
+                "type": "query",
+                "description": "Start of the date range within which the Awards should be searched. Supports yyyy-mm-dd format."
+              },
+              {
+                "name": "end_date",
+                "value": "2021-10-30",
+                "type": "query",
+                "description": "End of the date range within which the Awards should be searched. Supports yyyy-mm-dd format."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns a list of awards for a particular account. An opportunity can have either an award or a shipment."
+        },
+        {
+          "info": {
+            "name": "Creates an award.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v1/awards",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates an award. Awarding is the process of informing the carrier that they have won the shipment without tendering to them."
+        },
+        {
+          "info": {
+            "name": "Retrieves the details of an award.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.emergemarket.io/v1/awards/:id",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the award"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns an award. An opportunity can have either an award or a shipment."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Tenders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Creates a tender",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v1/tenders",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "The opportunity_id must be included in the create tender call."
+        },
+        {
+          "info": {
+            "name": "Retrieves the details of a tender.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.emergemarket.io/v1/tenders/:tender_id",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "tender_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the tender"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Tenders allow the shipper to award the shipment to Emerge Transportation. The get tender endpoint allows a developer to retrieve a specific tender."
+        },
+        {
+          "info": {
+            "name": "Updates a tender.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.emergemarket.io/v1/tenders/:tender_id",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "tender_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the tender"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "The shipment_id and rate value must be included in the update tender call."
+        },
+        {
+          "info": {
+            "name": "Cancel a tender.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v1/tenders/:tender_id/cancel",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "tender_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the tender"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Cancel a tender."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Shipments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get shipment.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.emergemarket.io/v1/shipments/:shipment_id",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "shipment_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the shipment"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "The Get Shipment end point allows shippers to get the full details of a shipment by it's ID."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of all webhooks.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.emergemarket.io/v1/webhooks",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a list of all webhooks."
+        },
+        {
+          "info": {
+            "name": "Create a new webhook.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.emergemarket.io/v1/webhooks",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new webhook."
+        },
+        {
+          "info": {
+            "name": "Get the details of a webhook by Id.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.emergemarket.io/v1/webhooks/:webhook_id",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "webhook_id",
+                "value": "",
+                "type": "path",
+                "description": "Identifier of the webhook"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the details of a webhook by Id."
+        },
+        {
+          "info": {
+            "name": "Update an existing webhook.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.emergemarket.io/v1/webhooks/:webhook_id",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "webhook_id",
+                "value": "",
+                "type": "path",
+                "description": "Identifier of the webhook"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update an existing webhook."
+        },
+        {
+          "info": {
+            "name": "Delete a webhook.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.emergemarket.io/v1/webhooks/:webhook_id",
+            "headers": [
+              {
+                "name": "organization-id",
+                "value": "070C895C-AE61-4629-A603-829FC54CD816"
+              }
+            ],
+            "params": [
+              {
+                "name": "webhook_id",
+                "value": "",
+                "type": "path",
+                "description": "Identifier of the webhook"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a webhook."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

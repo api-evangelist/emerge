@@ -27,13 +27,12 @@ search_result:
   third_party: []
   docs_mentions: none
 server: null
-note: >-
-  Emerge operates no MCP server. The tools below are a CANDIDATE surface derived one-to-one from the
-  published REST operations so an implementer (Emerge or a partner) has a starting shape. They are
-  not offered by Emerge and no tool below has ever been called. Neither OpenAPI document defines
-  operationId on any operation, so each candidate tool cites its METHOD + PATH as the source
-  operation instead of an operationId — the tool's real input contract is that operation's
-  parameters and requestBody in the referenced spec.
+note: Emerge operates no MCP server. The tools below are a CANDIDATE surface derived one-to-one from the
+  published REST operations so an implementer (Emerge or a partner) has a starting shape. They are not
+  offered by Emerge and no tool below has ever been called. Neither OpenAPI document defines operationId
+  on any operation, so each candidate tool cites its METHOD + PATH as the source operation instead of
+  an operationId — the tool's real input contract is that operation's parameters and requestBody in the
+  referenced spec.
 tools:
 - name: emerge_login
   description: Exchange a shipper username and password for a bearer access token.
@@ -132,3 +131,9 @@ counts:
   tools_candidate: 31
   rest_operations_total: 31
   tools_published_by_provider: 0
+deployment:
+  mode: none
+  verified: derived
+  tools: 31
+  checked: '2026-08-12'
+  source: catalog MCP census
