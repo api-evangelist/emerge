@@ -20,6 +20,19 @@ specificationVersion: '0.23'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
+- Freight
+- Logistics
+- Transportation
+- Supply Chain
+- Procurement
+- Trucking
+- Freight Marketplace
+- Transportation Management
+- Shipping
+- rate-benchmarking
+- Webhook
+- B2B Marketplace
+tags_raw:
 - freight
 - logistics
 - transportation
@@ -43,6 +56,13 @@ apis:
   humanURL: https://api-docs.emergemarket.io/
   baseURL: https://api.emergemarket.io/v1
   tags:
+  - Freight
+  - Logistics
+  - Procurement
+  - Transportation Management
+  - Webhook
+  - Shipping
+  tags_raw:
   - freight
   - logistics
   - procurement
@@ -84,6 +104,12 @@ apis:
   humanURL: https://carrier-api-docs.emergemarket.io/
   baseURL: https://api.emergemarket.io/v2
   tags:
+  - Freight
+  - Logistics
+  - Trucking
+  - Carrier Integration
+  - Webhook
+  tags_raw:
   - freight
   - logistics
   - trucking
