@@ -46,38 +46,22 @@ tags_raw:
 - webhooks
 - b2b-marketplace
 apis:
-- name: Emerge Public API (Shipper API)
-  description: >-
-    REST API giving partner developers and shipper TMS platforms access to the core Emerge shipper
-    workflow: create and manage opportunities, post them to the Emerge Marketplace or to network
-    partners, retrieve carrier options, create awards, tender to a carrier, track shipments, manage
-    network partners, and subscribe to webhook events. Supports the opportunity-to-tender and
-    opportunity-to-award workflows. Bearer token auth via a username/password login exchange.
+- aid: emerge:emerge-authentication-api
+  name: Emerge Authentication API
+  description: The Authentication API from Emerge — 3 operation(s) for authentication.
   humanURL: https://api-docs.emergemarket.io/
   baseURL: https://api.emergemarket.io/v1
   tags:
-  - Freight
-  - Logistics
-  - Procurement
-  - Transportation Management
-  - Webhook
-  - Shipping
-  tags_raw:
-  - freight
-  - logistics
-  - procurement
-  - transportation-management
-  - webhooks
-  - shipping
+  - Authentication
   properties:
+  - type: OpenAPI
+    url: openapi/emerge-authentication-api-openapi.yml
   - type: Documentation
     url: https://api-docs.emergemarket.io/
   - type: APIReference
     url: https://api-docs.emergemarket.io/
   - type: GettingStarted
     url: https://api-docs.emergemarket.io/#section/Get-Started
-  - type: OpenAPI
-    url: openapi/emerge-public-api-openapi.yml
   - type: Authentication
     url: authentication/emerge-authentication.yml
   - type: Webhooks
@@ -86,55 +70,337 @@ apis:
     url: errors/emerge-problem-types.yml
   - type: DataModel
     url: data-model/emerge-data-model.yml
-  - type: Overlay
-    url: overlays/emerge-public-api-overlay.yaml
   - type: RateLimits
     url: rate-limits/emerge-rate-limits.yml
   - type: Sandbox
     url: sandbox/emerge-sandbox.yml
   - type: TermsOfService
     url: https://www.emergemarket.com/legal/api-terms-of-use
-- name: Emerge Carrier API
-  description: >-
-    REST API for Capacity and Integration Providers (carriers, brokers and their TMS vendors) working
-    with shippers on the Emerge platform. Providers receive Rate Request and Tender Request events by
-    webhook, then respond with a quote (creating an Option for the shipper) or a tender response.
-    Authenticates with a client id / client secret credential pair exchanged for a bearer token. Part
-    of the Capacity Link program.
-  humanURL: https://carrier-api-docs.emergemarket.io/
-  baseURL: https://api.emergemarket.io/v2
-  tags:
-  - Freight
-  - Logistics
-  - Trucking
-  - Carrier Integration
-  - Webhook
-  tags_raw:
-  - freight
-  - logistics
-  - trucking
-  - carrier-integration
-  - webhooks
-  properties:
   - type: Documentation
     url: https://carrier-api-docs.emergemarket.io/
   - type: APIReference
     url: https://carrier-api-docs.emergemarket.io/
   - type: GettingStarted
     url: https://carrier-api-docs.emergemarket.io/#section/Get-Started
+  - type: SignUp
+    url: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+- aid: emerge:emerge-awards-api
+  name: Emerge Awards API
+  description: The Awards API from Emerge — 2 operation(s) for awards.
+  humanURL: https://api-docs.emergemarket.io/
+  baseURL: https://api.emergemarket.io/v1
+  tags:
+  - Awards
+  properties:
   - type: OpenAPI
-    url: openapi/emerge-carrier-api-openapi.yml
+    url: openapi/emerge-awards-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://api-docs.emergemarket.io/#section/Get-Started
   - type: Authentication
     url: authentication/emerge-authentication.yml
   - type: Webhooks
     url: asyncapi/emerge-webhooks.yml
-  - type: Overlay
-    url: overlays/emerge-carrier-api-overlay.yaml
+  - type: ErrorCatalog
+    url: errors/emerge-problem-types.yml
+  - type: DataModel
+    url: data-model/emerge-data-model.yml
+  - type: RateLimits
+    url: rate-limits/emerge-rate-limits.yml
   - type: Sandbox
     url: sandbox/emerge-sandbox.yml
+  - type: TermsOfService
+    url: https://www.emergemarket.com/legal/api-terms-of-use
+  - type: Documentation
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://carrier-api-docs.emergemarket.io/#section/Get-Started
+  - type: SignUp
+    url: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+- aid: emerge:emerge-network-partners-api
+  name: Emerge Network Partners API
+  description: The Network Partners API from Emerge — 2 operation(s) for network partners.
+  humanURL: https://api-docs.emergemarket.io/
+  baseURL: https://api.emergemarket.io/v1
+  tags:
+  - Network Partners
+  properties:
+  - type: OpenAPI
+    url: openapi/emerge-network-partners-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://api-docs.emergemarket.io/#section/Get-Started
+  - type: Authentication
+    url: authentication/emerge-authentication.yml
+  - type: Webhooks
+    url: asyncapi/emerge-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/emerge-problem-types.yml
+  - type: DataModel
+    url: data-model/emerge-data-model.yml
+  - type: RateLimits
+    url: rate-limits/emerge-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/emerge-sandbox.yml
+  - type: TermsOfService
+    url: https://www.emergemarket.com/legal/api-terms-of-use
+  - type: Documentation
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://carrier-api-docs.emergemarket.io/#section/Get-Started
+  - type: SignUp
+    url: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+- aid: emerge:emerge-opportunities-api
+  name: Emerge Opportunities API
+  description: The Opportunities API from Emerge — 6 operation(s) for opportunities.
+  humanURL: https://api-docs.emergemarket.io/
+  baseURL: https://api.emergemarket.io/v1
+  tags:
+  - Opportunities
+  properties:
+  - type: OpenAPI
+    url: openapi/emerge-opportunities-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://api-docs.emergemarket.io/#section/Get-Started
+  - type: Authentication
+    url: authentication/emerge-authentication.yml
+  - type: Webhooks
+    url: asyncapi/emerge-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/emerge-problem-types.yml
+  - type: DataModel
+    url: data-model/emerge-data-model.yml
+  - type: RateLimits
+    url: rate-limits/emerge-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/emerge-sandbox.yml
+  - type: TermsOfService
+    url: https://www.emergemarket.com/legal/api-terms-of-use
+  - type: Documentation
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://carrier-api-docs.emergemarket.io/#section/Get-Started
+  - type: SignUp
+    url: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+- aid: emerge:emerge-options-api
+  name: Emerge Options API
+  description: The Options API from Emerge — 2 operation(s) for options.
+  humanURL: https://api-docs.emergemarket.io/
+  baseURL: https://api.emergemarket.io/v1
+  tags:
+  - Options
+  properties:
+  - type: OpenAPI
+    url: openapi/emerge-options-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://api-docs.emergemarket.io/#section/Get-Started
+  - type: Authentication
+    url: authentication/emerge-authentication.yml
+  - type: Webhooks
+    url: asyncapi/emerge-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/emerge-problem-types.yml
+  - type: DataModel
+    url: data-model/emerge-data-model.yml
+  - type: RateLimits
+    url: rate-limits/emerge-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/emerge-sandbox.yml
+  - type: TermsOfService
+    url: https://www.emergemarket.com/legal/api-terms-of-use
+  - type: Documentation
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://carrier-api-docs.emergemarket.io/#section/Get-Started
+  - type: SignUp
+    url: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+- aid: emerge:emerge-shipments-api
+  name: Emerge Shipments API
+  description: The Shipments API from Emerge — 1 operation(s) for shipments.
+  humanURL: https://api-docs.emergemarket.io/
+  baseURL: https://api.emergemarket.io/v1
+  tags:
+  - Shipments
+  properties:
+  - type: OpenAPI
+    url: openapi/emerge-shipments-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://api-docs.emergemarket.io/#section/Get-Started
+  - type: Authentication
+    url: authentication/emerge-authentication.yml
+  - type: Webhooks
+    url: asyncapi/emerge-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/emerge-problem-types.yml
+  - type: DataModel
+    url: data-model/emerge-data-model.yml
+  - type: RateLimits
+    url: rate-limits/emerge-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/emerge-sandbox.yml
+  - type: TermsOfService
+    url: https://www.emergemarket.com/legal/api-terms-of-use
+  - type: Documentation
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://carrier-api-docs.emergemarket.io/#section/Get-Started
+  - type: SignUp
+    url: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+- aid: emerge:emerge-tender-api
+  name: Emerge Tender API
+  description: The Tender API from Emerge — 1 operation(s) for tender.
+  humanURL: https://api-docs.emergemarket.io/
+  baseURL: https://api.emergemarket.io/v1
+  tags:
+  - Tender
+  properties:
+  - type: OpenAPI
+    url: openapi/emerge-tender-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://api-docs.emergemarket.io/#section/Get-Started
+  - type: Authentication
+    url: authentication/emerge-authentication.yml
+  - type: Webhooks
+    url: asyncapi/emerge-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/emerge-problem-types.yml
+  - type: DataModel
+    url: data-model/emerge-data-model.yml
+  - type: RateLimits
+    url: rate-limits/emerge-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/emerge-sandbox.yml
+  - type: TermsOfService
+    url: https://www.emergemarket.com/legal/api-terms-of-use
+  - type: Documentation
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://carrier-api-docs.emergemarket.io/#section/Get-Started
+  - type: SignUp
+    url: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+- aid: emerge:emerge-tenders-api
+  name: Emerge Tenders API
+  description: The Tenders API from Emerge — 3 operation(s) for tenders.
+  humanURL: https://api-docs.emergemarket.io/
+  baseURL: https://api.emergemarket.io/v1
+  tags:
+  - Tenders
+  properties:
+  - type: OpenAPI
+    url: openapi/emerge-tenders-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://api-docs.emergemarket.io/#section/Get-Started
+  - type: Authentication
+    url: authentication/emerge-authentication.yml
+  - type: Webhooks
+    url: asyncapi/emerge-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/emerge-problem-types.yml
+  - type: DataModel
+    url: data-model/emerge-data-model.yml
+  - type: RateLimits
+    url: rate-limits/emerge-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/emerge-sandbox.yml
+  - type: TermsOfService
+    url: https://www.emergemarket.com/legal/api-terms-of-use
+  - type: Documentation
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://carrier-api-docs.emergemarket.io/#section/Get-Started
+  - type: SignUp
+    url: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
+- aid: emerge:emerge-webhooks-api
+  name: Emerge Webhooks API
+  description: "Webhooks are used to provide updates to the TMS when award or option events are generated\
+    \ within the Emerge system.\n</br></br>If our webhook message cannot be accepted by the webhook endpoint\
+    \ due to network failures, server errors, or request timeouts we will attempt delivering the message\
+    \ again. We will retry sending the message 6 times with varying gaps of time. \nSee table below:\n\
+    <table>\n<tr>\n<th>Retry Count</th>\n<th>Time</th>\n</tr>\n<tr>\n<td>1</td>\n<td>1 second from initial\
+    \ attempt</td>\n</tr>\n<tr>\n<td>2</td>\n<td>4 seconds from first attempt</td>\n</tr>\n<tr>\n<td>3</td>\n\
+    <td>9 seconds from second  attempt</td>\n</tr>\n<tr>\n<td>4</td>\n<td>16 seconds from third attempt</td>\n\
+    </tr>\n<tr>\n<td>5</td>\n<td>25 seconds from fourth attempt</td>\n</tr>\n<tr>\n<td>6</td>\n<td>36\
+    \ seconds from fifth attempt</td>\n</tr>\n</table>"
+  humanURL: https://api-docs.emergemarket.io/
+  baseURL: https://api.emergemarket.io/v1
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/emerge-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://api-docs.emergemarket.io/#section/Get-Started
+  - type: Authentication
+    url: authentication/emerge-authentication.yml
+  - type: Webhooks
+    url: asyncapi/emerge-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/emerge-problem-types.yml
+  - type: DataModel
+    url: data-model/emerge-data-model.yml
+  - type: RateLimits
+    url: rate-limits/emerge-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/emerge-sandbox.yml
+  - type: TermsOfService
+    url: https://www.emergemarket.com/legal/api-terms-of-use
+  - type: Documentation
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: APIReference
+    url: https://carrier-api-docs.emergemarket.io/
+  - type: GettingStarted
+    url: https://carrier-api-docs.emergemarket.io/#section/Get-Started
   - type: SignUp
     url: https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179
 common:
+- type: Overlay
+  url: overlays/emerge-public-api-overlay.yaml
+- type: Overlay
+  url: overlays/emerge-carrier-api-overlay.yaml
 - type: Website
   url: https://www.emergemarket.com/
 - type: DeveloperPortal
