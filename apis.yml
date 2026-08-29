@@ -12,6 +12,18 @@ description: >-
   webhook subscriptions, and a Carrier API for capacity/integration providers responding to rate
   requests and tenders — plus a documented webhook event catalog, a testing sandbox, and TMS
   integrations with Project44, E2open, MercuryGate and Capacity Link partners.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://cdn.prod.website-files.com/66ad43d7385c00622859db37/66b8fd0eb48dad5fa020dc5c_website_share.png
 url: https://raw.githubusercontent.com/api-evangelist/emerge/refs/heads/main/apis.yml
 x-type: company
