@@ -1,0 +1,350 @@
+openapi: 3.2.0
+info:
+  title: Emerge Authentication API
+  x-refined-note:
+  - x-logo differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Authentication across 2 of this provider''s published API definitions: emerge-carrier-api-openapi.yml, emerge-public-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.emergemarket.io/v2
+  description: Primary production endpoint
+- url: https://demo-api.emergemarket.dev/v2
+  description: Testing sandbox endpoint
+- url: https://api.emergemarket.io/v1
+  description: Primary production endpoint
+- url: https://demo-api.emergemarket.dev/v1
+  description: Testing sandbox endpoint
+tags:
+- name: Authentication
+paths:
+  /auth/login/client_credentials:
+    post:
+      tags:
+      - Authentication
+      summary: Gets access token for Integration Provider.
+      security: []
+      description: This method allows an Integration Provider to generate an access token from Emerge platform. A client credential pair, composed of a client id and a client secret, must be supplied in the request. The procured access token should be sent by the Integration Provider while calling other Carrier API endpoints.
+      requestBody:
+        description: Request body of an authentication attempt.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  description: The identifier provided during onboarding and used for authentication.
+                  type: string
+                  example: eMF2mQNXue5BXjmUNX1pQ45grwrquuiQ
+                client_secret:
+                  description: The secret provided during onboarding and used for authentication.
+                  type: string
+                  example: 1gTmAOzPLqoE5HKxjWgFt8WnAEPu3MQjlNBrR94c1q4o7UTtGgRd1QGwCFzVPsWb
+              required:
+              - client_id
+              - client_secret
+      responses:
+        '200':
+          description: 200 | OK. A JSON object containing the access token and additional information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200_client_credential_authentication_response'
+        '400':
+          description: 400 | Bad Request. A bad request was made. Please try again
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400_badrequest_clientcredentials_response'
+        '403':
+          $ref: '#/components/responses/403'
+    servers:
+    - url: https://api.emergemarket.io/v2
+      description: Primary production endpoint
+    - url: https://demo-api.emergemarket.dev/v2
+      description: Testing sandbox endpoint
+  /auth/login:
+    post:
+      tags:
+      - Authentication
+      summary: Gets access token for shipper user.
+      security: []
+      description: This method allows the shipper user to generate an access token from Emerge platform. This access token is based upon a username/password combination that should be supplied in the request. Authentication has a rate limit of up to 20 requests per second. This limit may be lower during times of high volumes.
+      requestBody:
+        description: Request body of an authentication attempt.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_name:
+                  description: The user name of the user authenticating against the API.
+                  type: string
+                  example: jsseh@emergemarket.com
+                password:
+                  description: The password of the user authenticating against the API.
+                  type: string
+                  example: Secret123
+              required:
+              - user_name
+              - password
+      responses:
+        '200':
+          description: 200 | OK. A JSON object containing the access token and additional information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200_authentication_response'
+        '403':
+          $ref: '#/components/responses/403'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    servers:
+    - url: https://api.emergemarket.io/v1
+      description: Primary production endpoint
+    - url: https://demo-api.emergemarket.dev/v1
+      description: Testing sandbox endpoint
+  /auth/refresh:
+    post:
+      tags:
+      - Authentication
+      summary: Gets a refreshed access token for shipper user.
+      security: []
+      description: This method allows users to refresh their access token based upon the original authentication event.
+      requestBody:
+        description: Request of the authentication renewal attempt.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  description: The refresh token from the original authentication request.
+                  type: string
+                  example: asdfklwj43asdfja432sjdafjadkkj2345efsdk4ts
+              required:
+              - refresh_token
+      responses:
+        '200':
+          description: 200 | OK. A new access token has been generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200_authenticationrefresh_response'
+        '400':
+          description: 400 | Bad Request. A bad request was made. Please try again
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400_badrequest_refreshtoken_response'
+        '403':
+          $ref: '#/components/responses/403'
+    servers:
+    - url: https://api.emergemarket.io/v1
+      description: Primary production endpoint
+    - url: https://demo-api.emergemarket.dev/v1
+      description: Testing sandbox endpoint
+components:
+  responses:
+    '403':
+      description: 403 | Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/403_forbidden_response'
+    '429':
+      description: 429 | Too many requests.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/429_response'
+    '500':
+      description: 500 | Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/500_response'
+  schemas:
+    400_badrequest_clientcredentials_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 400
+            detailed_errors:
+              description: Error messages
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    example: client_id
+                  value:
+                    type: string
+                    example: client_id must not be empty.
+            messages:
+              type: array
+              items:
+                type: string
+                example: Validation failed.
+    403_forbidden_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 403
+            messages:
+              description: Error messages
+              type: array
+              items:
+                type: string
+                example: Response status code does not indicate success 403 (Forbidden)
+    200_client_credential_authentication_response:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            token:
+              description: The access token to be used in subsequent requests.
+              type: string
+              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1qQkRRemN5TlRoQ05UbERNVVpGTXpneU5FUXpNVVF4UVRoR1FUSTRPRFF5T0VFeE16QXdRdyJ9.eyJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tL1Byb3ZpZGVyR3VpZCI6ImQ1OWEyNTY0LTAyNzAtNDBhYy1iYWZkLWIwNWE0NDNlZGY4ZiIsImlzcyI6Imh0dHBzOi8vdmFudGFnZWZyZWlnaHQuYXV0aDAuY29tLyIsInN1YiI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tIiwiaWF0IjoxNjMxNjk5MjM3LCJleHAiOjE2MzE3ODU2MzcsImF6cCI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRIiwic2NvcGUiOiJpbnRlZ3JhdGlvbjpzY29wZSIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.kMHPwoPFORvTp4A5e-1sc6gwCAdVPGwv3fx_I8sN_RSEWG7Cd9BSfQf5UtDOq4zyrAHmVyf1hczxL5bvVC4XOoe7v0g2hqbogEPEQLubO5tWZdoG76xKRYuJC-7aJAW8MJFUnp952l2rWE4bQ3jsQsLyZIavsaTW3dmrOgWEBLIbKR_4vMdA4SAIhclV_ZatiZRCtl6sib7KIUXQ8rFq5UjY_Oc3_XfSOTzgJSwV0eVA5D7Sty88Zqf6ElQNRf2jt4srZ0q3O1flVdyjCYsigig8xl7vSlkt-TJgMi8efucGsLPCR4DbsR1tlS7ulc05wIQL3QgngMajfCSfkSnOig
+            expires_in:
+              description: Expiration time of token in seconds.
+              type: number
+              example: 86400
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
+    200_authentication_response:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            token:
+              description: The access token to be used in subsequent requests.
+              type: string
+              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9UYzROVFExTTBSRVF6SXhOamd6UVRZNU0wSkNRak5HTWpVNE5VTkVNa1l4TVROQk9VSkROQSJ9.eyJodHRwczovL2F1dGgwLmVtZXJnZXRtcy5jb20vVXNlcklkIjoiY2ViN2Q0ZWYtOTA1YS00MTlkLWFjMWUtZmQ0Y2IwMzc4MjEyIiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL09yZ2FuaXphdGlvbklkIjoiZWU3YmRjMGItOTFiMy00NDAwLWFmZjUtYzc3ZGZlMjk3NjA2IiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL1NoaXBtZW50UHJvdmlkZXJPcmdhbml6YXRpb25JZCI6ImVlN2JkYzBiLTkxYjMtNDQwMC1hZmY1LWM3N2RmZTI5NzYwNiIsImlzcyI6Imh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZGQ2OGNjYjRmOGZmNzAzYjI5NmQ5Y2MiLCJhdWQiOlsiaHR0cHM6Ly9hcHAuZW1lcmdldG1zLmNvbSIsImh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1OTk3NzMzNTIsImV4cCI6MTU5OTg1OTc1MiwiYXpwIjoiSWpSRERQajFNeVV5SEg2TEF1aTFqY1loM3NuV0EweDYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUgYXRvbSByZnA6ZnAgcmZwOmNwIG9mZmxpbmVfYWNjZXNzIiwiZ3R5IjoicGFzc3dvcmQifQ.FamVUCPS7Q2B1u7zUPC5Guk2HKTQ6Km6i6CX_Tpg1h98gnuvnWrC9FF-awgldjHmCNoeqI9ImjEVpecP00oAtHWiDaXMTd7UsyPcHAWh2xatZ8LPCrnw-0ox3egSSv5KxCTrnXAhTxwR4XI07-jxWjTgkw5dSVGc70Q9a_PC8nXe7-1SDKmLpMKFmtU60eH52kmUy0CECi_GfYS7xKskZYgX3Xhx-C1jCWFbCbmRA1Yxvir450miOIo0g5AxaJjbTgm6ao2OGuPzyLUTrXaSchK1J9xrv8dXhKh-PSv0eIG5d2MVHJf4O_KsFckt40OuiiEokrdsfdsfdfhgsdOuDkQ
+            expires_in:
+              description: Expiration time of token in seconds.
+              type: number
+              example: 86400
+            refresh_token:
+              description: The token required to call refresh_token endpoint to get a new access token.
+              type: string
+              example: ciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9UYzROVFExTTBSRVF6SXhOamd6UVRZ
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
+    500_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 500
+            messages:
+              type: array
+              items:
+                type: string
+                example: userName.
+    400_badrequest_refreshtoken_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 400
+            detailed_errors:
+              description: Error messages
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    example: refresh_token
+                  value:
+                    type: string
+                    example: refresh_token must not be empty.
+            messages:
+              type: array
+              items:
+                type: string
+                example: Validation failed.
+    429_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 429
+            messages:
+              type: array
+              items:
+                type: string
+                example: Too many requests.
+    200_authenticationrefresh_response:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            token:
+              description: The access token to be used in subsequent requests.
+              type: string
+              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9UYzROVFExTTBSRVF6SXhOamd6UVRZNU0wSkNRak5HTWpVNE5VTkVNa1l4TVROQk9VSkROQSJ9.eyJodHRwczovL2F1dGgwLmVtZXJnZXRtcy5jb20vVXNlcklkIjoiY2ViN2Q0ZWYtOTA1YS00MTlkLWFjMWUtZmQ0Y2IwMzc4MjEyIiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL09yZ2FuaXphdGlvbklkIjoiZWU3YmRjMGItOTFiMy00NDAwLWFmZjUtYzc3ZGZlMjk3NjA2IiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL1NoaXBtZW50UHJvdmlkZXJPcmdhbml6YXRpb25JZCI6ImVlN2JkYzBiLTkxYjMtNDQwMC1hZmY1LWM3N2RmZTI5NzYwNiIsImlzcyI6Imh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZGQ2OGNjYjRmOGZmNzAzYjI5NmQ5Y2MiLCJhdWQiOlsiaHR0cHM6Ly9hcHAuZW1lcmdldG1zLmNvbSIsImh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1OTk3NzMzNTIsImV4cCI6MTU5OTg1OTc1MiwiYXpwIjoiSWpSRERQajFNeVV5SEg2TEF1aTFqY1loM3NuV0EweDYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUgYXRvbSByZnA6ZnAgcmZwOmNwIG9mZmxpbmVfYWNjZXNzIiwiZ3R5IjoicGFzc3dvcmQifQ.FamVUCPS7Q2B1u7zUPC5Guk2HKTQ6Km6i6CX_Tpg1h98gnuvnWrC9FF-awgldjHmCNoeqI9ImjEVpecP00oAtHWiDaXMTd7UsyPcHAWh2xatZ8LPCrnw-0ox3egSSv5KxCTrnXAhTxwR4XI07-jxWjTgkw5dSVGc70Q9a_PC8nXe7-1SDKmLpMKFmtU60eH52kmUy0CECi_GfYS7xKskZYgX3Xhx-C1jCWFbCbmRA1Yxvir450miOIo0g5AxaJjbTgm6ao2OGuPzyLUTrXaSchK1J9xrv8dXhKh-PSv0eIG5d2MVHJf4O_KsFckt40OuiiEokrdsfdsfdfhgsdOuDkQ
+            expires_in:
+              description: Expiration time of token in seconds.
+              type: number
+              example: 86400
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- emerge-carrier-api-openapi.yml
+- emerge-public-api-openapi.yml
+x-tagGroups:
+- name: Provider API
+  tags:
+  - Authentication
+  - Options
+  - Tender
+- name: Webhook Events
+  tags:
+  - Rate Request Event
+  - Tender Request Event

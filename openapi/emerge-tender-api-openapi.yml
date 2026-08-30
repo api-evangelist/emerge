@@ -1,0 +1,159 @@
+openapi: 3.2.0
+info:
+  version: 2.0.0
+  title: Emerge Carrier Tender API
+  description: "### \nThe Emerge carrier API provides integrated carrier (Provider) developers with access to the Emerge platform.\n\nThe current version of the API is v1.0.0 This API will evolve as the features in Emerge's product evolve.\n\n# Get Started\n\nWelcome to Emerge's REST API Carrier Documentation. \nOur APIs allow Capacity and Integration Providers to easily interact with Shippers utilizing Emerge's Platform. \n\nIf you are interested in implementing a Carrier API integration\nplease submit a request [here](https://emergetech.zendesk.com/hc/en-us/requests/new?ticket_form_id=11470751569179) \n\nAll production level API requests are made to:\n<br />`https://api.emergemarket.io`\n\n\nThe testing sandbox is available during development and for testing:\n<br />`https://demo-api.emergemarket.dev`\n\n## Compatibility Policy\n\nEmerge APIs are versioned using a prefix in the endpoint URL. Within an API version, we only make backward-compatible changes. This mean that when a provider integrates with our REST API, the API will continue to work until the version is deprecated. If we have to create a change that is not compatible with the current version, a new version will be created.\n\n### Non-Breaking Changes\n\n* Adding additional optional fields on the API request.\n* Adding additional fields on the API response.\n* Adding an HTTP method to an API.\n* Adding optional headers.\n* Adding additional accepted enumerated values.\n* Changing Error Response descriptions.\n* Added Rate Limits.\n\n### Breaking Changes\n\n* Removing or renaming an API method or endpoint.\n* Removing or renaming existing API request or response fields.\n* Removing or renaming enumerated values.\n* Changing the Error Response values.\n\n### Deprecation Policy\n\n* Emerge will continue to support deprecated APIs for 1 year.\n* Documentation will also be updated and integrating providers will be notified via email when a version or endpoint is being deprecated.\n\n# Workflows\nOur Carrier APIs enable Capacity Providers more flexibility when working with Shippers using Emerge's Platform. \nMore workflows will become available in the future as we continue growing our Carrier API suite.\n\nWhile integrating with Emerge, it is helpful to be aware of our nomenclature. \nOur Shippers create \"Opportunities,\" defined as shipments they are accepting quotes for. \nWhen we request a rate, you respond with a \"Quote\" which is composed of the rate and duration details. \nOnce a Quote is received from our Capacity Providers, it becomes an \"Option\" for our Shippers to review. \nYou will see these terms throughout our documentation.\n\n## Rate Request to Quote Response\nIn this workflow, Emerge automatically sends Rate Requests to our Capacity Providers on behalf of our Shippers. \nThis workflow makes it easy for Capacity Providers to rate Opportunities while maintaining existing processes. The steps of this workflow include:\n\n1. Receive a Rate Request Event via Webhook.<br />\na. Rate Requests contain Shipper identifying information in the relationship_identifiers object. These values are provided by the Capacity Provider during Capacity Link onboarding to enable matching in the Provider's application.<br />\n\n2. Review Opportunity details and determine whether to provide a quote.<br />\n\n3. Send the Rate or provide the Error Reason for declining to rate via the Quote Response Endpoint.<br />\na. A Quote Response must provide the event_id sourced from the Rate Request Event.<br />\nb. Providers can respond with either a Rate or an Error to let the shipper know why they are not providing a rate.<br />\nc. Providers responding with a rate can include their Quote ID in the provider_reference field.<br />\n\n4. The Rate will be available for Review by the Shipper.\n"
+  x-logo:
+    url: data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTUycHgiIGhlaWdodD0iODBweCIgdmlld0JveD0iMCAwIDE1MiA4MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDx0aXRsZT5lbWVyZ2UtbG9nbzwvdGl0bGU+CiAgICA8ZyBpZD0iZW1lcmdlLWxvZ28iIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJFbWVyZ2UiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI0LjAwMDAwMCwgMjQuMDAwMDAwKSIgZmlsbD0iIzBENDdBMSIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPHBhdGggZD0iTTgwLjMzNzc4ODMsNS44Mzc1NTI0NCBDODIuODk5NzUyLDUuODM3NTUyNDQgODUuNDI2MDA5Miw2LjY5MTgwMTcgODcuODgxMjY2MSw4LjAwODg5NDA2IEw4NC40NjUzNjAzLDI1LjU5Mjg1NTIgQzgzLjcxODEyNjcsMjkuNTA4Mjc5OSA4MC45MDcwMzg4LDMyIDc2LjQ5NDkxMjMsMzIgTDcxLjAxNTE0MzcsMzIgTDcxLjQwNjU0NjIsMjcuNzI4NjE4NiBMNzcuMzQ4ODUyNCwyNy43Mjg2MTg2IEM3OC41NTg2MjY1LDI3LjcyODYxODYgNzkuNDEyNTY5OSwyNi44MDMwNjc0IDc5LjY2MTY5MiwyNS41OTI4NTkyIEw4MC4wODg2NjQyLDIzLjMxNDc3MDUgQzc4LjkxMTI1MDgsMjQuMzAwNzM4MiA3Ny40MjU0NDQyLDI0Ljg0MjM3MDMgNzUuODg5OTU1MSwyNC44NDUzNTcyIEM3MS44NjkwOTQxLDI0Ljg0NTM1NzIgNjkuOTQ3NjQ4OSwyMS4zNTcwNTgyIDcwLjczMDQ1ODEsMTcuMTkyNDE5OSBMNzEuMzM1NDEzMSwxNC4xNjY4MjcgQzcyLjM2NzM0MDMsOS4wMDU0NzQ4NSA3NS4yODQ5OTE5LDUuODM3NTUyNDQgODAuMzM3Nzg4Myw1LjgzNzU1MjQ0IFogTTUzLjAwOTk4NDEsNS44Mzc1NTI0NCBDNTYuNzgxNzIzLDUuODM3NTUyNDQgNTkuMzA3OTgwMSw4LjE1MTIyMzU4IDU5LjMwNzk4MDEsMTEuMTQxMjM4MSBDNTkuMzA3OTgwMSwxNC42NjUxMTk0IDU2LjI0NzkwNTIsMTcuMjI4MDA0MyA1MC43MzI3MTIxLDE3LjU4Mzk2NTIgTDQ3Ljk5Mjc2MzQsMTcuNzYxODc3MSBDNDcuNjcyNjM3MSwxOS4zOTkzNDggNDguMjA2MzE4LDIxLjEwNzg0NjUgNTAuNjk3MTQyNSwyMS4xMDc4NDY1IEM1Mi42ODk3MjA4LDIxLjEwNzg0NjUgNTQuNzUzNDM4MSwyMC4zOTU5MTY2IDU2LjQ2MTQ1OTcsMTkuNzkwODg5MiBMNTYuNzgxNzIzLDIzLjgxMzA2MDkgQzU0LjUwNDQ1MzIsMjQuNjY3NDQ3MyA1Mi4zMzM4ODk5LDI1LjMwODA2NTIgNTAuMDIxMDUwMywyNS4zMDgwNjUyIEM0NS4yNTI5NTM3LDI1LjMwODA2NTIgNDIuMDUwNjAyMywyMi40NjA1MjEzIDQzLjE4OTIzODMsMTYuODM2NDYxMSBMNDMuNjg3MzQ3NiwxNC4zNDQ3Mzg5IEM0NC43OTA0MTQsOC44OTg3Mjc3MiA0Ny43NzkzNDc5LDUuODM3NTUyNDQgNTMuMDA5OTg0MSw1LjgzNzU1MjQ0IFogTTk3LjcwMjAwNCw1LjgzNzU1MjQ0IEMxMDEuNDczNzQzLDUuODM3NTUyNDQgMTA0LDguMTUxMjIzNTggMTA0LDExLjE0MTIzODEgQzEwNCwxNC42NjUxMTk0IDEwMC45Mzk5MjUsMTcuMjI4MDA0MyA5NS40MjQ3MzIsMTcuNTgzOTY1MiBMOTIuNjg0NzgzMiwxNy43NjE4NzcxIEM5Mi4zNjQ2NTY5LDE5LjM5OTM0OCA5Mi44OTgzMzc4LDIxLjEwNzg0NjUgOTUuMzg5MTYyNCwyMS4xMDc4NDY1IEM5Ny4zODE3NDA1LDIxLjEwNzg0NjUgOTkuNDQ1NDU4LDIwLjM5NTkxNjYgMTAxLjE1MzQ4LDE5Ljc5MDg4OTIgTDEwMS40NzM3NDMsMjMuODEzMDYwOSBDOTkuMTk2NDcyOSwyNC42Njc0NDczIDk3LjAyNTkwOTYsMjUuMzA4MDY1MiA5NC43MTMwNzAxLDI1LjMwODA2NTIgQzg5Ljk0NDk3MzUsMjUuMzA4MDY1MiA4Ni43NDI2MjIxLDIyLjQ2MDUyMTMgODcuODgxMjU4MSwxNi44MzY0NjExIEw4OC4zNzkzNjc0LDE0LjM0NDczODkgQzg5LjQ4MjQzMzksOC44OTg3Mjc3MiA5Mi40NzEzNjc2LDUuODM3NTUyNDQgOTcuNzAyMDA0LDUuODM3NTUyNDQgWiBNMTguMTM5MTIxMywwIEwxNy4zMjA3NDg4LDQuMjcxMzc3MzcgTDEwLjYzMTM1NjIsNC4yNzEzNzczNyBDOC4yNDcyNDAzOCw0LjI3MTM3NzM3IDcuNjA2ODUwNzIsNS42NTk0OTk0MSA3LjI4NjU4OTM4LDcuMjYxMzg3OTEgTDYuNzUyNzY3NCw5Ljk2NjYwODM2IEwxNS4xMTQ2MTgsOS45NjY2MDgzNiBMMTQuMzMxODE4OSwxNC4yMDI0MDk0IEw1LjkzNDM5NDc1LDE0LjIwMjQwOTQgTDUuMjU4MzAwNDcsMTcuNjE5NTQzNiBDNC45MzgxNzQxNiwxOS4yNTY4Nzc0IDUuMDQ0ODgyOTMsMjAuNTczOTcxOCA3LjQyODg2MTY4LDIwLjU3Mzk3MTggTDE0LjI2MDY3MTcsMjAuNTczOTcxOCBMMTMuNjIwMTQ0OSwyMy45MTk5NDExIEMxMy41NTgzOTA3LDI0LjQ1ODc4ODcgMTMuMDk0NzQ4NSwyNC44NjA3NzIzIDEyLjU1Mjc4NTIsMjQuODQ1MzU1MSBMNi41NzQ5MTk0NiwyNC44NDUzNTUxIEMxLjQ4NjY5ODU5LDI0Ljg0NTM1NTEgLTAuNjQ4Mjk1MDUsMjIuMTQwMTQwNyAwLjE3MDA3NzU5NCwxOC4wNDY2NjkyIEwyLjM0MDY0MDgzLDYuODM0MjY4MzEgQzMuMTU5MDEzNDcsMi43MDUyMTQ0MSA2LjI1NDY1NjEsMCAxMS4zNzg1ODM2LDAgTDE4LjEzOTEyMTMsMCBaIE0zNy43ODA3NTIsNS44Mzc1NTQ0NSBDNDEuNTE2OTIxNSw1LjgzNzU1NDQ1IDQzLjE4OTIzNjMsOC4xNTEyMjU2IDQyLjQwNjQzMzIsMTIuMTczNTM0NCBMNDAuMTI5MTYzMiwyMy45MTk5NDExIEM0MC4wNTA4MzI0LDI0LjQ2NDQ3ODkgMzkuNTc1NzYxOCwyNC44NjMwMzc3IDM5LjAyNjA5NjgsMjQuODQ1MzU1MSBMMzUuMDc2NTE4LDI0Ljg0NTM1NTEgTDM3LjQyNDkyNzIsMTIuNzQyOTg3NSBDMzcuODE2MzM3OCwxMC43NDk2OTI5IDM3LjMxODIxODQsMTAuMDM3NzczMSAzNS45MzA0NjAzLDEwLjAzNzc3MzEgQzM0Ljc5MTgyNDMsMTAuMDM3NzczMSAzMy42NTMxOTAzLDEwLjY0Mjk0NTcgMzIuNTg1NjkzNSwxMS41MzI3Nzc0IEMzMi41MTQ1NDYzLDEyLjA2NjY1MDIgMzIuNDQzNDE1MSwxMi42MzYyNDA0IDMyLjMzNjcwNjQsMTMuMjA1NjkzNSBMMzAuMDk1MDA2LDI0Ljg0NTM1NTEgTDI1LjIyMDE5NDYsMjQuODQ1MzU1MSBMMjcuNTY4NjAzOCwxMi43NDI5ODc1IEMyNy44ODg4NjcxLDExLjA3MDA3MTQgMjcuNzQ2NTg4NywxMC4wMzc3NzMxIDI2LjQ2NTUzNzQsMTAuMDM3NzczMSBDMjUuMjkxMzMxOCwxMC4wMzc3NzMxIDIzLjcyNTcyNTYsMTEuMTQxMjM2MSAyMi42OTM3OTgzLDEyLjMxNTg2MTkgTDIwLjI3NDI1LDI0Ljg0NTM1NTEgTDE1LjM5OTQ0NjcsMjQuODQ1MzU1MSBMMTguOTkzMjAwNiw2LjMwMDI2MDQ2IEwyMy4wNDk2MzE0LDYuMzAwMjYwNDYgTDIyLjk0MjkyMjYsOC4yMjIzOTAzNiBDMjQuMjk0OTc2MSw2Ljg2OTg1MDY5IDI1Ljk2NzQyOCw1LjgzNzU1NDQ1IDI3Ljk2MDAwNDMsNS44Mzc1NTQ0NSBDMzAuMjM3Mjc0Miw1LjgzNzU1NDQ1IDMxLjY2MDYwNCw2LjU4NTA1NjU4IDMyLjI2NTQyMiw4LjE4NjgwNzk4IEMzMy43NTk4ODksNi45MDU0MzMwNyAzNS43MTcwMzQ3LDUuODM3NTU0NDUgMzcuNzgwNzUyLDUuODM3NTU0NDUgWiBNNzAuODcyNTg3Miw1Ljg3MzEzNDgxIEM3MS40NjMxMzk0LDUuODY1OTcyODggNzIuMDUxMjU5LDUuOTUwMDMwODYgNzIuNjE2MTc4NCw2LjEyMjM0MDUgTDcxLjUxMzExOCwxMC4yNTE0MDQ1IEM3MS4wNzAxMjcsMTAuMTQ3NDgwMSA3MC42MTU4NDMzLDEwLjA5OTYxNjggNzAuMTYwOTI5MywxMC4xMDg5Mzc5IEM2OC42NjY0NjI0LDEwLjEwODkzNzkgNjYuOTk0MTQ1NiwxMS40NjE2MTI2IDY1Ljk5Nzc4OTksMTIuMzg3MDI2NiBMNjMuNTc4MjQxNiwyNC44NDUzNTUxIEw1OC43MDM0MzYzLDI0Ljg0NTM1NTEgTDYyLjI5NzMyNTIsNi4zMDAyNjA0NiBMNjYuMzE4MDUxMiw2LjMwMDI2MDQ2IEw2Ni4yODI0ODE3LDguNTQyNzY2ODQgQzY3LjUyNzgyNjQsNy4wNDc3NjI1OCA2OS4xNjQ3MDg4LDUuODczMTM0ODEgNzAuODcyNTg3Miw1Ljg3MzEzNDgxIFogTTgwLjIzMDkzODUsMTAuMDM3NzczMSBDNzcuOTE4MDk4OSwxMC4wMzc3NzMxIDc2Ljc3OTQ2MjksMTEuNTY4MzU5OCA3Ni4xNzQ2NDI4LDE0LjU5Mzk1MjcgTDc1Ljc0NzY3MDcsMTYuODcyMDQxNSBDNzUuMjQ5NDI0MywxOS4zOTkzNDQgNzUuNzgzMjQwMywyMC42NDUxMzY1IDc3LjE3MDg2MzQsMjAuNjQ1MTM2NSBDNzguNDUxOTE2OCwyMC42NDUxMzY1IDc5LjY5NzI1NzUsMTkuNzkwODg3MiA4MC45NzgxNzE5LDE4LjMzMTQ2NTMgTDgyLjUwODIwODUsMTAuNTAwNDgxMSBDODEuNzgzMDU3MywxMC4yMTA2ODI2IDgxLjAxMTY0NjksMTAuMDUzOTQzMiA4MC4yMzA5Mzg1LDEwLjAzNzc3MzEgWiBNNTIuNTQ3MzA3NSwxMC4wMzc3NzMxIEM0OS44MDc0OTU3LDEwLjAzNzc3MzEgNDkuMDI0NjkyNywxMi4zMTU4NjE5IDQ4LjYzMzI5MDEsMTQuMzgwMzIzMyBMNTAuNjI1ODY4NCwxNC4yMzc5OTE4IEM1My4yNTg5NzEzLDE0LjA2MDA3OTkgNTQuNDY4NzQ2NCwxMi45OTIxOTkzIDU0LjQ2ODc0NjQsMTEuNjc1MTA2OSBDNTQuNDY4NzQ2NCwxMC42NDI5NDU3IDUzLjc1NzIxNzYsMTAuMDM3NzczMSA1Mi41NDczMDc1LDEwLjAzNzc3MzEgWiBNOTcuMjM5MzI3MiwxMC4wMzc3NzMxIEM5NC40OTk1MTU1LDEwLjAzNzc3MzEgOTMuNzE2NzEyNCwxMi4zMTU4NjE5IDkzLjMyNTMwOTksMTQuMzgwMzIzMyBMOTUuMzE3ODg4MiwxNC4yMzc5OTE4IEM5Ny45NTA5OTExLDE0LjA2MDA3OTkgOTkuMTYwNzY2MywxMi45OTIxOTkzIDk5LjE2MDc2NjMsMTEuNjc1MTA2OSBDOTkuMTYwNzY2MywxMC42NDI5NDU3IDk4LjQ0OTIzNzQsMTAuMDM3NzczMSA5Ny4yMzkzMjcyLDEwLjAzNzc3MzEgWiIgaWQ9IkxvZ28tRW1lcmdlIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=
+    altText: Emerge logo
+servers:
+- url: https://api.emergemarket.io/v2
+  description: Primary production endpoint
+- url: https://demo-api.emergemarket.dev/v2
+  description: Testing sandbox endpoint
+tags:
+- name: Tender
+paths:
+  /tenders/{shipment_id}/responses:
+    post:
+      tags:
+      - Tender
+      summary: Respond to Tender
+      security:
+      - BearerAuth: []
+      description: This method is used to receive response for a Tender.
+      requestBody:
+        description: Request model to submit the response.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  description: The identifier for the tender request. This is provided by Emerge in the Tender Request Event.
+                  type: string
+                  example: 40dbcdb1-272b-4ee3-8621-208b88fe0beb
+                status:
+                  description: Defines tender status.
+                  type: string
+                  enum:
+                  - ACCEPT
+                  - REJECT
+                  example: ACCEPT
+                rejection_reason:
+                  description: Identifies reasons for rejecting a tender.
+                  type: string
+                  enum:
+                  - NO_CAPACITY
+                  - SHORT_LEAD_TIME
+                  - PICKUP_APPOINTMENT_NOT_FEASIBLE
+                  - DELIVERY_APPOINTMENT_NOT_FEASIBLE
+                  - TRANSIT_TIME_NOT_FEASIBLE
+                  - VOLUME_COMMITMENT_MET
+                  example: NO_CAPACITY
+                carrier_shipment_id:
+                  description: Defines the crrier shipment id.
+                  type: string
+                  example: S111171611
+              required:
+              - event_id
+              - status
+      responses:
+        '202':
+          description: 202 | Accepted. Rates submitted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200_postoptions_response'
+        '400':
+          description: 400 | Bad Request. A bad request was made. Please try again
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400_badrequest_posttender_response'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+components:
+  responses:
+    '403':
+      description: 403 | Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/403_forbidden_response'
+    '401':
+      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
+  schemas:
+    403_forbidden_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 403
+            messages:
+              description: Error messages
+              type: array
+              items:
+                type: string
+                example: Response status code does not indicate success 403 (Forbidden)
+    400_badrequest_posttender_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 400
+            detailed_errors:
+              description: Error messages
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    example: status
+                  value:
+                    type: string
+                    example: Error converting value to type 'Emerge.Atom.Carrier.Integrations.Contracts.Enums.TenderResponseStatus'.
+            messages:
+              type: array
+              items:
+                type: string
+                example: Validation failed.
+    errorcode_zero:
+      type: object
+      properties:
+        code:
+          description: HTTP code
+          type: integer
+          example: 0
+    200_postoptions_response:
+      description: 202 | Accepted.
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/errorcode_zero'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Provider API
+  tags:
+  - Authentication
+  - Options
+  - Tender
+- name: Webhook Events
+  tags:
+  - Rate Request Event
+  - Tender Request Event

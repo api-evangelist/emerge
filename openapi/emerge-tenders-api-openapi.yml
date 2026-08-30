@@ -1,0 +1,1388 @@
+openapi: 3.2.0
+info:
+  version: 1.2.1
+  title: Emerge Public Tenders API
+  description: 'The Emerge public API provides partner developers with access to core capabilities of the Emerge platform.
+
+
+    The current version of the API is v1.2.1. This API will evolve as the features in Emerge''s product evolve.
+
+
+    # Get Started
+
+
+    The Emerge API is a ''restish'' API and is designed to allow you to work with objects using familiar HTTP verbs like
+
+    * POST
+
+    * PUT
+
+    * DELETE
+
+    * GET
+
+
+    All production level API requests are made to:
+
+    <br />`https://api.emergemarket.io`
+
+
+
+    The testing sandbox is available during development and for testing:
+
+    <br />`https://demo-api.emergemarket.dev/`
+
+
+    ## Compatibility Policy
+
+
+    Emerge APIs are versioned using a prefix in the endpoint URL. Within an API version, we only make backward-compatible changes. This mean that when a provider integrates with our REST API, the API will continue to work until the version is deprecated. If we have to create a change that is not compatible with the current version, a new version will be created.
+
+
+    ### Non-Breaking Changes
+
+
+    * Adding additional optional fields on the API request.
+
+    * Adding additional fields on the API response.
+
+    * Adding an HTTP method to an API.
+
+    * Adding optional headers.
+
+    * Adding additional accepted enumerated values.
+
+    * Changing Error Response descriptions.
+
+    * Added Rate Limits.
+
+
+    ### Breaking Changes
+
+
+    * Removing or renaming an API method or endpoint.
+
+    * Removing or renaming existing API request or response fields.
+
+    * Removing or renaming enumerated values.
+
+    * Changing the Error Response values.
+
+
+    ### Deprecation Policy
+
+
+    * Emerge will continue to support deprecated APIs for 1 year.
+
+    * Documentation will also be updated and integrating providers will be notified via email when a version or endpoint is being deprecated.
+
+
+    # Workflows
+
+    The Emerge API is designed to support two primary workflows for a shipper organization: An opportunity-to-tender workflow and an opportunity-to-award workflow.
+
+
+    ## Opportunity-to-tender
+
+
+    The opportunity-to-tender is the most common workflow of an integrating system. In this workflow, the Emerge system is used to source the live capacity as well as to tender through Emerge to that live capacity. The benefit of this workflow is that all information, from opportunity through tender and finally tracking is maintained in the Emerge system. The basic steps of this workflow include:
+
+
+    1. Create an Opportunity.
+
+
+    2. Post to the shipper''s (your) marketplace.
+
+
+    3. Receive options from carriers. Retrieval is achieved through a webhook published by you for receiving option events.
+
+
+    4. Tender to a carrier.
+
+
+    5. Get tracking updates through webhook.
+
+
+    ## Opportunity-to-award
+
+    The opportunity-to-award workflow supports customers who are using the Emerge platform in conjunction with their TMS. In this workflow, Emerge is used as a capacity provider while the TMS is used on the execution side. The basic steps of this workflow include:
+
+
+    1. Create an opportunity.
+
+
+    2. Post to the shipper''s (your) marketplace.
+
+
+    3. Receive options from carriers. Retrieval is achieved through a webhook published by you for receiving option events.
+
+
+    4. Award to a carrier.
+
+
+    Note that awarding to the carrier will automatically close the opportunity, notify the carrier that they "won" the bidding and notify the remaining carriers that they did not win the bidding.
+
+
+    The opportunity-to-award workflow requires that the customer''s TMS tenders to the winning carrier. This happens outside of the Emerge system.
+
+    '
+servers:
+- url: https://api.emergemarket.io/v1
+  description: Primary production endpoint
+- url: https://demo-api.emergemarket.dev/v1
+  description: Testing sandbox endpoint
+tags:
+- name: Tenders
+paths:
+  /tenders:
+    summary: Creates a tender
+    description: Tenders allow the shipper to award the shipment to Emerge Transportation. The Marketplace workflow does allow Emerge to reject a tender. At this time, however, a rejected tender will be performed manually to ensure the best customer experience and to simplify the integration experience.
+    post:
+      parameters:
+      - name: organization-id
+        in: header
+        description: The Organization GUID for the request. This Emerge provided value is only required if your integration user is in multiple organizations. Note that if multiple headers are passed, the organization from the first instance of the header will be used.
+        example:
+        - 070C895C-AE61-4629-A603-829FC54CD816
+        required: false
+        schema:
+          type: string
+      tags:
+      - Tenders
+      description: The opportunity_id must be included in the create tender call.
+      summary: Creates a tender
+      security:
+      - BearerAuth: []
+      requestBody:
+        description: Structure of the call to create the tender
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tenders'
+      responses:
+        '200':
+          description: 200 | Success. A new tender has been created and an tender object is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/201_createtender_response'
+        '400':
+          description: 400 | Bad Request. A bad request was made. Please try again
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400_badrequest_createtender_response'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+  /tenders/{tender_id}:
+    get:
+      tags:
+      - Tenders
+      summary: Retrieves the details of a tender.
+      description: Tenders allow the shipper to award the shipment to Emerge Transportation. The get tender endpoint allows a developer to retrieve a specific tender.
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: organization-id
+        in: header
+        description: The Organization GUID for the request. This Emerge provided value is only required if your integration user is in multiple organizations. Note that if multiple headers are passed, the organization from the first instance of the header will be used.
+        example:
+        - 070C895C-AE61-4629-A603-829FC54CD816
+        required: false
+        schema:
+          type: string
+      - in: path
+        name: tender_id
+        schema:
+          type: integer
+          minimum: 1
+          example: 112020
+        required: true
+        description: ID of the tender
+      responses:
+        '200':
+          description: 200 | OK. Returns the current tender.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/201_createtender_response'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+    put:
+      tags:
+      - Tenders
+      summary: Updates a tender.
+      description: The shipment_id and rate value must be included in the update tender call.
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: organization-id
+        in: header
+        description: The Organization GUID for the request. This Emerge provided value is only required if your integration user is in multiple organizations. Note that if multiple headers are passed, the organization from the first instance of the header will be used.
+        example:
+        - 070C895C-AE61-4629-A603-829FC54CD816
+        required: false
+        schema:
+          type: string
+      - in: path
+        name: tender_id
+        schema:
+          type: integer
+          minimum: 1
+          example: 112020
+        required: true
+        description: ID of the tender
+      requestBody:
+        description: Structure of the call to create the tender
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tenders'
+      responses:
+        '200':
+          description: 200 | OK. The tender has been updated and tender object is returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/201_createtender_response'
+        '400':
+          description: 400 | Bad Request. A bad request was made. Please try again
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400_badrequest_updatetender_response'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+  /tenders/{tender_id}/cancel:
+    post:
+      tags:
+      - Tenders
+      summary: Cancel a tender.
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: organization-id
+        in: header
+        description: The Organization GUID for the request. This Emerge provided value is only required if your integration user is in multiple organizations. Note that if multiple headers are passed, the organization from the first instance of the header will be used.
+        example:
+        - 070C895C-AE61-4629-A603-829FC54CD816
+        required: false
+        schema:
+          type: string
+      - in: path
+        name: tender_id
+        schema:
+          type: integer
+          minimum: 1
+          example: 112020
+        required: true
+        description: ID of the tender
+      responses:
+        '200':
+          description: 200 | OK. The tender has been canceled.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorcode_zero_without_message_object'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '409':
+          $ref: '#/components/responses/409'
+components:
+  schemas:
+    409_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 409
+            messages:
+              type: array
+              items:
+                type: string
+                example: The tender status is invalid.
+    equipment_type_id_object:
+      description: The equipment type identifier.
+      type: string
+      enum:
+      - Other: 0
+      - Flatbed: 1
+      - Reefer: 3
+      - Stepdeck: 4
+      - Rgn: 5
+      - Van: 6
+      - Drayage: 7
+      - Dump: 8
+      - VanOrReefer: 9
+      - TrailerPoolInterchange
+      - 10
+      - PowerOnly: 11
+      - Conestoga: 12
+      - MaxiTrailer: 38
+      - Intermodal: 82
+      - BoxTruck: 84
+      - Hotshot: 85
+      - SprinterVan: 86
+      - StraightTruck: 87
+      example: 6
+    request_commodities_object:
+      description: A description of the items to be carried by the capacity provider.
+      type: array
+      items:
+        type: object
+        required:
+        - name
+        - weight
+        properties:
+          id:
+            description: The commodity identifier.
+            type: integer
+            default: 0
+          name:
+            description: The name and description of the commodity.
+            type: string
+            example: FAK
+          weight:
+            description: The weight of the commodity in lbs.
+            type: integer
+            example: 100
+          quantity_unit_id:
+            description: The type of unit the commodity is moved on.
+            type: string
+            enum:
+            - Other
+            - Pallet
+            - Box
+            - Crate
+            - Bag
+            - Coils
+            - Drums
+            - Reels
+            - Rolls
+            - TubesOrPipes
+            - Slipsheets
+            - Bale
+            - Bucket
+            - Bundle
+            - Can
+            - Carton
+            - Case
+            - Cylinder
+            - Pail
+            - Pieces
+            - Skid
+            example: Other
+          unit_count:
+            description: The unit count of the commodity.
+            type: integer
+            example: 2
+          piece_count:
+            description: The piece count of the commodity.
+            type: integer
+            example: 24
+          length:
+            description: The length of the commodity.
+            type: integer
+            example: 48
+          width:
+            description: The width of the commodity.
+            type: integer
+            example: 40
+          height:
+            description: The height of the commodity.
+            type: integer
+            example: 60
+          is_stackable:
+            description: Flag identifying a stackable commodity. Default value is false.
+            type: boolean
+            default: false
+            example: false
+          is_hazmat:
+            description: Flag identifying a hazmat commodity. Default value is false.
+            type: boolean
+            default: false
+            example: true
+          hazmat:
+            type: object
+            properties:
+              identification_number:
+                description: The hazmat identification number for the dangerous substances.
+                type: string
+                example: UN1000
+              packing_group_id:
+                description: The packing group identifier for the hazmat load.
+                enum:
+                - High
+                - Moderate
+                - Low
+                - None
+                type: string
+                example: High
+              class_id:
+                description: The class of the hazmat load
+                enum:
+                - MassExplosiveHazard
+                - ProjectionHazard
+                - MassFireHazard
+                - MinorExplosionHazard
+                - VeryInsensitiveExplosives
+                - ExtremelyInsensitiveExplosives
+                - FlammableGases
+                - NonFlammableGases
+                - PoisonousOrToxic
+                - CombustibleLiquids
+                - FlammableSolid
+                - SpontaneouslyCombustibleMaterial
+                - DangerousWhenWet
+                - Oxidizer
+                - OrganicPeroxide
+                - PoisonousOrToxicMaterial
+                - InfectiousSubstance
+                - RadioactiveMaterial
+                - Corrosives
+                - MiscellaneousDangerousGoods
+                type: string
+                example: ExtremelyInsensitiveExplosives
+              emergency_contact:
+                description: The person to be contacted regarding an emergency with this Hazmat load.
+                type: object
+                properties:
+                  name:
+                    description: The name of the contact responsible for the hazmat load.
+                    type: string
+                    example: Kyle Jepsen
+                  phone:
+                    description: The phone number of the emergency contact.
+                    $ref: '#/components/schemas/phone_response_object'
+    commodities_object:
+      description: A description of the items to be carried by the capacity provider.
+      type: array
+      items:
+        type: object
+        required:
+        - name
+        - weight
+        properties:
+          id:
+            description: The commodity identifier.
+            type: integer
+            default: 0
+          name:
+            description: The name and description of the commodity.
+            type: string
+            example: FAK
+          weight:
+            description: The weight of the commodity in lbs.
+            type: integer
+            example: 100
+          quantity_unit_id:
+            description: The type of unit the commodity is moved on.
+            type: string
+            enum:
+            - Other: 0
+            - Pallet: 1
+            - Box: 2
+            - Crate: 3
+            - Bag: 4
+            - Coils: 5
+            - Drums: 6
+            - Reels: 7
+            - Rolls: 8
+            - TubesOrPipes: 9
+            - Slipsheets: 10
+            - Bale: 11
+            - Bucket: 12
+            - Bundle: 13
+            - Can: 14
+            - Carton: 15
+            - Case: 16
+            - Cylinder: 17
+            - Pail: 18
+            - Pieces: 19
+            - Skid: 20
+            example: 0
+          unit_count:
+            description: The unit count of the commodity.
+            type: integer
+            example: 2
+          piece_count:
+            description: The piece count of the commodity.
+            type: integer
+            example: 24
+          length:
+            description: The length of the commodity.
+            type: integer
+            example: 48
+          width:
+            description: The width of the commodity.
+            type: integer
+            example: 40
+          height:
+            description: The height of the commodity.
+            type: integer
+            example: 60
+          is_stackable:
+            description: Flag identifying a stackable commodity. Default value is false.
+            type: boolean
+            default: false
+            example: false
+          is_hazmat:
+            description: Flag identifying a hazmat commodity. Default value is false.
+            type: boolean
+            default: false
+            example: true
+          hazmat:
+            type: object
+            properties:
+              identification_number:
+                description: The hazmat identification number for the dangerous substances.
+                type: string
+                example: UN1000
+              packing_group_id:
+                description: The packing group identifier for the hazmat load.
+                enum:
+                - High: 1
+                - Moderate: 2
+                - Low: 3
+                - None: 4
+                type: string
+                example: 1
+              class_id:
+                description: The class of the hazmat load
+                enum:
+                - MassExplosiveHazard: 1
+                - ProjectionHazard: 2
+                - MassFireHazard: 3
+                - MinorExplosionHazard: 4
+                - VeryInsensitiveExplosives: 5
+                - ExtremelyInsensitiveExplosives: 6
+                - FlammableGases: 7
+                - NonFlammableGases: 8
+                - PoisonousOrToxic: 9
+                - CombustibleLiquids: 10
+                - FlammableSolid: 11
+                - SpontaneouslyCombustibleMaterial: 12
+                - DangerousWhenWet: 13
+                - Oxidizer: 14
+                - OrganicPeroxide: 15
+                - PoisonousOrToxicMaterial: 16
+                - InfectiousSubstance: 17
+                - RadioactiveMaterial: 18
+                - Corrosives: 19
+                - MiscellaneousDangerousGoods: 20
+                type: string
+                example: 6
+              emergency_contact:
+                description: The person to be contacted regarding an emergency with this Hazmat load.
+                type: object
+                properties:
+                  name:
+                    description: The name of the contact responsible for the hazmat load.
+                    type: string
+                    example: Kyle Jepsen
+                  phone:
+                    description: The phone number of the emergency contact.
+                    $ref: '#/components/schemas/phone_response_object'
+    400_badrequest_updatetender_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 400
+            detailed_errors:
+              description: Error messages
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    example: shipment_id
+                  value:
+                    type: string
+                    example: shipment_id must not be empty.
+            messages:
+              type: array
+              items:
+                type: string
+                example: Validation failed.
+    length_of_haul_result_object:
+      description: The length of haul override.
+      type: object
+      properties:
+        manual:
+          type: integer
+          example: 2
+    equipment_size_object:
+      description: The length of the trailer.
+      type: integer
+      minimum: 1
+      example: 2
+    phone_response_object:
+      description: Phone Object
+      type: object
+      properties:
+        number:
+          description: The 10 digit phone number.
+          type: string
+          example: '1234567890'
+        extension_number:
+          description: The extension number, supports up to 5 digits.
+          type: string
+          example: '1234'
+    shipment_status:
+      description: The Shipment status.
+      type: integer
+      enum:
+      - Open: 1
+      - Tendered: 2
+      - Closed: 3
+      - Canceled: 4
+      - Covered: 5
+      example: 1
+    400_badrequest_createtender_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 400
+            detailed_errors:
+              description: Error messages
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    example: opportunity_id
+                  value:
+                    type: string
+                    example: opportunity_id must not be empty.
+            messages:
+              type: array
+              items:
+                type: string
+                example: Validation failed.
+    request_references_object:
+      required:
+      - Customer
+      description: References for the opportunity.
+      type: array
+      items:
+        type: object
+        properties:
+          type_id:
+            description: The type of reference.
+            type: string
+            enum:
+            - Other
+            - Customer
+            - Appointment
+            - Bol
+            - Delivery
+            - Pickup
+            - PickupConfirmation
+            - Po
+            - Pro
+            - Trailer
+            example: Customer
+          value:
+            description: The reference value.
+            type: string
+            example: CustRef123
+    accessorials_object:
+      description: The accessorials associated with the load.
+      type: array
+      items:
+        type: object
+        properties:
+          accessorial_type_id:
+            description: The type of accessorial required.<br /><span>Enum:</span> <div style="height:80px; overflow-y:scroll"> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Straps":127}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"ETracks":128}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"LoadLocks":129}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"BlockAndBrace":130}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Blankets":131}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"DriverLoadAssist":132}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"DriverTailgateAssist":133}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"EdgeProtector":134}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"BulkHeads":135}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"SmokedTarps":136}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"StandardTarps":137}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"VBoards":138}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"CoilRacks":139}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PipeStakes":140}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Headboard":141}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Dunnage":142}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Ramps":143}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"LoadLevelers":144}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Chains":145}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Other":146}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"TeamDrivers":147}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PreCool":148}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"WoodenFloor":153}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PersonalProtectiveEquipment":154}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"FtlInsideDelivery":155}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Liftgate":156}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"FoodGrade":157}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"TWICRequired":158}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"TankerEndorsement":159}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"ProtectFromFreeze":160}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"LightScaleTicketRequired":161}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PalletJack":162}</span> </div>
+            type: string
+            example: 131
+          value:
+            description: The accessorial quantity.
+            type: string
+            example: '1'
+    tenders:
+      type: object
+      required:
+      - stops
+      - commodities
+      properties:
+        load_type_id:
+          $ref: '#/components/schemas/request_load_type_id_object'
+        equipment_type_id:
+          $ref: '#/components/schemas/request_equipment_type_id_object'
+        reefer_maximum_temperature:
+          description: The maximum temperature for reefer in degree Fahrenheit. Only valid for Reefer equipment type.
+          type: integer
+          example: 20
+        reefer_minimum_temperature:
+          description: The minimum temperature for reefer in degree Fahrenheit. Only valid for Reefer equipment type.
+          type: integer
+          example: 1
+        equipment_size:
+          $ref: '#/components/schemas/equipment_size_object'
+        is_hot_load:
+          description: Identifies if the load is hot.
+          type: boolean
+          default: false
+        is_tracking_required:
+          description: Defines if tracking is required on this opportunity.
+          type: boolean
+          default: false
+        stops:
+          $ref: '#/components/schemas/stops_object'
+        commodities:
+          $ref: '#/components/schemas/request_commodities_object'
+        accessorials:
+          $ref: '#/components/schemas/request_accessorials_object'
+        references:
+          $ref: '#/components/schemas/request_references_object'
+        notes:
+          $ref: '#/components/schemas/notes_object'
+        tags:
+          $ref: '#/components/schemas/tags_object'
+        option_id:
+          description: The Id of the option that is to be tendered against.
+          type: integer
+          example: 323324
+          minimum: 1
+        opportunity_id:
+          description: The opportunity identifier.
+          type: integer
+          example: 213698
+          minimum: 1
+        mileage_override:
+          description: Miles to be overridden.
+          type: integer
+          example: 12
+        custom_equipment_type:
+          description: Custom equipment type.
+          type: string
+          example: custom type
+    errorcode_zero_without_message_object:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 0
+    201_createtender_response:
+      description: 201 | Success. Tender successfully created
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            id:
+              description: The tender ID. The tender ID is used in subsequent calls.
+              type: integer
+              example: 232343
+            assigned_user_id:
+              type: integer
+              example: 1305583
+            partner_id:
+              type: integer
+              example: 953
+            shipment_id:
+              type: integer
+              example: 16679
+            shipment_status_id:
+              $ref: '#/components/schemas/shipment_status'
+            load_type_id:
+              $ref: '#/components/schemas/load_type_id_object'
+            equipment_type_id:
+              $ref: '#/components/schemas/equipment_type_id_object'
+            reefer_maximum_temperature:
+              description: The maximum temperature for reefer in degree Fahrenheit. Only valid for Reefer equipment type.
+              type: integer
+              example: 20
+            reefer_minimum_temperature:
+              description: The minimum temperature for reefer in degree Fahrenheit. Only valid for Reefer equipment type.
+              type: integer
+              example: 1
+            freight_provider_organization_equipment_type_id:
+              type: integer
+              example: 974
+            freight_provider_organization_equipment_type_name:
+              type: string
+              example: Reefer
+            length_of_haul:
+              type: integer
+              example: 1084
+            length_of_haul_source_id:
+              description: The source of the length of haul calculation. Enumeration.
+              type: integer
+              example: 2
+            is_length_of_haul_override_enabled:
+              description: Boolean to indicate if the length of haul has been overridden.
+              type: boolean
+              example: false
+            length_of_haul_result:
+              $ref: '#/components/schemas/length_of_haul_result_object'
+            is_tracking_required:
+              type: boolean
+              example: false
+            rate:
+              description: The rate for the shipment in USD.
+              type: integer
+              example: 3866
+            rate_per_mile:
+              description: the rate for the shipment per mile in USD.
+              type: number
+              example: 3.57
+            fuel_rate:
+              description: The total rate for the fuel in USD.
+              type: number
+              example: 238.48
+            is_hot_load:
+              type: boolean
+              example: false
+            option_id:
+              description: The ID of the option associated with the tender
+              type: integer
+              example: 15618
+            option:
+              description: The option details
+              type: object
+              properties:
+                id:
+                  description: The ID of the option associated with the tender
+                  type: integer
+                  example: 15618
+                modified_date:
+                  type: string
+                  example: '2021-09-18T20:39:20.8137938+00:00'
+                type_id:
+                  type: integer
+                  example: 5
+                opportunity_id:
+                  type: integer
+                  example: 16734
+                partner_id:
+                  type: integer
+                  example: 953
+                rate:
+                  type: integer
+                  example: 3866
+                rate_per_mile:
+                  type: number
+                  example: 3.57
+                fuel_rate:
+                  type: number
+                  example: 238.48
+                is_fuel_included:
+                  type: boolean
+                  example: false
+                line_haul_rate:
+                  type: number
+                  example: 3627.52
+                line_haul_rate_per_mile:
+                  type: number
+                  example: 3.35
+                notes:
+                  $ref: '#/components/schemas/notes_object'
+            commodities:
+              $ref: '#/components/schemas/commodities_object'
+            stops:
+              $ref: '#/components/schemas/opportunity_response_stops_object'
+            references:
+              $ref: '#/components/schemas/references_object'
+            accessorials:
+              $ref: '#/components/schemas/accessorials_object'
+            notes:
+              $ref: '#/components/schemas/notes_object'
+        error:
+          $ref: '#/components/schemas/errorcode_zero'
+    request_load_type_id_object:
+      description: The load type identifier.
+      type: string
+      enum:
+      - FTL
+      example: FTL
+    notes_object:
+      type: array
+      items:
+        description: This shipment is ready to go now. Please provide your best options.
+        properties:
+          note:
+            description: The specific note for the opportunity
+            type: string
+    opportunity_response_stops_object:
+      description: The stops associated with the opportunity. An opportunity must have at least two stops.
+      type: array
+      items:
+        type: object
+        required:
+        - order
+        - action_type_id
+        - postal_code
+        - city
+        - state
+        - country
+        - appointment_type_id
+        properties:
+          type_id:
+            description: The type of the stop.
+            type: string
+            enum:
+            - Origin: 1
+            - Middle: 2
+            - Destination: 3
+            example: 1
+          appointment_type_id:
+            description: The appointment type.
+            type: string
+            deprecated: true
+            enum:
+            - FCFS: 1
+            - Appointment: 2
+            example: 1
+          standardized_appointment_type_id:
+            description: The appointment type of the stop.
+            type: string
+            enum:
+            - FCFS: 1
+            - AppointmentScheduled: 2
+            - AppointmentRequired: 3
+            example: 1
+          standardized_loading_type_id:
+            description: The loading or unloading type of the stop.
+            type: string
+            enum:
+            - Live: 1
+            - DropTrailer: 2
+            example: 1
+          address1:
+            type: string
+            example: 3665 North Harbor Drive
+          address2:
+            type: string
+            example: string
+          city:
+            type: string
+            example: San Diego
+          contact:
+            type: object
+            properties:
+              name:
+                description: The contact name for the person at the stop.
+                type: string
+                example: Shipper
+              phone:
+                description: The phone number for the contact at the stop.
+                $ref: '#/components/schemas/phone_response_object'
+              email:
+                type: string
+                format: email
+                example: shipper@stonelogistics.com
+          country:
+            description: The country of the stop. Use abbreviation US or USA for United States of America and CA or CAN for Canada.
+            type: string
+            example: US
+          state:
+            description: The state of the stop. Use abbreviation.
+            type: string
+            example: CA
+          postal_code:
+            type: string
+            example: '92101'
+          latitude:
+            description: The latitude of the stop (use decimal representation)
+            type: number
+            example: 32.7325
+          longitude:
+            description: The longitude of the stop (use decimal representation)
+            type: number
+            example: -117.2011
+          name:
+            description: The name for the stop.
+            type: string
+            example: Stone Brewing Company
+          note:
+            description: Notes associated with the stop.
+            type: string
+            example: Check in with security prior to loading or unloading.
+          order:
+            description: The order of the stop-starting with 1.
+            type: integer
+            example: 1
+          action_type_id:
+            description: The stop action.
+            type: string
+            enum:
+            - Pick: 1
+            - Drop: 2
+            example: 1
+          schedule:
+            description: The schedule associated with the stop.
+            type: object
+            deprecated: true
+            properties:
+              date:
+                description: The date associated with the stop. Supports yyyy-mm-dd format.
+                type: string
+                example: '2021-10-06'
+              start_time:
+                description: Based upon the local time at the stop, the earliest time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '14:00:00'
+              end_time:
+                description: Based upon the local time at the stop, the last time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '20:00:00'
+          standardized_schedule:
+            description: The schedule associated with the stop.
+            type: object
+            properties:
+              start_date:
+                description: The earliest date associated with the stop. Supports yyyy-mm-dd format.
+                type: string
+                example: '2021-10-06'
+              start_time:
+                description: Based upon the local time at the stop, the earliest time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '14:00:00'
+              end_date:
+                description: The latest date associated with the stop. Supports yyyy-mm-dd format.
+                type: string
+                example: '2021-10-07'
+              end_time:
+                description: Based upon the local time at the stop, the last time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '20:00:00'
+          raw_address:
+            description: A string version of the full address
+            type: string
+            example: 23, Phoenix
+          is_schedule_required:
+            description: Determines if a shipper will allow the carrier to schedule an appointment on their behalf. Not recommended for the marketplace workflow
+            type: boolean
+            deprecated: true
+            example: false
+    403_forbidden_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 403
+            messages:
+              description: Error messages
+              type: array
+              items:
+                type: string
+                example: Response status code does not indicate success 403 (Forbidden)
+    stops_object:
+      description: The stops associated with the opportunity. An opportunity must have at least two stops.
+      type: array
+      items:
+        type: object
+        required:
+        - order
+        - name
+        - address1
+        - address2
+        - city
+        - state
+        - country
+        properties:
+          type_id:
+            description: The type of the stop.
+            type: string
+            enum:
+            - Origin
+            - Middle
+            - Destination
+            example: Origin
+          appointment_type_id:
+            description: The appointment type.
+            type: string
+            deprecated: true
+            enum:
+            - FCFS
+            - Appointment
+            example: Appointment
+          standardized_appointment_type_id:
+            description: The appointment type of the stop.
+            type: string
+            enum:
+            - FCFS
+            - AppointmentScheduled
+            - AppointmentRequired
+            example: FCFS
+          standardized_loading_type_id:
+            description: The loading or unloading type of the stop.
+            type: string
+            enum:
+            - Live
+            - DropTrailer
+            example: Live
+          address1:
+            type: string
+            example: 3665 North Harbor Drive
+          address2:
+            type: string
+            example: string
+          city:
+            type: string
+            example: San Diego
+          contact:
+            type: object
+            properties:
+              name:
+                description: The contact name for the person at the stop.
+                type: string
+                example: Shipper
+              phone:
+                description: The phone number for the contact at the stop.
+                $ref: '#/components/schemas/phone_response_object'
+              email:
+                type: string
+                format: email
+                example: shipper@stonelogistics.com
+          country:
+            description: The country of the stop. Use abbreviation US or USA for United States of America and CA or CAN for Canada.
+            type: string
+            example: US
+          state:
+            description: The state of the stop. Use abbreviation.
+            type: string
+            example: CA
+          postal_code:
+            type: string
+            example: '92101'
+          latitude:
+            description: The latitude of the stop (use decimal representation)
+            type: number
+            example: 32.7325
+          longitude:
+            description: The longitude of the stop (use decimal representation)
+            type: number
+            example: -117.2011
+          name:
+            description: The name for the stop.
+            type: string
+            example: Stone Brewing Company
+          note:
+            description: Notes associated with the stop.
+            type: string
+            example: Check in with security prior to loading or unloading.
+          order:
+            description: The order of the stop-starting with 1.
+            type: integer
+            example: 1
+          action_type_id:
+            description: The stop action.
+            type: string
+            enum:
+            - Pick
+            - Drop
+            example: Pick
+          schedule:
+            description: The schedule associated with the stop.
+            type: object
+            deprecated: true
+            properties:
+              date:
+                description: The date associated with the stop. Supports yyyy-mm-dd format.
+                type: string
+                example: '2021-10-06'
+              start_time:
+                description: Based upon the local time at the stop, the earliest time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '14:00:00'
+              end_time:
+                description: Based upon the local time at the stop, the last time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '20:00:00'
+          standardized_schedule:
+            description: The schedule associated with the stop.
+            type: object
+            properties:
+              start_date:
+                description: The earliest date associated with the stop. Supports yyyy-mm-dd format.
+                type: string
+                example: '2021-10-06'
+              start_time:
+                description: Based upon the local time at the stop, the earliest time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '14:00:00'
+              end_date:
+                description: The latest date associated with the stop. Supports yyyy-mm-dd format.
+                type: string
+                example: '2021-10-07'
+              end_time:
+                description: Based upon the local time at the stop, the last time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '20:00:00'
+          raw_address:
+            description: A string version of the full address
+            type: string
+            example: 23, Phoenix
+          is_schedule_required:
+            description: Determines if a shipper will allow the carrier to schedule an appointment on their behalf. Not recommended for the marketplace workflow
+            type: boolean
+            deprecated: true
+            example: false
+    references_object:
+      required:
+      - Customer
+      description: References for the opportunity.
+      type: array
+      items:
+        type: object
+        properties:
+          type_id:
+            description: The type of reference.
+            type: string
+            enum:
+            - Other: 1
+            - Customer: 2
+            - Appointment: 3
+            - Bol: 4
+            - Delivery: 5
+            - Pickup: 6
+            - PickupConfirmation: 7
+            - Po: 8
+            - Pro: 9
+            - Trailer: 10
+            example: 2
+          value:
+            description: The reference value.
+            type: string
+            example: CustRef123
+    request_accessorials_object:
+      description: The accessorials associated with the load.
+      type: array
+      items:
+        type: object
+        properties:
+          accessorial_type_id:
+            description: The type of accessorial required.<br /><span>Enum:</span> <div style="height:80px; overflow-y:scroll"> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "Straps"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "ETracks"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "LoadLocks"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "BlockAndBrace"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "Blankets"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "DriverLoadAssist"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "DriverTailgateAssist"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "EdgeProtector"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "BulkHeads"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "SmokedTarps"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "StandardTarps"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "VBoards"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "CoilRacks"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "PipeStakes"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "Headboard"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "Dunnage"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "Ramps"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "LoadLevelers"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "Chains"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "Other"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "TeamDrivers"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "PreCool"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "WoodenFloor"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "PersonalProtectiveEquipment"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "FtlInsideDelivery"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "Liftgate"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "FoodGrade"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "TWICRequired"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "TankerEndorsement"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "ProtectFromFreeze"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "LightScaleTicketRequired"</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> "PalletJack"</span> </div>
+            type: string
+            example: Blankets
+          value:
+            description: The accessorial quantity.
+            type: string
+            example: '1'
+    load_type_id_object:
+      description: The load type identifier.
+      type: string
+      enum:
+      - FTL: 1
+      example: 1
+    request_equipment_type_id_object:
+      description: The equipment type identifier.
+      type: string
+      enum:
+      - Other
+      - Flatbed
+      - Reefer
+      - Stepdeck
+      - Rgn
+      - Van
+      - Drayage
+      - Dump
+      - VanOrReefer
+      - TrailerPoolInterchange
+      - PowerOnly
+      - Conestoga
+      - MaxiTrailer
+      - Intermodal
+      - BoxTruck
+      - Hotshot
+      - SprinterVan
+      - StraightTruck
+      example: Van
+    tags_object:
+      description: Tags specific to the entity.
+      type: array
+      items:
+        type: string
+        example: firstTag
+    errorcode_zero:
+      type: object
+      properties:
+        code:
+          description: HTTP code
+          type: integer
+          example: 0
+  responses:
+    '403':
+      description: 403 | Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/403_forbidden_response'
+    '409':
+      description: 409 | Conflict. A conflict has occurred
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/409_response'
+    '401':
+      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
+    '404':
+      description: 404 | Not Found. The requested resource was not found
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Shipper API
+  tags:
+  - Authentication
+  - Network Partners
+  - Opportunities
+  - Options
+  - Awards
+  - Tenders
+  - Shipments
+- name: Webhook Subscription API
+  tags:
+  - Webhooks
+- name: Webhook Events
+  tags:
+  - Tracking Events
+  - Opportunity Awarded Event
+  - Opportunity Deleted Event
+  - Opportunity Not Awarded Event
+  - Options Changed Event
+  - Tender Status Updated Event
+  - Network Partner Updated Event
+  - Network Partner Deleted Event
+  - Current Marketplace Option Event

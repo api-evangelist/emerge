@@ -1,0 +1,586 @@
+openapi: 3.2.0
+info:
+  version: 1.2.1
+  title: Emerge Public Network Partners API
+  description: 'The Emerge public API provides partner developers with access to core capabilities of the Emerge platform.
+
+
+    The current version of the API is v1.2.1. This API will evolve as the features in Emerge''s product evolve.
+
+
+    # Get Started
+
+
+    The Emerge API is a ''restish'' API and is designed to allow you to work with objects using familiar HTTP verbs like
+
+    * POST
+
+    * PUT
+
+    * DELETE
+
+    * GET
+
+
+    All production level API requests are made to:
+
+    <br />`https://api.emergemarket.io`
+
+
+
+    The testing sandbox is available during development and for testing:
+
+    <br />`https://demo-api.emergemarket.dev/`
+
+
+    ## Compatibility Policy
+
+
+    Emerge APIs are versioned using a prefix in the endpoint URL. Within an API version, we only make backward-compatible changes. This mean that when a provider integrates with our REST API, the API will continue to work until the version is deprecated. If we have to create a change that is not compatible with the current version, a new version will be created.
+
+
+    ### Non-Breaking Changes
+
+
+    * Adding additional optional fields on the API request.
+
+    * Adding additional fields on the API response.
+
+    * Adding an HTTP method to an API.
+
+    * Adding optional headers.
+
+    * Adding additional accepted enumerated values.
+
+    * Changing Error Response descriptions.
+
+    * Added Rate Limits.
+
+
+    ### Breaking Changes
+
+
+    * Removing or renaming an API method or endpoint.
+
+    * Removing or renaming existing API request or response fields.
+
+    * Removing or renaming enumerated values.
+
+    * Changing the Error Response values.
+
+
+    ### Deprecation Policy
+
+
+    * Emerge will continue to support deprecated APIs for 1 year.
+
+    * Documentation will also be updated and integrating providers will be notified via email when a version or endpoint is being deprecated.
+
+
+    # Workflows
+
+    The Emerge API is designed to support two primary workflows for a shipper organization: An opportunity-to-tender workflow and an opportunity-to-award workflow.
+
+
+    ## Opportunity-to-tender
+
+
+    The opportunity-to-tender is the most common workflow of an integrating system. In this workflow, the Emerge system is used to source the live capacity as well as to tender through Emerge to that live capacity. The benefit of this workflow is that all information, from opportunity through tender and finally tracking is maintained in the Emerge system. The basic steps of this workflow include:
+
+
+    1. Create an Opportunity.
+
+
+    2. Post to the shipper''s (your) marketplace.
+
+
+    3. Receive options from carriers. Retrieval is achieved through a webhook published by you for receiving option events.
+
+
+    4. Tender to a carrier.
+
+
+    5. Get tracking updates through webhook.
+
+
+    ## Opportunity-to-award
+
+    The opportunity-to-award workflow supports customers who are using the Emerge platform in conjunction with their TMS. In this workflow, Emerge is used as a capacity provider while the TMS is used on the execution side. The basic steps of this workflow include:
+
+
+    1. Create an opportunity.
+
+
+    2. Post to the shipper''s (your) marketplace.
+
+
+    3. Receive options from carriers. Retrieval is achieved through a webhook published by you for receiving option events.
+
+
+    4. Award to a carrier.
+
+
+    Note that awarding to the carrier will automatically close the opportunity, notify the carrier that they "won" the bidding and notify the remaining carriers that they did not win the bidding.
+
+
+    The opportunity-to-award workflow requires that the customer''s TMS tenders to the winning carrier. This happens outside of the Emerge system.
+
+    '
+servers:
+- url: https://api.emergemarket.io/v1
+  description: Primary production endpoint
+- url: https://demo-api.emergemarket.dev/v1
+  description: Testing sandbox endpoint
+tags:
+- name: Network Partners
+paths:
+  /network_partners:
+    description: This endpoint allows a shipper organization to interact with it's network partners (capacity providers) that are defined in the Emerge Platform.
+    get:
+      parameters:
+      - name: organization-id
+        in: header
+        description: The Organization GUID for the request. This Emerge provided value is only required if your integration user is in multiple organizations. Note that if multiple headers are passed, the organization from the first instance of the header will be used.
+        example:
+        - 070C895C-AE61-4629-A603-829FC54CD816
+        required: false
+        schema:
+          type: string
+      tags:
+      - Network Partners
+      summary: Gets all active network partners associated with the shipper organization.
+      security:
+      - BearerAuth: []
+      description: This method gives the ability to a shipper organization to view its active network partners in the Emerge system.
+      responses:
+        '200':
+          description: 200 | OK. Returns the list of associated active network partners.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200_getnetworkpartner_response'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+    post:
+      parameters:
+      - name: organization-id
+        in: header
+        description: The Organization GUID for the request. This Emerge provided value is only required if your integration user is in multiple organizations. Note that if multiple headers are passed, the organization from the first instance of the header will be used.
+        example:
+        - 070C895C-AE61-4629-A603-829FC54CD816
+        required: false
+        schema:
+          type: string
+      tags:
+      - Network Partners
+      summary: Invites a network partner to Emerge platform.
+      security:
+      - BearerAuth: []
+      description: This method gives the ability to the shipper organization to invite it's network partner to the Emerge platform.
+      requestBody:
+        description: Request model to invite a network partner.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contact:
+                  type: object
+                  required:
+                  - first_name
+                  - last_name
+                  - email
+                  - phone
+                  properties:
+                    first_name:
+                      description: First name of the network partner contact.
+                      type: string
+                      example: mycarrier
+                    last_name:
+                      description: Last name of the network partner contact.
+                      type: string
+                      example: test
+                    email:
+                      description: Email id of the network partner contact.
+                      type: string
+                      format: email
+                      example: mycarrier.test@abc.com
+                    phone:
+                      description: Phone number of the network partner contact.
+                      $ref: '#/components/schemas/phone_request_object'
+                partner_code:
+                  description: Network partner's partner code. Supports upto 10 characters with only uppercase and numeric values allowed.
+                  type: string
+                  example: AS1234
+      responses:
+        '200':
+          description: 200 | Success. Network partner invited successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200_invitenetworkpartner_response'
+        '400':
+          description: 400 | Bad Request. A bad request was made. Please try again
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400_badrequest_networkpartner_response'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+  /network_partners/{partner_id}:
+    delete:
+      tags:
+      - Network Partners
+      summary: Deletes a network partner from Emerge platform.
+      description: This method gives the ability to a shipper organization to delete it's network partner from the Emerge platform.
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: organization-id
+        in: header
+        description: The Organization GUID for the request. This Emerge provided value is only required if your integration user is in multiple organizations. Note that if multiple headers are passed, the organization from the first instance of the header will be used.
+        example:
+        - 070C895C-AE61-4629-A603-829FC54CD816
+        required: false
+        schema:
+          type: string
+      - in: path
+        name: partner_id
+        schema:
+          type: integer
+          minimum: 1
+          example: 1120
+        required: true
+        description: ID of the network partner.
+      responses:
+        '200':
+          description: 200 | OK. Network partner deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorcode_zero_without_message_object'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+components:
+  responses:
+    '403':
+      description: 403 | Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/403_forbidden_response'
+    '401':
+      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
+    '404':
+      description: 404 | Not Found. The requested resource was not found
+  schemas:
+    200_invitenetworkpartner_response:
+      description: 200 | OK. Network partners successfully retrieved.
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            partner_id:
+              description: The network partner identifier.
+              type: integer
+              example: 123
+            partner_code:
+              description: Network partner's partner code.
+              type: string
+              example: AS1234
+            type:
+              description: Network partner's type.
+              type: string
+              enum:
+              - Network
+              - Default
+            status:
+              description: Network partner's status.
+              type: string
+              enum:
+              - AwaitingConfirmation
+              - Confirmed
+            created_date:
+              description: Created date of the partner.
+              type: string
+              example: '2021-10-28T07:53:59.402Z'
+            contact:
+              description: Note that this may have different details from what was provided by the shipper when inviting the network partner. This happens when the network partner already existed in Emerge platform with different details or modifies it's details during or after registeration.
+              type: object
+              properties:
+                first_name:
+                  description: Network partner's first name.
+                  type: string
+                  example: mycarrier
+                last_name:
+                  description: Network partner's last name.
+                  type: string
+                  example: test
+                email:
+                  description: Network partner contact's email id.
+                  type: string
+                  format: email
+                  example: mycarrier.test@abc.com
+                phone:
+                  description: Network partner contact's phone number.
+                  $ref: '#/components/schemas/phone_response_object'
+            transportation_entity:
+              type: object
+              properties:
+                company_name:
+                  description: Transportation entity company name.
+                  type: string
+                  example: My Carrier Logistic
+                legal_name:
+                  description: Transportation entity legal name.
+                  type: string
+                  example: My Carrier Logistic
+                dot_number:
+                  description: Transportation entity DOT number.
+                  type: integer
+                  example: 2894801
+                docket_number:
+                  description: Transportation entity Docket number.
+                  type: string
+                  example: MC143583
+                address:
+                  description: Transportation entity address.
+                  type: object
+                  properties:
+                    address:
+                      type: string
+                      example: 3665 North Harbor Drive
+                    city:
+                      type: string
+                      example: San Diego
+                    state:
+                      type: string
+                      example: CA
+                    postal_code:
+                      type: string
+                      example: '92101'
+            tags:
+              $ref: '#/components/schemas/tags_object'
+        error:
+          $ref: '#/components/schemas/errorcode_zero'
+    phone_request_object:
+      description: Phone Object
+      type: object
+      required:
+      - number
+      properties:
+        number:
+          description: The 10 digit phone number.
+          type: string
+          example: '1234567890'
+        extension_number:
+          description: The extension number, supports up to 5 digits.
+          type: string
+          example: '1234'
+    403_forbidden_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 403
+            messages:
+              description: Error messages
+              type: array
+              items:
+                type: string
+                example: Response status code does not indicate success 403 (Forbidden)
+    200_getnetworkpartner_response:
+      description: 200 | OK. Network partners successfully retrieved.
+      type: object
+      properties:
+        response:
+          type: array
+          items:
+            type: object
+            properties:
+              partner_id:
+                description: The network partner identifier.
+                type: integer
+                example: 123
+              partner_code:
+                description: Network partner's partner code.
+                type: string
+                example: AS1234
+              type:
+                description: Network partner's type.
+                type: string
+                enum:
+                - Network
+                - Default
+              status:
+                description: Network partner's status.
+                type: string
+                enum:
+                - AwaitingConfirmation
+                - Confirmed
+              created_date:
+                description: Created date of the partner.
+                type: string
+                example: '2021-10-28T07:53:59.402Z'
+              transportation_entity:
+                type: object
+                properties:
+                  company_name:
+                    description: Transportation entity company name.
+                    type: string
+                    example: My Carrier Logistic
+                  legal_name:
+                    description: Transportation entity legal name.
+                    type: string
+                    example: My Carrier Logistic
+                  dot_number:
+                    description: Transportation entity DOT number.
+                    type: integer
+                    example: 2894801
+                  docket_number:
+                    description: Transportation entity Docket number.
+                    type: string
+                    example: MC143583
+                  address:
+                    description: Transportation entity address.
+                    type: object
+                    properties:
+                      address:
+                        type: string
+                        example: 3665 North Harbor Drive
+                      city:
+                        type: string
+                        example: San Diego
+                      state:
+                        type: string
+                        example: CA
+                      postal_code:
+                        type: string
+                        example: '92101'
+              contact:
+                type: object
+                properties:
+                  first_name:
+                    description: Network partner's first name.
+                    type: string
+                    example: mycarrier
+                  last_name:
+                    description: Network partner's last name.
+                    type: string
+                    example: test
+                  email:
+                    description: Network partner contact's email id.
+                    type: string
+                    format: email
+                    example: mycarrier.test@abc.com
+                  phone:
+                    description: Network partner contact's phone number.
+                    $ref: '#/components/schemas/phone_response_object'
+              tags:
+                $ref: '#/components/schemas/tags_object'
+        error:
+          $ref: '#/components/schemas/errorcode_zero'
+    errorcode_zero_without_message_object:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 0
+    tags_object:
+      description: Tags specific to the entity.
+      type: array
+      items:
+        type: string
+        example: firstTag
+    errorcode_zero:
+      type: object
+      properties:
+        code:
+          description: HTTP code
+          type: integer
+          example: 0
+    400_badrequest_networkpartner_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 400
+            detailed_errors:
+              description: Error messages
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    example: first_name
+                  value:
+                    type: string
+                    example: first_name must not be empty.
+            messages:
+              type: array
+              items:
+                type: string
+                example: Validation failed.
+    phone_response_object:
+      description: Phone Object
+      type: object
+      properties:
+        number:
+          description: The 10 digit phone number.
+          type: string
+          example: '1234567890'
+        extension_number:
+          description: The extension number, supports up to 5 digits.
+          type: string
+          example: '1234'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Shipper API
+  tags:
+  - Authentication
+  - Network Partners
+  - Opportunities
+  - Options
+  - Awards
+  - Tenders
+  - Shipments
+- name: Webhook Subscription API
+  tags:
+  - Webhooks
+- name: Webhook Events
+  tags:
+  - Tracking Events
+  - Opportunity Awarded Event
+  - Opportunity Deleted Event
+  - Opportunity Not Awarded Event
+  - Options Changed Event
+  - Tender Status Updated Event
+  - Network Partner Updated Event
+  - Network Partner Deleted Event
+  - Current Marketplace Option Event
