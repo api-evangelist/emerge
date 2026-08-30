@@ -32,18 +32,18 @@ specificationVersion: '0.23'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
-- Freight
+- freight
 - Logistics
 - Transportation
 - Supply Chain
 - Procurement
-- Trucking
-- Freight Marketplace
-- Transportation Management
+- trucking
+- freight-marketplace
+- transportation-management
 - Shipping
 - rate-benchmarking
 - Webhook
-- B2B Marketplace
+- b2b-marketplace
 tags_raw:
 - freight
 - logistics
@@ -376,6 +376,8 @@ apis:
   humanURL: https://api-docs.emergemarket.io/
   baseURL: https://api.emergemarket.io/v1
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
