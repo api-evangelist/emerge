@@ -32,18 +32,18 @@ specificationVersion: '0.23'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
-- freight
+- Freight
 - Logistics
 - Transportation
 - Supply Chain
 - Procurement
-- trucking
-- freight-marketplace
-- transportation-management
+- Trucking
+- Freight Marketplace
+- Transportation Management
 - Shipping
 - rate-benchmarking
 - Webhook
-- b2b-marketplace
+- B2B Marketplace
 tags_raw:
 - freight
 - logistics
