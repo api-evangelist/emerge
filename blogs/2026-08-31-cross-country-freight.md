@@ -1,0 +1,7 @@
+---
+title: "Cross Country Freight"
+url: "https://help.emergemarket.io/en/articles/16006532-cross-country-freight"
+date: "2026-08-31"
+feed_url: "https://help.emergemarket.io/en/feed.xml"
+---
+How to connect Cross Country Freight to your account.
