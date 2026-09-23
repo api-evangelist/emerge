@@ -4,7 +4,7 @@ info:
   x-refined-note:
   - x-logo differs across the merged source definitions and was not carried
   version: '1.0'
-  description: 'Operations tagged Options across 2 of this provider''s published API definitions: emerge-carrier-api-openapi.yml, emerge-public-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Options across 2 of this provider''s published API definitions: emerge-carrier-api-openapi.json, emerge-public-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.emergemarket.io/v2
   description: Primary production endpoint
@@ -93,6 +93,8 @@ paths:
           $ref: '#/components/responses/401'
         '403':
           $ref: '#/components/responses/403'
+      operationId: postOptions
+      x-operation-id-source: derived
     servers:
     - url: https://api.emergemarket.io/v2
       description: Primary production endpoint
@@ -103,7 +105,7 @@ paths:
     get:
       tags:
       - Options
-      summary: Gets options for an opportunity.
+      summary: Gets options for an opportunity
       security:
       - BearerAuth: []
       description: Gets all network partner options and market place options for a specific opportunity.
@@ -137,47 +139,21 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+      operationId: getOpportunitiesByOpportunityIdOptions
+      x-operation-id-source: derived
     servers:
     - url: https://api.emergemarket.io/v1
       description: Primary production endpoint
     - url: https://demo-api.emergemarket.dev/v1
       description: Testing sandbox endpoint
 components:
-  responses:
-    '403':
-      description: 403 | Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/403_forbidden_response'
-    '401':
-      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
-    '404':
-      description: 404 | Not Found. The requested resource was not found
   schemas:
-    403_forbidden_response:
+    200_postoptions_response:
+      description: 202 | Accepted.
       type: object
       properties:
         error:
-          type: object
-          properties:
-            code:
-              description: HTTP code
-              type: integer
-              example: 403
-            messages:
-              description: Error messages
-              type: array
-              items:
-                type: string
-                example: Response status code does not indicate success 403 (Forbidden)
-    errorcode_zero:
-      type: object
-      properties:
-        code:
-          description: HTTP code
-          type: integer
-          example: 0
+          $ref: '#/components/schemas/errorcode_zero'
     400_badrequest_postoptions_response:
       type: object
       properties:
@@ -205,12 +181,120 @@ components:
               items:
                 type: string
                 example: Validation failed.
-    200_postoptions_response:
-      description: 202 | Accepted.
+    errorcode_zero:
+      type: object
+      properties:
+        code:
+          description: HTTP code
+          type: integer
+          example: 0
+    403_forbidden_response:
       type: object
       properties:
         error:
-          $ref: '#/components/schemas/errorcode_zero'
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 403
+            messages:
+              description: Error messages
+              type: array
+              items:
+                type: string
+                example: Response status code does not indicate success 403 (Forbidden)
+    200_getoption_partner_response:
+      type: object
+      description: Details of the partner associated with the option
+      properties:
+        partner_code:
+          description: Partner code of partner.
+          type: string
+          example: P2314534
+        transportation_entity:
+          description: Details of the transportation entity associated with the partner.
+          type: object
+          properties:
+            legal_name:
+              description: Transportation entity legal name.
+              type: integer
+              example: Hansal Transport
+            dba_name:
+              description: Transportation entity dba name.
+              type: string
+              example: HansalTransport
+            dot_number:
+              description: Transportation entity DOT number.
+              type: integer
+              example: 2894801
+            docket_number:
+              description: Transportation entity Docket number.
+              type: string
+              example: MC143583
+            type:
+              description: Transportation entity type.
+              type: string
+              example: testType
+        contact:
+          description: Contact information of the winning partner.
+          type: object
+          properties:
+            first_name:
+              description: First name of the contact.
+              type: string
+              example: FirstName
+            last_name:
+              description: Last name of the contact.
+              type: string
+              example: LastName
+            email:
+              description: Email of the contact.
+              type: string
+              format: email
+              example: example@emergetms.com
+            phone:
+              description: Phone details of the contact.
+              $ref: '#/components/schemas/phone_response_object'
+    references_object:
+      required:
+      - Customer
+      description: References for the opportunity.
+      type: array
+      items:
+        type: object
+        properties:
+          type_id:
+            description: The type of reference.
+            type: string
+            enum:
+            - Other: 1
+            - Customer: 2
+            - Appointment: 3
+            - Bol: 4
+            - Delivery: 5
+            - Pickup: 6
+            - PickupConfirmation: 7
+            - Po: 8
+            - Pro: 9
+            - Trailer: 10
+            example: 2
+          value:
+            description: The reference value.
+            type: string
+            example: CustRef123
+    phone_response_object:
+      description: Phone Object
+      type: object
+      properties:
+        number:
+          description: The 10 digit phone number.
+          type: string
+          example: '1234567890'
+        extension_number:
+          description: The extension number, supports up to 5 digits.
+          type: string
+          example: '1234'
     200_Alloptions_response:
       type: object
       properties:
@@ -270,104 +354,24 @@ components:
               description: HTTP code
               type: integer
               example: 0
-    200_getoption_partner_response:
-      type: object
-      description: Details of the partner associated with the option
-      properties:
-        partner_code:
-          description: Partner code of partner.
-          type: string
-          example: P2314534
-        transportation_entity:
-          description: Details of the transportation entity associated with the partner.
-          type: object
-          properties:
-            legal_name:
-              description: Transportation entity legal name.
-              type: integer
-              example: Hansal Transport
-            dba_name:
-              description: Transportation entity dba name.
-              type: string
-              example: HansalTransport
-            dot_number:
-              description: Transportation entity DOT number.
-              type: integer
-              example: 2894801
-            docket_number:
-              description: Transportation entity Docket number.
-              type: string
-              example: MC143583
-            type:
-              description: Transportation entity type.
-              type: string
-              example: testType
-        contact:
-          description: Contact information of the winning partner.
-          type: object
-          properties:
-            first_name:
-              description: First name of the contact.
-              type: string
-              example: FirstName
-            last_name:
-              description: Last name of the contact.
-              type: string
-              example: LastName
-            email:
-              description: Email of the contact.
-              type: string
-              format: email
-              example: example@emergetms.com
-            phone:
-              description: Phone details of the contact.
-              $ref: '#/components/schemas/phone_response_object'
-    phone_response_object:
-      description: Phone Object
-      type: object
-      properties:
-        number:
-          description: The 10 digit phone number.
-          type: string
-          example: '1234567890'
-        extension_number:
-          description: The extension number, supports up to 5 digits.
-          type: string
-          example: '1234'
-    references_object:
-      required:
-      - Customer
-      description: References for the opportunity.
-      type: array
-      items:
-        type: object
-        properties:
-          type_id:
-            description: The type of reference.
-            type: string
-            enum:
-            - Other: 1
-            - Customer: 2
-            - Appointment: 3
-            - Bol: 4
-            - Delivery: 5
-            - Pickup: 6
-            - PickupConfirmation: 7
-            - Po: 8
-            - Pro: 9
-            - Trailer: 10
-            example: 2
-          value:
-            description: The reference value.
-            type: string
-            example: CustRef123
+  responses:
+    '401':
+      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
+    '403':
+      description: 403 | Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/403_forbidden_response'
+    '404':
+      description: 404 | Not Found. The requested resource was not found
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
 x-refined-from:
-- emerge-carrier-api-openapi.yml
-- emerge-public-api-openapi.yml
+- emerge-carrier-api-openapi.json
+- emerge-public-api-openapi.json
 x-tagGroups:
 - name: Provider API
   tags:

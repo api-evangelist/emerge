@@ -4,7 +4,7 @@ info:
   x-refined-note:
   - x-logo differs across the merged source definitions and was not carried
   version: '1.0'
-  description: 'Operations tagged Authentication across 2 of this provider''s published API definitions: emerge-carrier-api-openapi.yml, emerge-public-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Authentication across 2 of this provider''s published API definitions: emerge-carrier-api-openapi.json, emerge-public-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.emergemarket.io/v2
   description: Primary production endpoint
@@ -21,7 +21,7 @@ paths:
     post:
       tags:
       - Authentication
-      summary: Gets access token for Integration Provider.
+      summary: Gets access token for Integration Provider
       security: []
       description: This method allows an Integration Provider to generate an access token from Emerge platform. A client credential pair, composed of a client id and a client secret, must be supplied in the request. The procured access token should be sent by the Integration Provider while calling other Carrier API endpoints.
       requestBody:
@@ -58,6 +58,8 @@ paths:
                 $ref: '#/components/schemas/400_badrequest_clientcredentials_response'
         '403':
           $ref: '#/components/responses/403'
+      operationId: postAuthLoginClientCredentials
+      x-operation-id-source: derived
     servers:
     - url: https://api.emergemarket.io/v2
       description: Primary production endpoint
@@ -67,7 +69,7 @@ paths:
     post:
       tags:
       - Authentication
-      summary: Gets access token for shipper user.
+      summary: Gets access token for shipper user
       security: []
       description: This method allows the shipper user to generate an access token from Emerge platform. This access token is based upon a username/password combination that should be supplied in the request. Authentication has a rate limit of up to 20 requests per second. This limit may be lower during times of high volumes.
       requestBody:
@@ -102,6 +104,8 @@ paths:
           $ref: '#/components/responses/429'
         '500':
           $ref: '#/components/responses/500'
+      operationId: postAuthLogin
+      x-operation-id-source: derived
     servers:
     - url: https://api.emergemarket.io/v1
       description: Primary production endpoint
@@ -111,7 +115,7 @@ paths:
     post:
       tags:
       - Authentication
-      summary: Gets a refreshed access token for shipper user.
+      summary: Gets a refreshed access token for shipper user
       security: []
       description: This method allows users to refresh their access token based upon the original authentication event.
       requestBody:
@@ -143,6 +147,8 @@ paths:
                 $ref: '#/components/schemas/400_badrequest_refreshtoken_response'
         '403':
           $ref: '#/components/responses/403'
+      operationId: postAuthRefresh
+      x-operation-id-source: derived
     servers:
     - url: https://api.emergemarket.io/v1
       description: Primary production endpoint
@@ -169,6 +175,42 @@ components:
           schema:
             $ref: '#/components/schemas/500_response'
   schemas:
+    200_client_credential_authentication_response:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            token:
+              description: The access token to be used in subsequent requests.
+              type: string
+              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1qQkRRemN5TlRoQ05UbERNVVpGTXpneU5FUXpNVVF4UVRoR1FUSTRPRFF5T0VFeE16QXdRdyJ9.eyJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tL1Byb3ZpZGVyR3VpZCI6ImQ1OWEyNTY0LTAyNzAtNDBhYy1iYWZkLWIwNWE0NDNlZGY4ZiIsImlzcyI6Imh0dHBzOi8vdmFudGFnZWZyZWlnaHQuYXV0aDAuY29tLyIsInN1YiI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tIiwiaWF0IjoxNjMxNjk5MjM3LCJleHAiOjE2MzE3ODU2MzcsImF6cCI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRIiwic2NvcGUiOiJpbnRlZ3JhdGlvbjpzY29wZSIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.kMHPwoPFORvTp4A5e-1sc6gwCAdVPGwv3fx_I8sN_RSEWG7Cd9BSfQf5UtDOq4zyrAHmVyf1hczxL5bvVC4XOoe7v0g2hqbogEPEQLubO5tWZdoG76xKRYuJC-7aJAW8MJFUnp952l2rWE4bQ3jsQsLyZIavsaTW3dmrOgWEBLIbKR_4vMdA4SAIhclV_ZatiZRCtl6sib7KIUXQ8rFq5UjY_Oc3_XfSOTzgJSwV0eVA5D7Sty88Zqf6ElQNRf2jt4srZ0q3O1flVdyjCYsigig8xl7vSlkt-TJgMi8efucGsLPCR4DbsR1tlS7ulc05wIQL3QgngMajfCSfkSnOig
+            expires_in:
+              description: Expiration time of token in seconds.
+              type: number
+              example: 86400
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
+    403_forbidden_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 403
+            messages:
+              description: Error messages
+              type: array
+              items:
+                type: string
+                example: Response status code does not indicate success 403 (Forbidden)
     400_badrequest_clientcredentials_response:
       type: object
       properties:
@@ -196,23 +238,7 @@ components:
               items:
                 type: string
                 example: Validation failed.
-    403_forbidden_response:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              description: HTTP code
-              type: integer
-              example: 403
-            messages:
-              description: Error messages
-              type: array
-              items:
-                type: string
-                example: Response status code does not indicate success 403 (Forbidden)
-    200_client_credential_authentication_response:
+    200_authenticationrefresh_response:
       type: object
       properties:
         response:
@@ -221,7 +247,7 @@ components:
             token:
               description: The access token to be used in subsequent requests.
               type: string
-              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1qQkRRemN5TlRoQ05UbERNVVpGTXpneU5FUXpNVVF4UVRoR1FUSTRPRFF5T0VFeE16QXdRdyJ9.eyJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tL1Byb3ZpZGVyR3VpZCI6ImQ1OWEyNTY0LTAyNzAtNDBhYy1iYWZkLWIwNWE0NDNlZGY4ZiIsImlzcyI6Imh0dHBzOi8vdmFudGFnZWZyZWlnaHQuYXV0aDAuY29tLyIsInN1YiI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tIiwiaWF0IjoxNjMxNjk5MjM3LCJleHAiOjE2MzE3ODU2MzcsImF6cCI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRIiwic2NvcGUiOiJpbnRlZ3JhdGlvbjpzY29wZSIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.kMHPwoPFORvTp4A5e-1sc6gwCAdVPGwv3fx_I8sN_RSEWG7Cd9BSfQf5UtDOq4zyrAHmVyf1hczxL5bvVC4XOoe7v0g2hqbogEPEQLubO5tWZdoG76xKRYuJC-7aJAW8MJFUnp952l2rWE4bQ3jsQsLyZIavsaTW3dmrOgWEBLIbKR_4vMdA4SAIhclV_ZatiZRCtl6sib7KIUXQ8rFq5UjY_Oc3_XfSOTzgJSwV0eVA5D7Sty88Zqf6ElQNRf2jt4srZ0q3O1flVdyjCYsigig8xl7vSlkt-TJgMi8efucGsLPCR4DbsR1tlS7ulc05wIQL3QgngMajfCSfkSnOig
+              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9UYzROVFExTTBSRVF6SXhOamd6UVRZNU0wSkNRak5HTWpVNE5VTkVNa1l4TVROQk9VSkROQSJ9.eyJodHRwczovL2F1dGgwLmVtZXJnZXRtcy5jb20vVXNlcklkIjoiY2ViN2Q0ZWYtOTA1YS00MTlkLWFjMWUtZmQ0Y2IwMzc4MjEyIiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL09yZ2FuaXphdGlvbklkIjoiZWU3YmRjMGItOTFiMy00NDAwLWFmZjUtYzc3ZGZlMjk3NjA2IiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL1NoaXBtZW50UHJvdmlkZXJPcmdhbml6YXRpb25JZCI6ImVlN2JkYzBiLTkxYjMtNDQwMC1hZmY1LWM3N2RmZTI5NzYwNiIsImlzcyI6Imh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZGQ2OGNjYjRmOGZmNzAzYjI5NmQ5Y2MiLCJhdWQiOlsiaHR0cHM6Ly9hcHAuZW1lcmdldG1zLmNvbSIsImh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1OTk3NzMzNTIsImV4cCI6MTU5OTg1OTc1MiwiYXpwIjoiSWpSRERQajFNeVV5SEg2TEF1aTFqY1loM3NuV0EweDYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUgYXRvbSByZnA6ZnAgcmZwOmNwIG9mZmxpbmVfYWNjZXNzIiwiZ3R5IjoicGFzc3dvcmQifQ.FamVUCPS7Q2B1u7zUPC5Guk2HKTQ6Km6i6CX_Tpg1h98gnuvnWrC9FF-awgldjHmCNoeqI9ImjEVpecP00oAtHWiDaXMTd7UsyPcHAWh2xatZ8LPCrnw-0ox3egSSv5KxCTrnXAhTxwR4XI07-jxWjTgkw5dSVGc70Q9a_PC8nXe7-1SDKmLpMKFmtU60eH52kmUy0CECi_GfYS7xKskZYgX3Xhx-C1jCWFbCbmRA1Yxvir450miOIo0g5AxaJjbTgm6ao2OGuPzyLUTrXaSchK1J9xrv8dXhKh-PSv0eIG5d2MVHJf4O_KsFckt40OuiiEokrdsfdsfdfhgsdOuDkQ
             expires_in:
               description: Expiration time of token in seconds.
               type: number
@@ -256,20 +282,6 @@ components:
             code:
               type: integer
               example: 0
-    500_response:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: integer
-              example: 500
-            messages:
-              type: array
-              items:
-                type: string
-                example: userName.
     400_badrequest_refreshtoken_response:
       type: object
       properties:
@@ -311,33 +323,27 @@ components:
               items:
                 type: string
                 example: Too many requests.
-    200_authenticationrefresh_response:
+    500_response:
       type: object
       properties:
-        response:
-          type: object
-          properties:
-            token:
-              description: The access token to be used in subsequent requests.
-              type: string
-              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9UYzROVFExTTBSRVF6SXhOamd6UVRZNU0wSkNRak5HTWpVNE5VTkVNa1l4TVROQk9VSkROQSJ9.eyJodHRwczovL2F1dGgwLmVtZXJnZXRtcy5jb20vVXNlcklkIjoiY2ViN2Q0ZWYtOTA1YS00MTlkLWFjMWUtZmQ0Y2IwMzc4MjEyIiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL09yZ2FuaXphdGlvbklkIjoiZWU3YmRjMGItOTFiMy00NDAwLWFmZjUtYzc3ZGZlMjk3NjA2IiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL1NoaXBtZW50UHJvdmlkZXJPcmdhbml6YXRpb25JZCI6ImVlN2JkYzBiLTkxYjMtNDQwMC1hZmY1LWM3N2RmZTI5NzYwNiIsImlzcyI6Imh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZGQ2OGNjYjRmOGZmNzAzYjI5NmQ5Y2MiLCJhdWQiOlsiaHR0cHM6Ly9hcHAuZW1lcmdldG1zLmNvbSIsImh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1OTk3NzMzNTIsImV4cCI6MTU5OTg1OTc1MiwiYXpwIjoiSWpSRERQajFNeVV5SEg2TEF1aTFqY1loM3NuV0EweDYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUgYXRvbSByZnA6ZnAgcmZwOmNwIG9mZmxpbmVfYWNjZXNzIiwiZ3R5IjoicGFzc3dvcmQifQ.FamVUCPS7Q2B1u7zUPC5Guk2HKTQ6Km6i6CX_Tpg1h98gnuvnWrC9FF-awgldjHmCNoeqI9ImjEVpecP00oAtHWiDaXMTd7UsyPcHAWh2xatZ8LPCrnw-0ox3egSSv5KxCTrnXAhTxwR4XI07-jxWjTgkw5dSVGc70Q9a_PC8nXe7-1SDKmLpMKFmtU60eH52kmUy0CECi_GfYS7xKskZYgX3Xhx-C1jCWFbCbmRA1Yxvir450miOIo0g5AxaJjbTgm6ao2OGuPzyLUTrXaSchK1J9xrv8dXhKh-PSv0eIG5d2MVHJf4O_KsFckt40OuiiEokrdsfdsfdfhgsdOuDkQ
-            expires_in:
-              description: Expiration time of token in seconds.
-              type: number
-              example: 86400
         error:
           type: object
           properties:
             code:
               type: integer
-              example: 0
+              example: 500
+            messages:
+              type: array
+              items:
+                type: string
+                example: userName.
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
 x-refined-from:
-- emerge-carrier-api-openapi.yml
-- emerge-public-api-openapi.yml
+- emerge-carrier-api-openapi.json
+- emerge-public-api-openapi.json
 x-tagGroups:
 - name: Provider API
   tags:

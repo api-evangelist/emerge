@@ -1,0 +1,53 @@
+{
+  "provider": "emerge",
+  "sources": [
+    "_original/emerge-carrier-api-openapi.json",
+    "_original/emerge-public-api-openapi.json"
+  ],
+  "outputs": [
+    "emerge-authentication-api-openapi.yml",
+    "emerge-options-api-openapi.yml",
+    "emerge-tender-api-openapi.yml",
+    "emerge-awards-api-openapi.yml",
+    "emerge-network-partners-api-openapi.yml",
+    "emerge-opportunities-api-openapi.yml",
+    "emerge-shipments-api-openapi.yml",
+    "emerge-tenders-api-openapi.yml",
+    "emerge-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "2 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "emerge-carrier-api-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "emerge-carrier-api-openapi.json: declared missing tag: Authentication",
+    "emerge-carrier-api-openapi.json: declared missing tag: Options",
+    "emerge-carrier-api-openapi.json: declared missing tag: Tender",
+    "emerge-public-api-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "emerge-public-api-openapi.json: declared missing tag: Authentication",
+    "emerge-public-api-openapi.json: declared missing tag: Awards",
+    "emerge-public-api-openapi.json: declared missing tag: Network Partners",
+    "emerge-public-api-openapi.json: declared missing tag: Opportunities",
+    "emerge-public-api-openapi.json: declared missing tag: Options",
+    "emerge-public-api-openapi.json: declared missing tag: Shipments",
+    "emerge-public-api-openapi.json: declared missing tag: Tenders",
+    "tag 'Authentication' spans 2 source specs (emerge-carrier-api-openapi.json, emerge-public-api-openapi.json): per-path servers applied",
+    "tag 'Options' spans 2 source specs (emerge-carrier-api-openapi.json, emerge-public-api-openapi.json): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/emerge-public-api-openapi.yml: archived document superseded by a larger archived document",
+    "_original/emerge-carrier-api-openapi.yml: archived document superseded by a larger archived document",
+    "emerge-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "emerge-awards-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "emerge-network-partners-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "emerge-opportunities-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "emerge-options-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "emerge-shipments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "emerge-tender-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "emerge-tenders-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "emerge-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

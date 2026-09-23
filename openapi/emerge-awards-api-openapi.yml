@@ -2,130 +2,7 @@ openapi: 3.2.0
 info:
   version: 1.2.1
   title: Emerge Public Awards API
-  description: 'The Emerge public API provides partner developers with access to core capabilities of the Emerge platform.
-
-
-    The current version of the API is v1.2.1. This API will evolve as the features in Emerge''s product evolve.
-
-
-    # Get Started
-
-
-    The Emerge API is a ''restish'' API and is designed to allow you to work with objects using familiar HTTP verbs like
-
-    * POST
-
-    * PUT
-
-    * DELETE
-
-    * GET
-
-
-    All production level API requests are made to:
-
-    <br />`https://api.emergemarket.io`
-
-
-
-    The testing sandbox is available during development and for testing:
-
-    <br />`https://demo-api.emergemarket.dev/`
-
-
-    ## Compatibility Policy
-
-
-    Emerge APIs are versioned using a prefix in the endpoint URL. Within an API version, we only make backward-compatible changes. This mean that when a provider integrates with our REST API, the API will continue to work until the version is deprecated. If we have to create a change that is not compatible with the current version, a new version will be created.
-
-
-    ### Non-Breaking Changes
-
-
-    * Adding additional optional fields on the API request.
-
-    * Adding additional fields on the API response.
-
-    * Adding an HTTP method to an API.
-
-    * Adding optional headers.
-
-    * Adding additional accepted enumerated values.
-
-    * Changing Error Response descriptions.
-
-    * Added Rate Limits.
-
-
-    ### Breaking Changes
-
-
-    * Removing or renaming an API method or endpoint.
-
-    * Removing or renaming existing API request or response fields.
-
-    * Removing or renaming enumerated values.
-
-    * Changing the Error Response values.
-
-
-    ### Deprecation Policy
-
-
-    * Emerge will continue to support deprecated APIs for 1 year.
-
-    * Documentation will also be updated and integrating providers will be notified via email when a version or endpoint is being deprecated.
-
-
-    # Workflows
-
-    The Emerge API is designed to support two primary workflows for a shipper organization: An opportunity-to-tender workflow and an opportunity-to-award workflow.
-
-
-    ## Opportunity-to-tender
-
-
-    The opportunity-to-tender is the most common workflow of an integrating system. In this workflow, the Emerge system is used to source the live capacity as well as to tender through Emerge to that live capacity. The benefit of this workflow is that all information, from opportunity through tender and finally tracking is maintained in the Emerge system. The basic steps of this workflow include:
-
-
-    1. Create an Opportunity.
-
-
-    2. Post to the shipper''s (your) marketplace.
-
-
-    3. Receive options from carriers. Retrieval is achieved through a webhook published by you for receiving option events.
-
-
-    4. Tender to a carrier.
-
-
-    5. Get tracking updates through webhook.
-
-
-    ## Opportunity-to-award
-
-    The opportunity-to-award workflow supports customers who are using the Emerge platform in conjunction with their TMS. In this workflow, Emerge is used as a capacity provider while the TMS is used on the execution side. The basic steps of this workflow include:
-
-
-    1. Create an opportunity.
-
-
-    2. Post to the shipper''s (your) marketplace.
-
-
-    3. Receive options from carriers. Retrieval is achieved through a webhook published by you for receiving option events.
-
-
-    4. Award to a carrier.
-
-
-    Note that awarding to the carrier will automatically close the opportunity, notify the carrier that they "won" the bidding and notify the remaining carriers that they did not win the bidding.
-
-
-    The opportunity-to-award workflow requires that the customer''s TMS tenders to the winning carrier. This happens outside of the Emerge system.
-
-    '
+  description: The Emerge public API provides partner developers with access to core capabilities of the Emerge platform.
 servers:
 - url: https://api.emergemarket.io/v1
   description: Primary production endpoint
@@ -140,7 +17,7 @@ paths:
     get:
       tags:
       - Awards
-      summary: Returns an array of awards.
+      summary: Returns an array of awards
       security:
       - BearerAuth: []
       description: Returns a list of awards for a particular account. An opportunity can have either an award or a shipment.
@@ -266,6 +143,8 @@ paths:
           $ref: '#/components/responses/401'
         '403':
           $ref: '#/components/responses/403'
+      operationId: getAwards
+      x-operation-id-source: derived
     post:
       parameters:
       - name: organization-id
@@ -278,7 +157,7 @@ paths:
           type: string
       tags:
       - Awards
-      summary: Creates an award.
+      summary: Creates an award
       security:
       - BearerAuth: []
       description: Creates an award. Awarding is the process of informing the carrier that they have won the shipment without tendering to them.
@@ -398,13 +277,15 @@ paths:
           $ref: '#/components/responses/401'
         '403':
           $ref: '#/components/responses/403'
+      operationId: postAwards
+      x-operation-id-source: derived
   /awards/{id}:
     description: The award endpoints allow a shipper to award a carrier in the Emerge system a load. Note that awards are not replacements for tenders. The awards endpoints are typically used when the Emerge system is used to source capacity, while the shipper's TMS is used to tender to the carrier.
     summary: Returns an award for award identifier.
     get:
       tags:
       - Awards
-      summary: Retrieves the details of an award.
+      summary: Retrieves the details of an award
       security:
       - BearerAuth: []
       description: Returns an award. An opportunity can have either an award or a shipment.
@@ -508,35 +389,10 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+      operationId: getAwardsById
+      x-operation-id-source: derived
 components:
-  responses:
-    '403':
-      description: 403 | Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/403_forbidden_response'
-    '401':
-      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
-    '404':
-      description: 404 | Not Found. The requested resource was not found
   schemas:
-    403_forbidden_response:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              description: HTTP code
-              type: integer
-              example: 403
-            messages:
-              description: Error messages
-              type: array
-              items:
-                type: string
-                example: Response status code does not indicate success 403 (Forbidden)
     400_badrequest_createaward_response:
       type: object
       properties:
@@ -564,6 +420,33 @@ components:
               items:
                 type: string
                 example: Validation failed.
+    references_object:
+      required:
+      - Customer
+      description: References for the opportunity.
+      type: array
+      items:
+        type: object
+        properties:
+          type_id:
+            description: The type of reference.
+            type: string
+            enum:
+            - Other: 1
+            - Customer: 2
+            - Appointment: 3
+            - Bol: 4
+            - Delivery: 5
+            - Pickup: 6
+            - PickupConfirmation: 7
+            - Po: 8
+            - Pro: 9
+            - Trailer: 10
+            example: 2
+          value:
+            description: The reference value.
+            type: string
+            example: CustRef123
     phone_response_object:
       description: Phone Object
       type: object
@@ -628,33 +511,33 @@ components:
             phone:
               description: Phone details of the contact.
               $ref: '#/components/schemas/phone_response_object'
-    references_object:
-      required:
-      - Customer
-      description: References for the opportunity.
-      type: array
-      items:
-        type: object
-        properties:
-          type_id:
-            description: The type of reference.
-            type: string
-            enum:
-            - Other: 1
-            - Customer: 2
-            - Appointment: 3
-            - Bol: 4
-            - Delivery: 5
-            - Pickup: 6
-            - PickupConfirmation: 7
-            - Po: 8
-            - Pro: 9
-            - Trailer: 10
-            example: 2
-          value:
-            description: The reference value.
-            type: string
-            example: CustRef123
+    403_forbidden_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 403
+            messages:
+              description: Error messages
+              type: array
+              items:
+                type: string
+                example: Response status code does not indicate success 403 (Forbidden)
+  responses:
+    '401':
+      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
+    '404':
+      description: 404 | Not Found. The requested resource was not found
+    '403':
+      description: 403 | Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/403_forbidden_response'
   securitySchemes:
     BearerAuth:
       type: http
