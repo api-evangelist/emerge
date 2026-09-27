@@ -210,88 +210,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    201_createwebhook_response:
-      type: object
-      description: 201 | Success. Details of the webhook
-      properties:
-        response:
-          description: Response of the webhook creation.
-          type: object
-          properties:
-            authentication:
-              description: Credentials that Emerge system will send using Basic authentication scheme when calling the webhook for the subscribed event(s)
-              type: object
-              properties:
-                is_enabled:
-                  description: Authentication user status .
-                  type: boolean
-                  example: true
-                username:
-                  description: Authentication username.
-                  type: string
-                  example: username
-                password:
-                  description: Authentication password.
-                  type: string
-                  example: password
-            custom_headers:
-              description: An object containing a set of key-value pairs. For each pair defined in this object, a custom HTTP header is sent in the webhook call for the subscribed event(s). The key becomes the header name, while the value is added as the header value. A possible use case for this feature is when the customer expects each webhook call to have a security key for authentication on their end.
-              type: object
-              example:
-                x-api-key: 070C895C-AE61-4629-A603-829FC54CD816
-            form_data:
-              type: object
-              description: Object to define the form data format when content type is FormData.
-              properties:
-                payload_property_name:
-                  description: FormData property name for the payload
-                  type: string
-                  example: payload
-                payload_type:
-                  description: The payload data format when content type is FormData
-                  type: string
-                  default: JSON
-                  enum:
-                  - JSON
-                  - XML
-                addon_properties:
-                  description: A simple JSON object containing a set of key-value pairs. Each of these key-value pairs will be added to the webhook call payload in addition to the event data information.
-                  type: object
-                  example:
-                    process_id: 34809f4d-75b1-431e-a367-bea47e48636c
-            content_type:
-              description: Request content type.
-              type: string
-              enum:
-              - application/json
-              - application/x-www-form-urlencoded
-            event_types:
-              description: Subscribed event types for the webhook. Note that the API allows multiple subscriptions for any given event type(s) without any duplicate subscription checks. Although this flexibility is required by some consumers for handling certain special cases, duplicate subscription is not recommended in general and should be safeguarded against. If a consumer receives duplicate webhook calls for a single event, a duplicate webhook subscribed by mistake could be the root cause.
-              type: array
-              items:
-                $ref: '#/components/schemas/webhook_event_types'
-            id:
-              description: Guid of the webhook.
-              type: string
-              example: 2bc9eec8-0a66-4e0f-9103-ff4f6ad4ae68
-            is_enabled:
-              description: Status of the webhook.
-              type: boolean
-              example: true
-            url:
-              description: URL of the webhook as hosted by the consumer (shipper organization).
-              type: string
-              example: webhook_url
-            created_date:
-              description: Created date of the webhook.
-              type: string
-              example: '2019-02-12T02:36:54.2973188+00:00'
-            modified_date:
-              description: Modified date of the webhook.
-              type: string
-              example: '2019-02-12T02:36:54.2973188+00:00'
-        error:
-          $ref: '#/components/schemas/errorcode_zero'
     200_getwebhooks_response:
       type: object
       description: 200 | OK. Details of the webhook
@@ -376,79 +294,139 @@ components:
                 example: '2019-02-12T02:36:54.2973188+00:00'
         error:
           $ref: '#/components/schemas/errorcode_zero'
-    updatewebhook:
+    errorcode_zero_without_message_object:
       type: object
-      description: Details of the webhook.
-      required:
-      - id
-      - content_type
-      - event_types
-      - url
       properties:
-        authentication:
-          description: Credentials that Emerge system will send using Basic authentication scheme when calling the webhook for the subscribed event(s).
+        error:
           type: object
           properties:
-            is_enabled:
-              description: Authentication user status .
-              type: boolean
-              example: true
-            username:
-              description: Basic authentication username.
-              type: string
-              example: username
-            password:
-              description: Basic authentication password.
-              type: string
-              example: password
-        custom_headers:
-          description: An object containing a set of key-value pairs. For each pair defined in this object, a custom HTTP header is sent in the webhook call for the subscribed event(s). The key becomes the header name, while the value is added as the header value. A possible use case for this feature is when the customer expects each webhook call to have a security key for authentication on their end.
+            code:
+              description: HTTP code
+              type: integer
+              example: 0
+    webhook_event_types:
+      description: Webhook event types.
+      type: string
+      enum:
+      - '*'
+      - tracking_status_updated
+      - delivery_status_updated
+      - stop_actual_times_updated
+      - current_location_updated_job
+      - current_marketplace_option
+      - opportunity_awarded
+      - options_changed
+      - tender_status_updated
+      - network_partner_updated
+      - network_partner_deleted
+      - opportunity_deleted
+      - opportunity_not_awarded
+      example: tracking_status_updated
+    200_getwebhook_response:
+      type: object
+      description: 200 | OK. Details of the webhook
+      properties:
+        response:
+          description: Response of the webhook.
           type: object
-          example:
-            x-api-key: 070C895C-AE61-4629-A603-829FC54CD816
-        form_data:
-          type: object
-          description: Object to define the form data format when content type is FormData.
           properties:
-            payload_property_name:
-              description: FormData property name for the payload
-              type: string
-              example: payload
-            payload_type:
-              description: The payload data format when content type is FormData
-              type: string
-              default: JSON
-              enum:
-              - JSON
-              - XML
-            addon_properties:
-              description: A simple JSON object containing a set of key-value pairs. Each of these key-value pairs will be added to the webhook call payload in addition to the event data information.
+            authentication:
+              description: Credentials that Emerge system will send using Basic authentication scheme when calling the webhook for the subscribed event(s).
+              type: object
+              properties:
+                is_enabled:
+                  description: Authentication user status .
+                  type: boolean
+                  example: true
+                username:
+                  description: Authentication username.
+                  type: string
+                  example: username
+                password:
+                  description: Authentication password.
+                  type: string
+                  example: password
+            custom_headers:
+              description: An object containing a set of key-value pairs. For each pair defined in this object, a custom HTTP header is sent in the webhook call for the subscribed event(s). The key becomes the header name, while the value is added as the header value. A possible use case for this feature is when the customer expects each webhook call to have a security key for authentication on their end.
               type: object
               example:
-                process_id: 34809f4d-75b1-431e-a367-bea47e48636c
-        content_type:
-          description: Request content type.
-          type: string
-          enum:
-          - application/json
-          - application/x-www-form-urlencoded
-        event_types:
-          description: Subscribed event types for the webhook. Note that the API allows multiple subscriptions for any given event type(s) without any duplicate subscription checks. Although this flexibility is required by some consumers for handling certain special cases, duplicate subscription is not recommended in general and should be safeguarded against. If a consumer receives duplicate webhook calls for a single event, a duplicate webhook subscribed by mistake could be the root cause.
-          type: array
-          items:
-            $ref: '#/components/schemas/webhook_event_types'
-        is_enabled:
-          description: Flag to control publishing of the events on webhook Url.
-          type: boolean
-          example: true
-        url:
-          description: URL of the webhook as hosted by the consumer (shipper organization).
-          type: string
-          example: webhook_url
-        id:
-          description: Guid of the webhook.
-          type: string
-          example: 2bc9eec8-0a66-4e0f-9103-ff4f6ad4ae68
+                x-api-key: 070C895C-AE61-4629-A603-829FC54CD816
+            form_data:
+              type: object
+              description: Object to define the form data format when content type is FormData.
+              properties:
+                payload_property_name:
+                  description: FormData property name for the payload
+                  type: string
+                  example: payload
+                payload_type:
+                  description: The payload data format when content type is FormData
+                  type: string
+                  default: JSON
+                  enum:
+                  - JSON
+                  - XML
+                addon_properties:
+                  description: A simple JSON object containing a set of key-value pairs. Each of these key-value pairs will be added to the webhook call payload in addition to the event data information.
+                  type: object
+                  example:
+                    process_id: 34809f4d-75b1-431e-a367-bea47e48636c
+            content_type:
+              description: Request content type.
+              type: string
+              enum:
+              - application/json
+              - application/x-www-form-urlencoded
+            event_types:
+              description: Subscribed event types for the webhook. Note that the API allows multiple subscriptions for any given event type(s) without any duplicate subscription checks. Although this flexibility is required by some consumers for handling certain special cases, duplicate subscription is not recommended in general and should be safeguarded against. If a consumer receives duplicate webhook calls for a single event, a duplicate webhook subscribed by mistake could be the root cause.
+              type: array
+              items:
+                $ref: '#/components/schemas/webhook_event_types'
+            id:
+              description: Guid of the webhook.
+              type: string
+              example: 2bc9eec8-0a66-4e0f-9103-ff4f6ad4ae68
+            is_enabled:
+              description: Status of the webhook.
+              type: boolean
+              example: true
+            url:
+              description: URL of the webhook as hosted by the consumer (shipper organization).
+              type: string
+              example: webhook_url
+            created_date:
+              description: Created date of the webhook.
+              type: string
+              example: '2019-02-12T02:36:54.2973188+00:00'
+            modified_date:
+              description: Modified date of the webhook.
+              type: string
+              example: '2019-02-12T02:36:54.2973188+00:00'
+        error:
+          $ref: '#/components/schemas/errorcode_zero'
+    errorcode_zero:
+      type: object
+      properties:
+        code:
+          description: HTTP code
+          type: integer
+          example: 0
+    403_forbidden_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 403
+            messages:
+              description: Error messages
+              type: array
+              items:
+                type: string
+                example: Response status code does not indicate success 403 (Forbidden)
     webhooks:
       type: object
       description: Details of the webhook.
@@ -519,16 +497,16 @@ components:
           description: URL of the webhook as hosted by the consumer (shipper organization).
           type: string
           example: webhook_url
-    200_getwebhook_response:
+    201_createwebhook_response:
       type: object
-      description: 200 | OK. Details of the webhook
+      description: 201 | Success. Details of the webhook
       properties:
         response:
-          description: Response of the webhook.
+          description: Response of the webhook creation.
           type: object
           properties:
             authentication:
-              description: Credentials that Emerge system will send using Basic authentication scheme when calling the webhook for the subscribed event(s).
+              description: Credentials that Emerge system will send using Basic authentication scheme when calling the webhook for the subscribed event(s)
               type: object
               properties:
                 is_enabled:
@@ -628,62 +606,84 @@ components:
               items:
                 type: string
                 example: Validation failed.
-    errorcode_zero:
+    updatewebhook:
       type: object
+      description: Details of the webhook.
+      required:
+      - id
+      - content_type
+      - event_types
+      - url
       properties:
-        code:
-          description: HTTP code
-          type: integer
-          example: 0
-    webhook_event_types:
-      description: Webhook event types.
-      type: string
-      enum:
-      - '*'
-      - tracking_status_updated
-      - delivery_status_updated
-      - stop_actual_times_updated
-      - current_location_updated_job
-      - current_marketplace_option
-      - opportunity_awarded
-      - options_changed
-      - tender_status_updated
-      - network_partner_updated
-      - network_partner_deleted
-      - opportunity_deleted
-      - opportunity_not_awarded
-      example: tracking_status_updated
-    403_forbidden_response:
-      type: object
-      properties:
-        error:
+        authentication:
+          description: Credentials that Emerge system will send using Basic authentication scheme when calling the webhook for the subscribed event(s).
           type: object
           properties:
-            code:
-              description: HTTP code
-              type: integer
-              example: 403
-            messages:
-              description: Error messages
-              type: array
-              items:
-                type: string
-                example: Response status code does not indicate success 403 (Forbidden)
-    errorcode_zero_without_message_object:
-      type: object
-      properties:
-        error:
+            is_enabled:
+              description: Authentication user status .
+              type: boolean
+              example: true
+            username:
+              description: Basic authentication username.
+              type: string
+              example: username
+            password:
+              description: Basic authentication password.
+              type: string
+              example: password
+        custom_headers:
+          description: An object containing a set of key-value pairs. For each pair defined in this object, a custom HTTP header is sent in the webhook call for the subscribed event(s). The key becomes the header name, while the value is added as the header value. A possible use case for this feature is when the customer expects each webhook call to have a security key for authentication on their end.
           type: object
+          example:
+            x-api-key: 070C895C-AE61-4629-A603-829FC54CD816
+        form_data:
+          type: object
+          description: Object to define the form data format when content type is FormData.
           properties:
-            code:
-              description: HTTP code
-              type: integer
-              example: 0
+            payload_property_name:
+              description: FormData property name for the payload
+              type: string
+              example: payload
+            payload_type:
+              description: The payload data format when content type is FormData
+              type: string
+              default: JSON
+              enum:
+              - JSON
+              - XML
+            addon_properties:
+              description: A simple JSON object containing a set of key-value pairs. Each of these key-value pairs will be added to the webhook call payload in addition to the event data information.
+              type: object
+              example:
+                process_id: 34809f4d-75b1-431e-a367-bea47e48636c
+        content_type:
+          description: Request content type.
+          type: string
+          enum:
+          - application/json
+          - application/x-www-form-urlencoded
+        event_types:
+          description: Subscribed event types for the webhook. Note that the API allows multiple subscriptions for any given event type(s) without any duplicate subscription checks. Although this flexibility is required by some consumers for handling certain special cases, duplicate subscription is not recommended in general and should be safeguarded against. If a consumer receives duplicate webhook calls for a single event, a duplicate webhook subscribed by mistake could be the root cause.
+          type: array
+          items:
+            $ref: '#/components/schemas/webhook_event_types'
+        is_enabled:
+          description: Flag to control publishing of the events on webhook Url.
+          type: boolean
+          example: true
+        url:
+          description: URL of the webhook as hosted by the consumer (shipper organization).
+          type: string
+          example: webhook_url
+        id:
+          description: Guid of the webhook.
+          type: string
+          example: 2bc9eec8-0a66-4e0f-9103-ff4f6ad4ae68
   responses:
-    '401':
-      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
     '404':
       description: 404 | Not Found. The requested resource was not found
+    '401':
+      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
     '403':
       description: 403 | Forbidden
       content:

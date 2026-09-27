@@ -154,6 +154,29 @@ components:
       properties:
         error:
           $ref: '#/components/schemas/errorcode_zero'
+    403_forbidden_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 403
+            messages:
+              description: Error messages
+              type: array
+              items:
+                type: string
+                example: Response status code does not indicate success 403 (Forbidden)
+    errorcode_zero:
+      type: object
+      properties:
+        code:
+          description: HTTP code
+          type: integer
+          example: 0
     400_badrequest_postoptions_response:
       type: object
       properties:
@@ -181,29 +204,6 @@ components:
               items:
                 type: string
                 example: Validation failed.
-    errorcode_zero:
-      type: object
-      properties:
-        code:
-          description: HTTP code
-          type: integer
-          example: 0
-    403_forbidden_response:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              description: HTTP code
-              type: integer
-              example: 403
-            messages:
-              description: Error messages
-              type: array
-              items:
-                type: string
-                example: Response status code does not indicate success 403 (Forbidden)
     200_getoption_partner_response:
       type: object
       description: Details of the partner associated with the option
@@ -256,6 +256,18 @@ components:
             phone:
               description: Phone details of the contact.
               $ref: '#/components/schemas/phone_response_object'
+    phone_response_object:
+      description: Phone Object
+      type: object
+      properties:
+        number:
+          description: The 10 digit phone number.
+          type: string
+          example: '1234567890'
+        extension_number:
+          description: The extension number, supports up to 5 digits.
+          type: string
+          example: '1234'
     references_object:
       required:
       - Customer
@@ -283,18 +295,6 @@ components:
             description: The reference value.
             type: string
             example: CustRef123
-    phone_response_object:
-      description: Phone Object
-      type: object
-      properties:
-        number:
-          description: The 10 digit phone number.
-          type: string
-          example: '1234567890'
-        extension_number:
-          description: The extension number, supports up to 5 digits.
-          type: string
-          example: '1234'
     200_Alloptions_response:
       type: object
       properties:

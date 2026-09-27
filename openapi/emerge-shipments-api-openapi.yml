@@ -53,33 +53,36 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    equipment_size_object:
-      description: The length of the trailer.
+    opportunity_type:
+      description: The Opportunity type.
       type: integer
-      minimum: 1
-      example: 2
-    notes_object:
-      type: array
-      items:
-        description: This shipment is ready to go now. Please provide your best options.
-        properties:
-          note:
-            description: The specific note for the opportunity
-            type: string
-    accessorials_object:
-      description: The accessorials associated with the load.
-      type: array
-      items:
-        type: object
-        properties:
-          accessorial_type_id:
-            description: The type of accessorial required.<br /><span>Enum:</span> <div style="height:80px; overflow-y:scroll"> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Straps":127}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"ETracks":128}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"LoadLocks":129}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"BlockAndBrace":130}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Blankets":131}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"DriverLoadAssist":132}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"DriverTailgateAssist":133}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"EdgeProtector":134}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"BulkHeads":135}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"SmokedTarps":136}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"StandardTarps":137}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"VBoards":138}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"CoilRacks":139}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PipeStakes":140}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Headboard":141}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Dunnage":142}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Ramps":143}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"LoadLevelers":144}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Chains":145}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Other":146}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"TeamDrivers":147}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PreCool":148}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"WoodenFloor":153}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PersonalProtectiveEquipment":154}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"FtlInsideDelivery":155}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Liftgate":156}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"FoodGrade":157}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"TWICRequired":158}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"TankerEndorsement":159}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"ProtectFromFreeze":160}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"LightScaleTicketRequired":161}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PalletJack":162}</span> </div>
-            type: string
-            example: 131
-          value:
-            description: The accessorial quantity.
-            type: string
-            example: '1'
+      enum:
+      - Quote: 1
+      example: 1
+    equipment_type_id_object:
+      description: The equipment type identifier.
+      type: string
+      enum:
+      - Other: 0
+      - Flatbed: 1
+      - Reefer: 3
+      - Stepdeck: 4
+      - Rgn: 5
+      - Van: 6
+      - Drayage: 7
+      - Dump: 8
+      - VanOrReefer: 9
+      - TrailerPoolInterchange
+      - 10
+      - PowerOnly: 11
+      - Conestoga: 12
+      - MaxiTrailer: 38
+      - Intermodal: 82
+      - BoxTruck: 84
+      - Hotshot: 85
+      - SprinterVan: 86
+      - StraightTruck: 87
+      example: 6
     403_forbidden_response:
       type: object
       properties:
@@ -96,15 +99,172 @@ components:
               items:
                 type: string
                 example: Response status code does not indicate success 403 (Forbidden)
-    shipment_status:
-      description: The Shipment status.
+    notes_object:
+      type: array
+      items:
+        description: This shipment is ready to go now. Please provide your best options.
+        properties:
+          note:
+            description: The specific note for the opportunity
+            type: string
+    opportunity_response_stops_object:
+      description: The stops associated with the opportunity. An opportunity must have at least two stops.
+      type: array
+      items:
+        type: object
+        required:
+        - order
+        - action_type_id
+        - postal_code
+        - city
+        - state
+        - country
+        - appointment_type_id
+        properties:
+          type_id:
+            description: The type of the stop.
+            type: string
+            enum:
+            - Origin: 1
+            - Middle: 2
+            - Destination: 3
+            example: 1
+          appointment_type_id:
+            description: The appointment type.
+            type: string
+            deprecated: true
+            enum:
+            - FCFS: 1
+            - Appointment: 2
+            example: 1
+          standardized_appointment_type_id:
+            description: The appointment type of the stop.
+            type: string
+            enum:
+            - FCFS: 1
+            - AppointmentScheduled: 2
+            - AppointmentRequired: 3
+            example: 1
+          standardized_loading_type_id:
+            description: The loading or unloading type of the stop.
+            type: string
+            enum:
+            - Live: 1
+            - DropTrailer: 2
+            example: 1
+          address1:
+            type: string
+            example: 3665 North Harbor Drive
+          address2:
+            type: string
+            example: string
+          city:
+            type: string
+            example: San Diego
+          contact:
+            type: object
+            properties:
+              name:
+                description: The contact name for the person at the stop.
+                type: string
+                example: Shipper
+              phone:
+                description: The phone number for the contact at the stop.
+                $ref: '#/components/schemas/phone_response_object'
+              email:
+                type: string
+                format: email
+                example: shipper@stonelogistics.com
+          country:
+            description: The country of the stop. Use abbreviation US or USA for United States of America and CA or CAN for Canada.
+            type: string
+            example: US
+          state:
+            description: The state of the stop. Use abbreviation.
+            type: string
+            example: CA
+          postal_code:
+            type: string
+            example: '92101'
+          latitude:
+            description: The latitude of the stop (use decimal representation)
+            type: number
+            example: 32.7325
+          longitude:
+            description: The longitude of the stop (use decimal representation)
+            type: number
+            example: -117.2011
+          name:
+            description: The name for the stop.
+            type: string
+            example: Stone Brewing Company
+          note:
+            description: Notes associated with the stop.
+            type: string
+            example: Check in with security prior to loading or unloading.
+          order:
+            description: The order of the stop-starting with 1.
+            type: integer
+            example: 1
+          action_type_id:
+            description: The stop action.
+            type: string
+            enum:
+            - Pick: 1
+            - Drop: 2
+            example: 1
+          schedule:
+            description: The schedule associated with the stop.
+            type: object
+            deprecated: true
+            properties:
+              date:
+                description: The date associated with the stop. Supports yyyy-mm-dd format.
+                type: string
+                example: '2021-10-06'
+              start_time:
+                description: Based upon the local time at the stop, the earliest time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '14:00:00'
+              end_time:
+                description: Based upon the local time at the stop, the last time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '20:00:00'
+          standardized_schedule:
+            description: The schedule associated with the stop.
+            type: object
+            properties:
+              start_date:
+                description: The earliest date associated with the stop. Supports yyyy-mm-dd format.
+                type: string
+                example: '2021-10-06'
+              start_time:
+                description: Based upon the local time at the stop, the earliest time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '14:00:00'
+              end_date:
+                description: The latest date associated with the stop. Supports yyyy-mm-dd format.
+                type: string
+                example: '2021-10-07'
+              end_time:
+                description: Based upon the local time at the stop, the last time the load is available. Supports the format hh:mm:ss
+                type: string
+                example: '20:00:00'
+          raw_address:
+            description: A string version of the full address
+            type: string
+            example: 23, Phoenix
+          is_schedule_required:
+            description: Determines if a shipper will allow the carrier to schedule an appointment on their behalf. Not recommended for the marketplace workflow
+            type: boolean
+            deprecated: true
+            example: false
+    opportunity_status:
+      description: The Opportunity status.
       type: integer
       enum:
       - Open: 1
-      - Tendered: 2
-      - Closed: 3
-      - Canceled: 4
-      - Covered: 5
+      - Closed: 2
       example: 1
     200_getshipment_response:
       description: 200 | Ok. Returns shipment details.
@@ -325,49 +485,69 @@ components:
               description: This feature is limited to ProcureOS Pro plans
               type: string
               example: https://app.emergemarket.io/en/publictracking/12345
-    equipment_type_id_object:
-      description: The equipment type identifier.
-      type: string
-      enum:
-      - Other: 0
-      - Flatbed: 1
-      - Reefer: 3
-      - Stepdeck: 4
-      - Rgn: 5
-      - Van: 6
-      - Drayage: 7
-      - Dump: 8
-      - VanOrReefer: 9
-      - TrailerPoolInterchange
-      - 10
-      - PowerOnly: 11
-      - Conestoga: 12
-      - MaxiTrailer: 38
-      - Intermodal: 82
-      - BoxTruck: 84
-      - Hotshot: 85
-      - SprinterVan: 86
-      - StraightTruck: 87
-      example: 6
-    load_type_id_object:
-      description: The load type identifier.
-      type: string
-      enum:
-      - FTL: 1
-      example: 1
-    length_of_haul_result_object:
-      description: The length of haul override.
-      type: object
-      properties:
-        manual:
-          type: integer
-          example: 2
+    accessorials_object:
+      description: The accessorials associated with the load.
+      type: array
+      items:
+        type: object
+        properties:
+          accessorial_type_id:
+            description: The type of accessorial required.<br /><span>Enum:</span> <div style="height:80px; overflow-y:scroll"> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Straps":127}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"ETracks":128}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"LoadLocks":129}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"BlockAndBrace":130}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Blankets":131}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"DriverLoadAssist":132}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"DriverTailgateAssist":133}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"EdgeProtector":134}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"BulkHeads":135}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"SmokedTarps":136}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"StandardTarps":137}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"VBoards":138}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"CoilRacks":139}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PipeStakes":140}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Headboard":141}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Dunnage":142}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Ramps":143}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"LoadLevelers":144}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Chains":145}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Other":146}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"TeamDrivers":147}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PreCool":148}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"WoodenFloor":153}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PersonalProtectiveEquipment":154}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"FtlInsideDelivery":155}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"Liftgate":156}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"FoodGrade":157}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"TWICRequired":158}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"TankerEndorsement":159}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"ProtectFromFreeze":160}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"LightScaleTicketRequired":161}</span> <span style="color:rgb(62 65 68); border-radius:4px; padding:1px 5px; border:1px solid rgb(228, 231, 235); font-size:12px; font-family:'Source Code Pro', monospace; line-height:1.2em; display:inline-flex; overflow-wrap:anywhere"> {"PalletJack":162}</span> </div>
+            type: string
+            example: 131
+          value:
+            description: The accessorial quantity.
+            type: string
+            example: '1'
     tags_object:
       description: Tags specific to the entity.
       type: array
       items:
         type: string
         example: firstTag
+    references_object:
+      required:
+      - Customer
+      description: References for the opportunity.
+      type: array
+      items:
+        type: object
+        properties:
+          type_id:
+            description: The type of reference.
+            type: string
+            enum:
+            - Other: 1
+            - Customer: 2
+            - Appointment: 3
+            - Bol: 4
+            - Delivery: 5
+            - Pickup: 6
+            - PickupConfirmation: 7
+            - Po: 8
+            - Pro: 9
+            - Trailer: 10
+            example: 2
+          value:
+            description: The reference value.
+            type: string
+            example: CustRef123
+    shipment_status:
+      description: The Shipment status.
+      type: integer
+      enum:
+      - Open: 1
+      - Tendered: 2
+      - Closed: 3
+      - Canceled: 4
+      - Covered: 5
+      example: 1
+    load_type_id_object:
+      description: The load type identifier.
+      type: string
+      enum:
+      - FTL: 1
+      example: 1
     phone_response_object:
       description: Phone Object
       type: object
@@ -380,158 +560,6 @@ components:
           description: The extension number, supports up to 5 digits.
           type: string
           example: '1234'
-    opportunity_response_stops_object:
-      description: The stops associated with the opportunity. An opportunity must have at least two stops.
-      type: array
-      items:
-        type: object
-        required:
-        - order
-        - action_type_id
-        - postal_code
-        - city
-        - state
-        - country
-        - appointment_type_id
-        properties:
-          type_id:
-            description: The type of the stop.
-            type: string
-            enum:
-            - Origin: 1
-            - Middle: 2
-            - Destination: 3
-            example: 1
-          appointment_type_id:
-            description: The appointment type.
-            type: string
-            deprecated: true
-            enum:
-            - FCFS: 1
-            - Appointment: 2
-            example: 1
-          standardized_appointment_type_id:
-            description: The appointment type of the stop.
-            type: string
-            enum:
-            - FCFS: 1
-            - AppointmentScheduled: 2
-            - AppointmentRequired: 3
-            example: 1
-          standardized_loading_type_id:
-            description: The loading or unloading type of the stop.
-            type: string
-            enum:
-            - Live: 1
-            - DropTrailer: 2
-            example: 1
-          address1:
-            type: string
-            example: 3665 North Harbor Drive
-          address2:
-            type: string
-            example: string
-          city:
-            type: string
-            example: San Diego
-          contact:
-            type: object
-            properties:
-              name:
-                description: The contact name for the person at the stop.
-                type: string
-                example: Shipper
-              phone:
-                description: The phone number for the contact at the stop.
-                $ref: '#/components/schemas/phone_response_object'
-              email:
-                type: string
-                format: email
-                example: shipper@stonelogistics.com
-          country:
-            description: The country of the stop. Use abbreviation US or USA for United States of America and CA or CAN for Canada.
-            type: string
-            example: US
-          state:
-            description: The state of the stop. Use abbreviation.
-            type: string
-            example: CA
-          postal_code:
-            type: string
-            example: '92101'
-          latitude:
-            description: The latitude of the stop (use decimal representation)
-            type: number
-            example: 32.7325
-          longitude:
-            description: The longitude of the stop (use decimal representation)
-            type: number
-            example: -117.2011
-          name:
-            description: The name for the stop.
-            type: string
-            example: Stone Brewing Company
-          note:
-            description: Notes associated with the stop.
-            type: string
-            example: Check in with security prior to loading or unloading.
-          order:
-            description: The order of the stop-starting with 1.
-            type: integer
-            example: 1
-          action_type_id:
-            description: The stop action.
-            type: string
-            enum:
-            - Pick: 1
-            - Drop: 2
-            example: 1
-          schedule:
-            description: The schedule associated with the stop.
-            type: object
-            deprecated: true
-            properties:
-              date:
-                description: The date associated with the stop. Supports yyyy-mm-dd format.
-                type: string
-                example: '2021-10-06'
-              start_time:
-                description: Based upon the local time at the stop, the earliest time the load is available. Supports the format hh:mm:ss
-                type: string
-                example: '14:00:00'
-              end_time:
-                description: Based upon the local time at the stop, the last time the load is available. Supports the format hh:mm:ss
-                type: string
-                example: '20:00:00'
-          standardized_schedule:
-            description: The schedule associated with the stop.
-            type: object
-            properties:
-              start_date:
-                description: The earliest date associated with the stop. Supports yyyy-mm-dd format.
-                type: string
-                example: '2021-10-06'
-              start_time:
-                description: Based upon the local time at the stop, the earliest time the load is available. Supports the format hh:mm:ss
-                type: string
-                example: '14:00:00'
-              end_date:
-                description: The latest date associated with the stop. Supports yyyy-mm-dd format.
-                type: string
-                example: '2021-10-07'
-              end_time:
-                description: Based upon the local time at the stop, the last time the load is available. Supports the format hh:mm:ss
-                type: string
-                example: '20:00:00'
-          raw_address:
-            description: A string version of the full address
-            type: string
-            example: 23, Phoenix
-          is_schedule_required:
-            description: Determines if a shipper will allow the carrier to schedule an appointment on their behalf. Not recommended for the marketplace workflow
-            type: boolean
-            deprecated: true
-            example: false
     commodities_object:
       description: A description of the items to be carried by the capacity provider.
       type: array
@@ -661,57 +689,29 @@ components:
                   phone:
                     description: The phone number of the emergency contact.
                     $ref: '#/components/schemas/phone_response_object'
-    references_object:
-      required:
-      - Customer
-      description: References for the opportunity.
-      type: array
-      items:
-        type: object
-        properties:
-          type_id:
-            description: The type of reference.
-            type: string
-            enum:
-            - Other: 1
-            - Customer: 2
-            - Appointment: 3
-            - Bol: 4
-            - Delivery: 5
-            - Pickup: 6
-            - PickupConfirmation: 7
-            - Po: 8
-            - Pro: 9
-            - Trailer: 10
-            example: 2
-          value:
-            description: The reference value.
-            type: string
-            example: CustRef123
-    opportunity_status:
-      description: The Opportunity status.
+    equipment_size_object:
+      description: The length of the trailer.
       type: integer
-      enum:
-      - Open: 1
-      - Closed: 2
-      example: 1
-    opportunity_type:
-      description: The Opportunity type.
-      type: integer
-      enum:
-      - Quote: 1
-      example: 1
+      minimum: 1
+      example: 2
+    length_of_haul_result_object:
+      description: The length of haul override.
+      type: object
+      properties:
+        manual:
+          type: integer
+          example: 2
   responses:
     '404':
       description: 404 | Not Found. The requested resource was not found
-    '401':
-      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
     '403':
       description: 403 | Forbidden
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/403_forbidden_response'
+    '401':
+      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
   securitySchemes:
     BearerAuth:
       type: http
