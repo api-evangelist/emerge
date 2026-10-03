@@ -82,6 +82,19 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    errorcode_zero:
+      type: object
+      properties:
+        code:
+          description: HTTP code
+          type: integer
+          example: 0
+    200_postoptions_response:
+      description: 202 | Accepted.
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/errorcode_zero'
     400_badrequest_posttender_response:
       type: object
       properties:
@@ -109,12 +122,6 @@ components:
               items:
                 type: string
                 example: Validation failed.
-    200_postoptions_response:
-      description: 202 | Accepted.
-      type: object
-      properties:
-        error:
-          $ref: '#/components/schemas/errorcode_zero'
     403_forbidden_response:
       type: object
       properties:
@@ -131,13 +138,6 @@ components:
               items:
                 type: string
                 example: Response status code does not indicate success 403 (Forbidden)
-    errorcode_zero:
-      type: object
-      properties:
-        code:
-          description: HTTP code
-          type: integer
-          example: 0
   responses:
     '401':
       description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token

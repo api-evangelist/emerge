@@ -392,6 +392,17 @@ paths:
       operationId: getAwardsById
       x-operation-id-source: derived
 components:
+  responses:
+    '401':
+      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
+    '403':
+      description: 403 | Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/403_forbidden_response'
+    '404':
+      description: 404 | Not Found. The requested resource was not found
   schemas:
     phone_response_object:
       description: Phone Object
@@ -405,6 +416,60 @@ components:
           description: The extension number, supports up to 5 digits.
           type: string
           example: '1234'
+    400_badrequest_createaward_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 400
+            detailed_errors:
+              description: Error messages
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    example: option_id
+                  value:
+                    type: string
+                    example: option_id must not be empty.
+            messages:
+              type: array
+              items:
+                type: string
+                example: Validation failed.
+    references_object:
+      required:
+      - Customer
+      description: References for the opportunity.
+      type: array
+      items:
+        type: object
+        properties:
+          type_id:
+            description: The type of reference.
+            type: string
+            enum:
+            - Other: 1
+            - Customer: 2
+            - Appointment: 3
+            - Bol: 4
+            - Delivery: 5
+            - Pickup: 6
+            - PickupConfirmation: 7
+            - Po: 8
+            - Pro: 9
+            - Trailer: 10
+            example: 2
+          value:
+            description: The reference value.
+            type: string
+            example: CustRef123
     200_getawards_partner_response:
       type: object
       description: 200 | OK. Details of the partner winning the award
@@ -457,33 +522,6 @@ components:
             phone:
               description: Phone details of the contact.
               $ref: '#/components/schemas/phone_response_object'
-    references_object:
-      required:
-      - Customer
-      description: References for the opportunity.
-      type: array
-      items:
-        type: object
-        properties:
-          type_id:
-            description: The type of reference.
-            type: string
-            enum:
-            - Other: 1
-            - Customer: 2
-            - Appointment: 3
-            - Bol: 4
-            - Delivery: 5
-            - Pickup: 6
-            - PickupConfirmation: 7
-            - Po: 8
-            - Pro: 9
-            - Trailer: 10
-            example: 2
-          value:
-            description: The reference value.
-            type: string
-            example: CustRef123
     403_forbidden_response:
       type: object
       properties:
@@ -500,44 +538,6 @@ components:
               items:
                 type: string
                 example: Response status code does not indicate success 403 (Forbidden)
-    400_badrequest_createaward_response:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              description: HTTP code
-              type: integer
-              example: 400
-            detailed_errors:
-              description: Error messages
-              type: array
-              items:
-                type: object
-                properties:
-                  key:
-                    type: string
-                    example: option_id
-                  value:
-                    type: string
-                    example: option_id must not be empty.
-            messages:
-              type: array
-              items:
-                type: string
-                example: Validation failed.
-  responses:
-    '404':
-      description: 404 | Not Found. The requested resource was not found
-    '401':
-      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
-    '403':
-      description: 403 | Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/403_forbidden_response'
   securitySchemes:
     BearerAuth:
       type: http

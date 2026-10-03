@@ -155,32 +155,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    phone_request_object:
-      description: Phone Object
-      type: object
-      required:
-      - number
-      properties:
-        number:
-          description: The 10 digit phone number.
-          type: string
-          example: '1234567890'
-        extension_number:
-          description: The extension number, supports up to 5 digits.
-          type: string
-          example: '1234'
-    phone_response_object:
-      description: Phone Object
-      type: object
-      properties:
-        number:
-          description: The 10 digit phone number.
-          type: string
-          example: '1234567890'
-        extension_number:
-          description: The extension number, supports up to 5 digits.
-          type: string
-          example: '1234'
     errorcode_zero_without_message_object:
       type: object
       properties:
@@ -191,55 +165,13 @@ components:
               description: HTTP code
               type: integer
               example: 0
-    tags_object:
-      description: Tags specific to the entity.
-      type: array
-      items:
-        type: string
-        example: firstTag
-    400_badrequest_networkpartner_response:
+    errorcode_zero:
       type: object
       properties:
-        error:
-          type: object
-          properties:
-            code:
-              description: HTTP code
-              type: integer
-              example: 400
-            detailed_errors:
-              description: Error messages
-              type: array
-              items:
-                type: object
-                properties:
-                  key:
-                    type: string
-                    example: first_name
-                  value:
-                    type: string
-                    example: first_name must not be empty.
-            messages:
-              type: array
-              items:
-                type: string
-                example: Validation failed.
-    403_forbidden_response:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              description: HTTP code
-              type: integer
-              example: 403
-            messages:
-              description: Error messages
-              type: array
-              items:
-                type: string
-                example: Response status code does not indicate success 403 (Forbidden)
+        code:
+          description: HTTP code
+          type: integer
+          example: 0
     200_invitenetworkpartner_response:
       description: 200 | OK. Network partners successfully retrieved.
       type: object
@@ -330,13 +262,40 @@ components:
               $ref: '#/components/schemas/tags_object'
         error:
           $ref: '#/components/schemas/errorcode_zero'
-    errorcode_zero:
+    phone_response_object:
+      description: Phone Object
       type: object
       properties:
-        code:
-          description: HTTP code
-          type: integer
-          example: 0
+        number:
+          description: The 10 digit phone number.
+          type: string
+          example: '1234567890'
+        extension_number:
+          description: The extension number, supports up to 5 digits.
+          type: string
+          example: '1234'
+    403_forbidden_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 403
+            messages:
+              description: Error messages
+              type: array
+              items:
+                type: string
+                example: Response status code does not indicate success 403 (Forbidden)
+    tags_object:
+      description: Tags specific to the entity.
+      type: array
+      items:
+        type: string
+        example: firstTag
     200_getnetworkpartner_response:
       description: 200 | OK. Network partners successfully retrieved.
       type: object
@@ -428,9 +387,48 @@ components:
                 $ref: '#/components/schemas/tags_object'
         error:
           $ref: '#/components/schemas/errorcode_zero'
+    400_badrequest_networkpartner_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 400
+            detailed_errors:
+              description: Error messages
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    example: first_name
+                  value:
+                    type: string
+                    example: first_name must not be empty.
+            messages:
+              type: array
+              items:
+                type: string
+                example: Validation failed.
+    phone_request_object:
+      description: Phone Object
+      type: object
+      required:
+      - number
+      properties:
+        number:
+          description: The 10 digit phone number.
+          type: string
+          example: '1234567890'
+        extension_number:
+          description: The extension number, supports up to 5 digits.
+          type: string
+          example: '1234'
   responses:
-    '404':
-      description: 404 | Not Found. The requested resource was not found
     '401':
       description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
     '403':
@@ -439,6 +437,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/403_forbidden_response'
+    '404':
+      description: 404 | Not Found. The requested resource was not found
   securitySchemes:
     BearerAuth:
       type: http

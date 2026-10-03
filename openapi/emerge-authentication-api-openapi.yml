@@ -156,6 +156,26 @@ paths:
       description: Testing sandbox endpoint
 components:
   schemas:
+    200_client_credential_authentication_response:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            token:
+              description: The access token to be used in subsequent requests.
+              type: string
+              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1qQkRRemN5TlRoQ05UbERNVVpGTXpneU5FUXpNVVF4UVRoR1FUSTRPRFF5T0VFeE16QXdRdyJ9.eyJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tL1Byb3ZpZGVyR3VpZCI6ImQ1OWEyNTY0LTAyNzAtNDBhYy1iYWZkLWIwNWE0NDNlZGY4ZiIsImlzcyI6Imh0dHBzOi8vdmFudGFnZWZyZWlnaHQuYXV0aDAuY29tLyIsInN1YiI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tIiwiaWF0IjoxNjMxNjk5MjM3LCJleHAiOjE2MzE3ODU2MzcsImF6cCI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRIiwic2NvcGUiOiJpbnRlZ3JhdGlvbjpzY29wZSIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.kMHPwoPFORvTp4A5e-1sc6gwCAdVPGwv3fx_I8sN_RSEWG7Cd9BSfQf5UtDOq4zyrAHmVyf1hczxL5bvVC4XOoe7v0g2hqbogEPEQLubO5tWZdoG76xKRYuJC-7aJAW8MJFUnp952l2rWE4bQ3jsQsLyZIavsaTW3dmrOgWEBLIbKR_4vMdA4SAIhclV_ZatiZRCtl6sib7KIUXQ8rFq5UjY_Oc3_XfSOTzgJSwV0eVA5D7Sty88Zqf6ElQNRf2jt4srZ0q3O1flVdyjCYsigig8xl7vSlkt-TJgMi8efucGsLPCR4DbsR1tlS7ulc05wIQL3QgngMajfCSfkSnOig
+            expires_in:
+              description: Expiration time of token in seconds.
+              type: number
+              example: 86400
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
     403_forbidden_response:
       type: object
       properties:
@@ -199,84 +219,6 @@ components:
               items:
                 type: string
                 example: Validation failed.
-    200_client_credential_authentication_response:
-      type: object
-      properties:
-        response:
-          type: object
-          properties:
-            token:
-              description: The access token to be used in subsequent requests.
-              type: string
-              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1qQkRRemN5TlRoQ05UbERNVVpGTXpneU5FUXpNVVF4UVRoR1FUSTRPRFF5T0VFeE16QXdRdyJ9.eyJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tL1Byb3ZpZGVyR3VpZCI6ImQ1OWEyNTY0LTAyNzAtNDBhYy1iYWZkLWIwNWE0NDNlZGY4ZiIsImlzcyI6Imh0dHBzOi8vdmFudGFnZWZyZWlnaHQuYXV0aDAuY29tLyIsInN1YiI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwcC5lbWVyZ2V0bXMuY29tIiwiaWF0IjoxNjMxNjk5MjM3LCJleHAiOjE2MzE3ODU2MzcsImF6cCI6ImVNRjJtUU5YdWU1QlhqbVVOWDFwUTQ1Z3J3cnF1dWlRIiwic2NvcGUiOiJpbnRlZ3JhdGlvbjpzY29wZSIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.kMHPwoPFORvTp4A5e-1sc6gwCAdVPGwv3fx_I8sN_RSEWG7Cd9BSfQf5UtDOq4zyrAHmVyf1hczxL5bvVC4XOoe7v0g2hqbogEPEQLubO5tWZdoG76xKRYuJC-7aJAW8MJFUnp952l2rWE4bQ3jsQsLyZIavsaTW3dmrOgWEBLIbKR_4vMdA4SAIhclV_ZatiZRCtl6sib7KIUXQ8rFq5UjY_Oc3_XfSOTzgJSwV0eVA5D7Sty88Zqf6ElQNRf2jt4srZ0q3O1flVdyjCYsigig8xl7vSlkt-TJgMi8efucGsLPCR4DbsR1tlS7ulc05wIQL3QgngMajfCSfkSnOig
-            expires_in:
-              description: Expiration time of token in seconds.
-              type: number
-              example: 86400
-        error:
-          type: object
-          properties:
-            code:
-              type: integer
-              example: 0
-    500_response:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: integer
-              example: 500
-            messages:
-              type: array
-              items:
-                type: string
-                example: userName.
-    200_authenticationrefresh_response:
-      type: object
-      properties:
-        response:
-          type: object
-          properties:
-            token:
-              description: The access token to be used in subsequent requests.
-              type: string
-              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9UYzROVFExTTBSRVF6SXhOamd6UVRZNU0wSkNRak5HTWpVNE5VTkVNa1l4TVROQk9VSkROQSJ9.eyJodHRwczovL2F1dGgwLmVtZXJnZXRtcy5jb20vVXNlcklkIjoiY2ViN2Q0ZWYtOTA1YS00MTlkLWFjMWUtZmQ0Y2IwMzc4MjEyIiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL09yZ2FuaXphdGlvbklkIjoiZWU3YmRjMGItOTFiMy00NDAwLWFmZjUtYzc3ZGZlMjk3NjA2IiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL1NoaXBtZW50UHJvdmlkZXJPcmdhbml6YXRpb25JZCI6ImVlN2JkYzBiLTkxYjMtNDQwMC1hZmY1LWM3N2RmZTI5NzYwNiIsImlzcyI6Imh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZGQ2OGNjYjRmOGZmNzAzYjI5NmQ5Y2MiLCJhdWQiOlsiaHR0cHM6Ly9hcHAuZW1lcmdldG1zLmNvbSIsImh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1OTk3NzMzNTIsImV4cCI6MTU5OTg1OTc1MiwiYXpwIjoiSWpSRERQajFNeVV5SEg2TEF1aTFqY1loM3NuV0EweDYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUgYXRvbSByZnA6ZnAgcmZwOmNwIG9mZmxpbmVfYWNjZXNzIiwiZ3R5IjoicGFzc3dvcmQifQ.FamVUCPS7Q2B1u7zUPC5Guk2HKTQ6Km6i6CX_Tpg1h98gnuvnWrC9FF-awgldjHmCNoeqI9ImjEVpecP00oAtHWiDaXMTd7UsyPcHAWh2xatZ8LPCrnw-0ox3egSSv5KxCTrnXAhTxwR4XI07-jxWjTgkw5dSVGc70Q9a_PC8nXe7-1SDKmLpMKFmtU60eH52kmUy0CECi_GfYS7xKskZYgX3Xhx-C1jCWFbCbmRA1Yxvir450miOIo0g5AxaJjbTgm6ao2OGuPzyLUTrXaSchK1J9xrv8dXhKh-PSv0eIG5d2MVHJf4O_KsFckt40OuiiEokrdsfdsfdfhgsdOuDkQ
-            expires_in:
-              description: Expiration time of token in seconds.
-              type: number
-              example: 86400
-        error:
-          type: object
-          properties:
-            code:
-              type: integer
-              example: 0
-    200_authentication_response:
-      type: object
-      properties:
-        response:
-          type: object
-          properties:
-            token:
-              description: The access token to be used in subsequent requests.
-              type: string
-              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9UYzROVFExTTBSRVF6SXhOamd6UVRZNU0wSkNRak5HTWpVNE5VTkVNa1l4TVROQk9VSkROQSJ9.eyJodHRwczovL2F1dGgwLmVtZXJnZXRtcy5jb20vVXNlcklkIjoiY2ViN2Q0ZWYtOTA1YS00MTlkLWFjMWUtZmQ0Y2IwMzc4MjEyIiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL09yZ2FuaXphdGlvbklkIjoiZWU3YmRjMGItOTFiMy00NDAwLWFmZjUtYzc3ZGZlMjk3NjA2IiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL1NoaXBtZW50UHJvdmlkZXJPcmdhbml6YXRpb25JZCI6ImVlN2JkYzBiLTkxYjMtNDQwMC1hZmY1LWM3N2RmZTI5NzYwNiIsImlzcyI6Imh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZGQ2OGNjYjRmOGZmNzAzYjI5NmQ5Y2MiLCJhdWQiOlsiaHR0cHM6Ly9hcHAuZW1lcmdldG1zLmNvbSIsImh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1OTk3NzMzNTIsImV4cCI6MTU5OTg1OTc1MiwiYXpwIjoiSWpSRERQajFNeVV5SEg2TEF1aTFqY1loM3NuV0EweDYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUgYXRvbSByZnA6ZnAgcmZwOmNwIG9mZmxpbmVfYWNjZXNzIiwiZ3R5IjoicGFzc3dvcmQifQ.FamVUCPS7Q2B1u7zUPC5Guk2HKTQ6Km6i6CX_Tpg1h98gnuvnWrC9FF-awgldjHmCNoeqI9ImjEVpecP00oAtHWiDaXMTd7UsyPcHAWh2xatZ8LPCrnw-0ox3egSSv5KxCTrnXAhTxwR4XI07-jxWjTgkw5dSVGc70Q9a_PC8nXe7-1SDKmLpMKFmtU60eH52kmUy0CECi_GfYS7xKskZYgX3Xhx-C1jCWFbCbmRA1Yxvir450miOIo0g5AxaJjbTgm6ao2OGuPzyLUTrXaSchK1J9xrv8dXhKh-PSv0eIG5d2MVHJf4O_KsFckt40OuiiEokrdsfdsfdfhgsdOuDkQ
-            expires_in:
-              description: Expiration time of token in seconds.
-              type: number
-              example: 86400
-            refresh_token:
-              description: The token required to call refresh_token endpoint to get a new access token.
-              type: string
-              example: ciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9UYzROVFExTTBSRVF6SXhOamd6UVRZ
-        error:
-          type: object
-          properties:
-            code:
-              type: integer
-              example: 0
     400_badrequest_refreshtoken_response:
       type: object
       properties:
@@ -304,6 +246,64 @@ components:
               items:
                 type: string
                 example: Validation failed.
+    200_authenticationrefresh_response:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            token:
+              description: The access token to be used in subsequent requests.
+              type: string
+              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9UYzROVFExTTBSRVF6SXhOamd6UVRZNU0wSkNRak5HTWpVNE5VTkVNa1l4TVROQk9VSkROQSJ9.eyJodHRwczovL2F1dGgwLmVtZXJnZXRtcy5jb20vVXNlcklkIjoiY2ViN2Q0ZWYtOTA1YS00MTlkLWFjMWUtZmQ0Y2IwMzc4MjEyIiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL09yZ2FuaXphdGlvbklkIjoiZWU3YmRjMGItOTFiMy00NDAwLWFmZjUtYzc3ZGZlMjk3NjA2IiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL1NoaXBtZW50UHJvdmlkZXJPcmdhbml6YXRpb25JZCI6ImVlN2JkYzBiLTkxYjMtNDQwMC1hZmY1LWM3N2RmZTI5NzYwNiIsImlzcyI6Imh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZGQ2OGNjYjRmOGZmNzAzYjI5NmQ5Y2MiLCJhdWQiOlsiaHR0cHM6Ly9hcHAuZW1lcmdldG1zLmNvbSIsImh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1OTk3NzMzNTIsImV4cCI6MTU5OTg1OTc1MiwiYXpwIjoiSWpSRERQajFNeVV5SEg2TEF1aTFqY1loM3NuV0EweDYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUgYXRvbSByZnA6ZnAgcmZwOmNwIG9mZmxpbmVfYWNjZXNzIiwiZ3R5IjoicGFzc3dvcmQifQ.FamVUCPS7Q2B1u7zUPC5Guk2HKTQ6Km6i6CX_Tpg1h98gnuvnWrC9FF-awgldjHmCNoeqI9ImjEVpecP00oAtHWiDaXMTd7UsyPcHAWh2xatZ8LPCrnw-0ox3egSSv5KxCTrnXAhTxwR4XI07-jxWjTgkw5dSVGc70Q9a_PC8nXe7-1SDKmLpMKFmtU60eH52kmUy0CECi_GfYS7xKskZYgX3Xhx-C1jCWFbCbmRA1Yxvir450miOIo0g5AxaJjbTgm6ao2OGuPzyLUTrXaSchK1J9xrv8dXhKh-PSv0eIG5d2MVHJf4O_KsFckt40OuiiEokrdsfdsfdfhgsdOuDkQ
+            expires_in:
+              description: Expiration time of token in seconds.
+              type: number
+              example: 86400
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
+    500_response:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 500
+            messages:
+              type: array
+              items:
+                type: string
+                example: userName.
+    200_authentication_response:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            token:
+              description: The access token to be used in subsequent requests.
+              type: string
+              example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9UYzROVFExTTBSRVF6SXhOamd6UVRZNU0wSkNRak5HTWpVNE5VTkVNa1l4TVROQk9VSkROQSJ9.eyJodHRwczovL2F1dGgwLmVtZXJnZXRtcy5jb20vVXNlcklkIjoiY2ViN2Q0ZWYtOTA1YS00MTlkLWFjMWUtZmQ0Y2IwMzc4MjEyIiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL09yZ2FuaXphdGlvbklkIjoiZWU3YmRjMGItOTFiMy00NDAwLWFmZjUtYzc3ZGZlMjk3NjA2IiwiaHR0cHM6Ly9hdXRoMC5lbWVyZ2V0bXMuY29tL1NoaXBtZW50UHJvdmlkZXJPcmdhbml6YXRpb25JZCI6ImVlN2JkYzBiLTkxYjMtNDQwMC1hZmY1LWM3N2RmZTI5NzYwNiIsImlzcyI6Imh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZGQ2OGNjYjRmOGZmNzAzYjI5NmQ5Y2MiLCJhdWQiOlsiaHR0cHM6Ly9hcHAuZW1lcmdldG1zLmNvbSIsImh0dHBzOi8vZW1lcmdlLXNzby10ZXN0LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1OTk3NzMzNTIsImV4cCI6MTU5OTg1OTc1MiwiYXpwIjoiSWpSRERQajFNeVV5SEg2TEF1aTFqY1loM3NuV0EweDYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUgYXRvbSByZnA6ZnAgcmZwOmNwIG9mZmxpbmVfYWNjZXNzIiwiZ3R5IjoicGFzc3dvcmQifQ.FamVUCPS7Q2B1u7zUPC5Guk2HKTQ6Km6i6CX_Tpg1h98gnuvnWrC9FF-awgldjHmCNoeqI9ImjEVpecP00oAtHWiDaXMTd7UsyPcHAWh2xatZ8LPCrnw-0ox3egSSv5KxCTrnXAhTxwR4XI07-jxWjTgkw5dSVGc70Q9a_PC8nXe7-1SDKmLpMKFmtU60eH52kmUy0CECi_GfYS7xKskZYgX3Xhx-C1jCWFbCbmRA1Yxvir450miOIo0g5AxaJjbTgm6ao2OGuPzyLUTrXaSchK1J9xrv8dXhKh-PSv0eIG5d2MVHJf4O_KsFckt40OuiiEokrdsfdsfdfhgsdOuDkQ
+            expires_in:
+              description: Expiration time of token in seconds.
+              type: number
+              example: 86400
+            refresh_token:
+              description: The token required to call refresh_token endpoint to get a new access token.
+              type: string
+              example: ciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9UYzROVFExTTBSRVF6SXhOamd6UVRZ
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
     429_response:
       type: object
       properties:
@@ -325,18 +325,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/403_forbidden_response'
-    '500':
-      description: 500 | Internal Server Error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/500_response'
     '429':
       description: 429 | Too many requests.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/429_response'
+    '500':
+      description: 500 | Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/500_response'
   securitySchemes:
     BearerAuth:
       type: http
