@@ -154,17 +154,18 @@ paths:
       operationId: deleteNetworkPartnersByPartnerId
       x-operation-id-source: derived
 components:
+  responses:
+    '403':
+      description: 403 | Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/403_forbidden_response'
+    '404':
+      description: 404 | Not Found. The requested resource was not found
+    '401':
+      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
   schemas:
-    errorcode_zero_without_message_object:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              description: HTTP code
-              type: integer
-              example: 0
     errorcode_zero:
       type: object
       properties:
@@ -172,6 +173,12 @@ components:
           description: HTTP code
           type: integer
           example: 0
+    tags_object:
+      description: Tags specific to the entity.
+      type: array
+      items:
+        type: string
+        example: firstTag
     200_invitenetworkpartner_response:
       description: 200 | OK. Network partners successfully retrieved.
       type: object
@@ -262,9 +269,21 @@ components:
               $ref: '#/components/schemas/tags_object'
         error:
           $ref: '#/components/schemas/errorcode_zero'
-    phone_response_object:
+    errorcode_zero_without_message_object:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: HTTP code
+              type: integer
+              example: 0
+    phone_request_object:
       description: Phone Object
       type: object
+      required:
+      - number
       properties:
         number:
           description: The 10 digit phone number.
@@ -290,12 +309,18 @@ components:
               items:
                 type: string
                 example: Response status code does not indicate success 403 (Forbidden)
-    tags_object:
-      description: Tags specific to the entity.
-      type: array
-      items:
-        type: string
-        example: firstTag
+    phone_response_object:
+      description: Phone Object
+      type: object
+      properties:
+        number:
+          description: The 10 digit phone number.
+          type: string
+          example: '1234567890'
+        extension_number:
+          description: The extension number, supports up to 5 digits.
+          type: string
+          example: '1234'
     200_getnetworkpartner_response:
       description: 200 | OK. Network partners successfully retrieved.
       type: object
@@ -414,31 +439,6 @@ components:
               items:
                 type: string
                 example: Validation failed.
-    phone_request_object:
-      description: Phone Object
-      type: object
-      required:
-      - number
-      properties:
-        number:
-          description: The 10 digit phone number.
-          type: string
-          example: '1234567890'
-        extension_number:
-          description: The extension number, supports up to 5 digits.
-          type: string
-          example: '1234'
-  responses:
-    '401':
-      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
-    '403':
-      description: 403 | Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/403_forbidden_response'
-    '404':
-      description: 404 | Not Found. The requested resource was not found
   securitySchemes:
     BearerAuth:
       type: http

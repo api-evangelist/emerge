@@ -147,7 +147,31 @@ paths:
     - url: https://demo-api.emergemarket.dev/v1
       description: Testing sandbox endpoint
 components:
+  responses:
+    '403':
+      description: 403 | Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/403_forbidden_response'
+    '401':
+      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
+    '404':
+      description: 404 | Not Found. The requested resource was not found
   schemas:
+    errorcode_zero:
+      type: object
+      properties:
+        code:
+          description: HTTP code
+          type: integer
+          example: 0
+    200_postoptions_response:
+      description: 202 | Accepted.
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/errorcode_zero'
     400_badrequest_postoptions_response:
       type: object
       properties:
@@ -175,19 +199,6 @@ components:
               items:
                 type: string
                 example: Validation failed.
-    errorcode_zero:
-      type: object
-      properties:
-        code:
-          description: HTTP code
-          type: integer
-          example: 0
-    200_postoptions_response:
-      description: 202 | Accepted.
-      type: object
-      properties:
-        error:
-          $ref: '#/components/schemas/errorcode_zero'
     403_forbidden_response:
       type: object
       properties:
@@ -256,18 +267,6 @@ components:
             phone:
               description: Phone details of the contact.
               $ref: '#/components/schemas/phone_response_object'
-    phone_response_object:
-      description: Phone Object
-      type: object
-      properties:
-        number:
-          description: The 10 digit phone number.
-          type: string
-          example: '1234567890'
-        extension_number:
-          description: The extension number, supports up to 5 digits.
-          type: string
-          example: '1234'
     200_Alloptions_response:
       type: object
       properties:
@@ -354,17 +353,18 @@ components:
             description: The reference value.
             type: string
             example: CustRef123
-  responses:
-    '401':
-      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
-    '403':
-      description: 403 | Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/403_forbidden_response'
-    '404':
-      description: 404 | Not Found. The requested resource was not found
+    phone_response_object:
+      description: Phone Object
+      type: object
+      properties:
+        number:
+          description: The 10 digit phone number.
+          type: string
+          example: '1234567890'
+        extension_number:
+          description: The extension number, supports up to 5 digits.
+          type: string
+          example: '1234'
   securitySchemes:
     BearerAuth:
       type: http

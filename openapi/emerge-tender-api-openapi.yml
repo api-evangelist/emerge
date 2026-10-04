@@ -81,6 +81,15 @@ paths:
       operationId: postTendersByShipmentIdResponses
       x-operation-id-source: derived
 components:
+  responses:
+    '403':
+      description: 403 | Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/403_forbidden_response'
+    '401':
+      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
   schemas:
     errorcode_zero:
       type: object
@@ -138,15 +147,6 @@ components:
               items:
                 type: string
                 example: Response status code does not indicate success 403 (Forbidden)
-  responses:
-    '401':
-      description: 401 | Not Authorized. The request was not authorized. Please add or refresh your authorization token
-    '403':
-      description: 403 | Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/403_forbidden_response'
   securitySchemes:
     BearerAuth:
       type: http
