@@ -64,15 +64,146 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Emerge (EmergeTech, Inc.) is a Scottsdale, Arizona freight procurement and transportation spend
-management platform — marketed as ProcureOS — covering contract procurement (RFPs, mini-bids,
-carrier scorecards), spot procurement (quoting, tendering, tracking), Emerge AI rate benchmarking,
-and the Emerge Marketplace of 45,000+ pre-vetted asset-based carriers across the US, Canada and
-Mexico. It publishes two public REST APIs with OpenAPI 3.0 documents, a 14-event webhook catalog,
-a testing sandbox, an llms.txt, an RFC 9116 security.txt and a public Postman workspace.
+Emerge (EmergeTech, Inc.) is a Scottsdale, Arizona freight procurement and transportation spend management platform — marketed as ProcureOS — that moves full truckload, volume/partial truckload and drop-trailer freight sourcing out of spreadsheets and email into a single system. The platform combines contract procurement (annual RFPs, mini-bids, awarding scenarios, carrier scorecards), spot procurement (quoting, tendering, Dynamic Book It Now, tracking and visibility), Emerge AI rate benchmarking and lane intelligence (Rate Pulse), and the Emerge Marketplace of 45,000+ pre-vetted asset-based carriers across the US, Canada and Mexico. Emerge publishes two public REST APIs — a Shipper (public) API for opportunities, options, awards, tenders, shipments, network partners and webhook subscriptions, and a Carrier API for capacity/integration providers responding to rate requests and tenders — plus a documented webhook event catalog, a testing sandbox, and TMS integrations with Project44, E2open, MercuryGate and Capacity Link partners.
 
-- Website: https://www.emergemarket.com/
-- Shipper (public) API docs: https://api-docs.emergemarket.io/
-- Carrier API docs: https://carrier-api-docs.emergemarket.io/
-- Status: https://status.emergemarket.com/
-- Secondary-market listing: https://forgeglobal.com/emerge_stock/
+**Areas:** Freight · Logistics · Transportation · Supply Chain · Procurement · Trucking · Freight Marketplace · Transportation Management · Shipping · rate-benchmarking · Webhook · B2B Marketplace
+
+## Emerge on APIs.io
+
+Everything profiled for Emerge is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/emerge/](https://apis.io/providers/emerge/)** — or go straight to one of the APIs or properties below.
+
+### APIs (9)
+
+- [Emerge Authentication API](https://apis.io/apis/emerge/emerge-authentication-api/) — The Authentication API from Emerge — 3 operation(s) for authentication.
+- [Emerge Awards API](https://apis.io/apis/emerge/emerge-awards-api/) — The Awards API from Emerge — 2 operation(s) for awards.
+- [Emerge Network Partners API](https://apis.io/apis/emerge/emerge-network-partners-api/) — The Network Partners API from Emerge — 2 operation(s) for network partners.
+- [Emerge Opportunities API](https://apis.io/apis/emerge/emerge-opportunities-api/) — The Opportunities API from Emerge — 6 operation(s) for opportunities.
+- [Emerge Options API](https://apis.io/apis/emerge/emerge-options-api/) — The Options API from Emerge — 2 operation(s) for options.
+- [Emerge Shipments API](https://apis.io/apis/emerge/emerge-shipments-api/) — The Shipments API from Emerge — 1 operation(s) for shipments.
+- [Emerge Tender API](https://apis.io/apis/emerge/emerge-tender-api/) — The Tender API from Emerge — 1 operation(s) for tender.
+- [Emerge Tenders API](https://apis.io/apis/emerge/emerge-tenders-api/) — The Tenders API from Emerge — 3 operation(s) for tenders.
+- [Emerge Webhooks API](https://apis.io/apis/emerge/emerge-webhooks-api/) — Webhooks are used to provide updates to the TMS when award or option events are generated within the Emerge system. </br></br>If our webhook message cannot…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Emerge Webhooks](https://apis.io/asyncapis/emerge/emerge-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [emerge-mcp.yml](https://apis.io/servers/emerge/emerge-mcp-yml/)
+
+#### Collections (2)
+
+Postman and Open Collection request collections.
+
+- [Emerge Carrier API](https://apis.io/collections/emerge/open-emerge-carrier-api/)
+- [Emerge Public API](https://apis.io/collections/emerge/open-emerge-public-api/)
+
+#### Overlays (2)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Emerge Carrier Api Overlay](https://apis.io/overlays/emerge/emerge-carrier-api-overlay/)
+- [Emerge Public Api Overlay](https://apis.io/overlays/emerge/emerge-public-api-overlay/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Emerge Authentication](https://apis.io/security/emerge/emerge-authentication/)
+- [Emerge Domain Security](https://apis.io/security/emerge/emerge-domain-security/)
+- [Emerge Trust Center](https://apis.io/security/emerge/emerge-trust-center/)
+- [Emerge Vulnerability Disclosure](https://apis.io/security/emerge/emerge-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Emerge Plans Pricing](https://apis.io/plans/emerge/emerge-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Emerge Rate Limits](https://apis.io/rate-limits/emerge/emerge-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.emergemarket.com/)
+- [Documentation](https://api-docs.emergemarket.io/)
+- [Getting started](https://api-docs.emergemarket.io/#section/Get-Started)
+- [API reference](https://api-docs.emergemarket.io/)
+- [Pricing](https://www.emergemarket.com/legal/fees)
+- [Sign up](https://www.emergemarket.com/demo)
+- [Support](https://help.emergemarket.io/en/)
+- [Blog](https://www.emergemarket.com/company/blog)
+- [Security](https://api.emergemarket.io/.well-known/security.txt)
+- [Trust centre](https://trust.emergemarket.com/)
+- [Terms of service](https://www.emergemarket.com/legal/terms-and-conditions)
+- [Privacy policy](https://www.emergemarket.com/legal/privacy-policy)
+- [Status](https://status.emergemarket.com/)
+
+## API Evangelist rating
+
+**Kin Score 48.3** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 60.0 |
+| Contract governance | 4.5 |
+| Operational transparency | 50.0 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 52.6 |
+
+**Agent readiness 37.1** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 35.3** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/emerge/](https://apis.io/providers/emerge/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Emerge: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/emerge/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
